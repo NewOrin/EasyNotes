@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_default_title">所有</string>
+    <string name="open">打开</string>
+    <string name="close">关闭</string>
+    <string name="main_refresh">刷新</string>
+    <string name="main_search">搜索</string>
+    <string name="main_thumb">缩略图</string>
+    <string name="main_sort">排序</string>
+    <string name="main_show_title_only">仅显示标题</string>
+</resources>
