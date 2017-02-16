@@ -1,36 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
-    android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent"
-    tools:context="com.neworin.easynotes.MainActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <include layout="@layout/toolbar_layout" />
-
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/main_drawerlayout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/main_left_container_ll"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="@color/colorWhite"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:text="你好"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+        <include layout="@layout/toolbar_layout" />
 
-        <FrameLayout
-            android:id="@+id/main_content_container"
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/main_drawerlayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </android.support.v4.widget.DrawerLayout>
-</LinearLayout>
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/main_left_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:background="@color/white"
+                android:orientation="vertical" />
+
+            <FrameLayout
+                android:id="@+id/main_content_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </android.support.v4.widget.DrawerLayout>
+    </LinearLayout>
+</layout>

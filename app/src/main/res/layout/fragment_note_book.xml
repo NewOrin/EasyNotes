@@ -1,0 +1,23 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.design.widget.CoordinatorLayout android:id="@+id/note_book_fg_coordinatorlayout"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.neworin.easynotes.NoteBookFragment">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/note_book_fg_float_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="@dimen/y10"
+            android:layout_marginRight="@dimen/x10"
+            android:backgroundTint="@color/colorPrimary"
+            android:src="@drawable/ic_add_white"
+            app:borderWidth="@dimen/dp0"
+            app:fabSize="normal"
+            app:rippleColor="@color/colorPrimaryDark" />
+    </android.support.design.widget.CoordinatorLayout>
+</layout>
