@@ -1,8 +1,10 @@
 package com.neworin.easynotes;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 /**
  * Created by NewOrin Zhang
@@ -45,5 +47,28 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
      */
     protected abstract int getLayoutId();
 
-    
+    /**
+     * 显示SnackBar
+     *
+     * @param view
+     * @param msg
+     */
+    public void showSnackBar(View view, String msg) {
+        Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 显示SnackBar带Action
+     *
+     * @param view
+     * @param msg
+     * @param actionMsg
+     * @param listener
+     */
+    public void showSnackBarWithAction(View view,
+                                       String msg,
+                                       String actionMsg,
+                                       View.OnClickListener listener) {
+        Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).setAction(actionMsg, listener).show();
+    }
 }
