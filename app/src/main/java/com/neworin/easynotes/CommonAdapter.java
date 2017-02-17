@@ -3,6 +3,8 @@ package com.neworin.easynotes;
 import java.util.List;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +15,13 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     public Context mContext;
     public List<T> mDatas;
     public LayoutInflater mInflater;
+    private ViewDataBinding mViewDataBinding;
     private int mLayoutId;
 
     public CommonAdapter(Context context, List<T> datas, int layoutId) {
         this.mContext = context;
         this.mDatas = datas;
-        mInflater = LayoutInflater.from(context);
+        this.mInflater = LayoutInflater.from(context);
         this.mLayoutId = layoutId;
     }
 
@@ -35,12 +38,11 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = ViewHolder.get(mContext, convertView, parent,
-                                           mLayoutId, position);
-        convert(holder, getItem(position));
+        mViewDataBinding = DataBindingUtil.inflate(mInflater, mLayoutId, parent, false);
+        convert(mViewDataBinding, getItem(position));
 
-        return holder.getConvertView();
+        return mViewDataBinding.getRoot();
     }
 
-    public abstract void convert(ViewHolder holder, T t);
+    public abstract void convert(ViewDataBinding binding, T t);
 }
