@@ -1,12 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:text="TextView"
+    <android.support.percent.PercentRelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:background="@color/colorPrimary"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_heightPercent="20%"
+            app:layout_widthPercent="100%">
+
+            <com.neworin.easynotes.CircleImageView
+                android:layout_width="@dimen/x80"
+                android:layout_height="@dimen/y80"
+                android:layout_marginLeft="@dimen/x10"
+                android:src="@mipmap/ic_launcher"
+                app:civ_border_width="@dimen/dp0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x10"
+                android:text="@string/login_or_register"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_17_sp" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/slide_menu_listview"
+            android:layout_alignParentBottom="true"
+            app:layout_heightPercent="78%"
+            app:layout_widthPercent="100%" />
+    </android.support.percent.PercentRelativeLayout>
+
+</layout>
