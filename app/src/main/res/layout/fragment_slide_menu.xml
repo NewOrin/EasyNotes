@@ -2,6 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="adapter"
+            type="android.widget.BaseAdapter" />
+    </data>
+
     <android.support.percent.PercentRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -35,7 +42,8 @@
             android:id="@+id/slide_menu_listview"
             android:layout_alignParentBottom="true"
             app:layout_heightPercent="78%"
-            app:layout_widthPercent="100%" />
+            app:layout_widthPercent="100%"
+            app:adapter="@{adapter}" />
     </android.support.percent.PercentRelativeLayout>
 
 </layout>

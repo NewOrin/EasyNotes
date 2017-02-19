@@ -15,6 +15,15 @@ public class SlideMenuNoteBookModel extends BaseObservable {
     private String count;
     private Boolean isChecked;
 
+    public SlideMenuNoteBookModel() {
+    }
+
+    public SlideMenuNoteBookModel(String name, String count, Boolean isChecked) {
+        this.name = name;
+        this.count = count;
+        this.isChecked = isChecked;
+    }
+
     @Bindable
     public Boolean getChecked() {
         return isChecked;

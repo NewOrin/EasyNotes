@@ -10,19 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-public abstract class CommonAdapter<T> extends BaseAdapter {
+public class CommonAdapter<T> extends BaseAdapter {
 
     public Context mContext;
     public List<T> mDatas;
     public LayoutInflater mInflater;
-    private ViewDataBinding mViewDataBinding;
     private int mLayoutId;
+    private int mVariableId;
 
-    public CommonAdapter(Context context, List<T> datas, int layoutId) {
+    public CommonAdapter(Context context, List<T> datas, int layoutId, int variableId) {
         this.mContext = context;
         this.mDatas = datas;
         this.mInflater = LayoutInflater.from(context);
         this.mLayoutId = layoutId;
+        this.mVariableId = variableId;
     }
 
     public int getCount() {
@@ -38,11 +39,13 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        mViewDataBinding = DataBindingUtil.inflate(mInflater, mLayoutId, parent, false);
-        convert(mViewDataBinding, getItem(position));
-
+        ViewDataBinding mViewDataBinding;
+        if (convertView == null) {
+            mViewDataBinding = DataBindingUtil.inflate(mInflater, mLayoutId, parent, false);
+        } else {
+            mViewDataBinding = DataBindingUtil.getBinding(convertView);
+        }
+        mViewDataBinding.setVariable(mVariableId, mDatas.get(position));
         return mViewDataBinding.getRoot();
     }
-
-    public abstract void convert(ViewDataBinding binding, T t);
 }
