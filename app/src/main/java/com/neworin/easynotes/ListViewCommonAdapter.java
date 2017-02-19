@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-public class CommonAdapter<T> extends BaseAdapter {
+public class ListViewCommonAdapter<T> extends BaseAdapter {
 
     public Context mContext;
     public List<T> mDatas;
@@ -18,7 +18,7 @@ public class CommonAdapter<T> extends BaseAdapter {
     private int mLayoutId;
     private int mVariableId;
 
-    public CommonAdapter(Context context, List<T> datas, int layoutId, int variableId) {
+    public ListViewCommonAdapter(Context context, List<T> datas, int layoutId, int variableId) {
         this.mContext = context;
         this.mDatas = datas;
         this.mInflater = LayoutInflater.from(context);

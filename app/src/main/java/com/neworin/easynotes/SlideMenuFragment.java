@@ -41,7 +41,7 @@ public class SlideMenuFragment extends BaseFragment {
         for (int i = 0; i < 10; i++) {
             datas.add(new SlideMenuNoteBookModel("笔记本", "2", false));
         }
-        CommonAdapter<SlideMenuNoteBookModel> adapter = new CommonAdapter<>(getActivity(), datas, R.layout.item_slide_menu_layout, com.neworin.easynotes.BR.notebookBean);
+        ListViewCommonAdapter<SlideMenuNoteBookModel> adapter = new ListViewCommonAdapter<>(getActivity(), datas, R.layout.item_slide_menu_layout, com.neworin.easynotes.BR.notebookBean);
         binding.setAdapter(adapter);
 //        binding.slideMenuListview.setAdapter(adapter);
     }
