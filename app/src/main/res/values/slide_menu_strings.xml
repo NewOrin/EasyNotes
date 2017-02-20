@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="login_or_register">登录或注册</string>
+    <string name="settings">设置</string>
+    <string name="edit_notebook">编辑笔记本</string>
 </resources>

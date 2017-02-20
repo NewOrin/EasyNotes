@@ -25,14 +25,14 @@
             <com.neworin.easynotes.CircleImageView
                 android:layout_width="@dimen/x80"
                 android:layout_height="@dimen/y80"
-                android:layout_marginLeft="@dimen/x10"
-                android:src="@mipmap/ic_launcher"
+                android:layout_marginLeft="@dimen/x20"
+                android:src="@mipmap/ic_defualt_avatar"
                 app:civ_border_width="@dimen/dp0" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/x10"
+                android:layout_marginLeft="@dimen/x20"
                 android:text="@string/login_or_register"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_17_sp" />
@@ -41,9 +41,10 @@
         <ListView
             android:id="@+id/slide_menu_listview"
             android:layout_alignParentBottom="true"
+            android:divider="@null"
+            app:adapter="@{adapter}"
             app:layout_heightPercent="78%"
-            app:layout_widthPercent="100%"
-            app:adapter="@{adapter}" />
+            app:layout_widthPercent="100%" />
     </android.support.percent.PercentRelativeLayout>
 
 </layout>
