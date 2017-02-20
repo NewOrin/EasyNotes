@@ -1,4 +1,4 @@
-package com.neworin.easynotes;
+package com.neworin.easynotes.adapter;
 
 import java.util.List;
 

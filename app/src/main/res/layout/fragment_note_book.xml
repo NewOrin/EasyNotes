@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.neworin.easynotes.NoteBookFragment">
+        tools:context="com.neworin.easynotes.ui.fragment.NoteBookFragment">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/note_book_fg_float_btn"

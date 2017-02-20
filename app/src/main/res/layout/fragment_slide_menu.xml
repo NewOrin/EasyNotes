@@ -22,7 +22,7 @@
             app:layout_heightPercent="20%"
             app:layout_widthPercent="100%">
 
-            <com.neworin.easynotes.CircleImageView
+            <com.neworin.easynotes.view.CircleImageView
                 android:layout_width="@dimen/x80"
                 android:layout_height="@dimen/y80"
                 android:layout_marginLeft="@dimen/x20"

@@ -1,15 +1,15 @@
-package com.neworin.easynotes;
+package com.neworin.easynotes.ui.fragment;
 
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.neworin.easynotes.R;
 import com.neworin.easynotes.databinding.FragmentNoteBookBinding;
+import com.neworin.easynotes.ui.BaseFragment;
 
 
 public class NoteBookFragment extends BaseFragment {

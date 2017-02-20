@@ -1,4 +1,4 @@
-package com.neworin.easynotes;
+package com.neworin.easynotes.model;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;

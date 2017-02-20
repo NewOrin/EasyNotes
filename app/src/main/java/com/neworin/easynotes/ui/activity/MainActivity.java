@@ -1,15 +1,17 @@
-package com.neworin.easynotes;
+package com.neworin.easynotes.ui.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
+import com.neworin.easynotes.ui.fragment.NoteBookFragment;
+import com.neworin.easynotes.R;
+import com.neworin.easynotes.ui.fragment.SlideMenuFragment;
 import com.neworin.easynotes.databinding.ActivityMainBinding;
+import com.neworin.easynotes.ui.BaseAppCompatActivity;
 
 public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMenuItemClickListener {
 

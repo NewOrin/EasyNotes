@@ -1,4 +1,4 @@
-package com.neworin.easynotes;
+package com.neworin.easynotes.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -20,6 +20,8 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
+import com.neworin.easynotes.R;
 
 public class CircleImageView extends ImageView {
 

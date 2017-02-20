@@ -1,4 +1,4 @@
-package com.neworin.easynotes;
+package com.neworin.easynotes.utils;
 
 import android.util.Log;
 
