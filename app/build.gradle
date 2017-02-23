@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion 24
@@ -20,6 +21,12 @@ android {
     dataBinding{
         enabled true
     }
+    /**针对GreenDao的一些配置**/
+    greendao {
+        schemaVersion 1 //数据库版本号
+        daoPackage 'com.neworin.easynote.greendao.gen' //自动生成的工具类的包名
+        targetGenDir 'src/main/java' //路径
+    }
 }
 
 dependencies {
@@ -32,5 +39,6 @@ dependencies {
     compile group: 'com.android.databinding', name: 'baseLibrary', version: '2.2.0'
     compile 'com.android.support:percent:24.2.0'
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'org.greenrobot:greendao:3.2.0'
     testCompile 'junit:junit:4.12'
 }
