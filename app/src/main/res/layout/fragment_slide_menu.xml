@@ -7,6 +7,10 @@
         <variable
             name="adapter"
             type="android.widget.BaseAdapter" />
+
+        <variable
+            name="handler"
+            type="com.neworin.easynotes.handlers.SlideMenuEventHandler" />
     </data>
 
     <android.support.percent.PercentRelativeLayout
@@ -17,7 +21,9 @@
 
         <LinearLayout
             android:background="@color/colorPrimary"
+            android:clickable="true"
             android:gravity="center_vertical"
+            android:onClick="@{handler::headLayoutClick}"
             android:orientation="horizontal"
             app:layout_heightPercent="20%"
             app:layout_widthPercent="100%">

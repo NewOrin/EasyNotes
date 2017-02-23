@@ -31,7 +31,6 @@ public class SlideMenuNoteBookModel extends BaseObservable {
 
     public void setChecked(Boolean checked) {
         isChecked = checked;
-        notifyChange();
     }
 
     @Bindable

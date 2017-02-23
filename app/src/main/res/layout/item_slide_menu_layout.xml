@@ -5,12 +5,15 @@
 
         <variable
             name="notebookBean"
-            type="com.neworin.easynotes.SlideMenuNoteBookModel" />
+            type="com.neworin.easynotes.model.SlideMenuNoteBookModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="@dimen/y55"
+        android:background="@{notebookBean.checked ? @color/slide_menu_item_selected : @color/white}"
         android:paddingLeft="@dimen/x20"
         android:paddingRight="@dimen/x20">
 
@@ -19,14 +22,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_notebook_normal" />
+            android:src="@{notebookBean.checked ? @drawable/ic_notebook_normal : @drawable/ic_notebook_selected}" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/x20"
-            android:layout_toRightOf="@id/item_slide_menu_img"
+            android:layout_toRightOf="@+id/item_slide_menu_img"
             android:text="@{notebookBean.name}" />
 
         <TextView
@@ -35,5 +38,12 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text="@{notebookBean.count}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@{String.valueOf(notebookBean.checked)}" />
+
     </RelativeLayout>
 </layout>
