@@ -7,15 +7,22 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.neworin.easynotes.DBManager;
 import com.neworin.easynotes.event.SlideMenuEvent;
+import com.neworin.easynotes.greendao.gen.SlideMenuNoteBookModelDao;
+import com.neworin.easynotes.model.SlideMenuNoteBookModel;
 import com.neworin.easynotes.ui.fragment.NoteBookFragment;
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.ui.fragment.SlideMenuFragment;
 import com.neworin.easynotes.databinding.ActivityMainBinding;
 import com.neworin.easynotes.ui.BaseAppCompatActivity;
+import com.neworin.easynotes.utils.L;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.greendao.query.QueryBuilder;
+
+import java.util.List;
 
 public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMenuItemClickListener {
 
@@ -42,6 +49,17 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         mFragmentManager = getSupportFragmentManager();
         mFragmentManager.beginTransaction().add(R.id.main_left_container, new SlideMenuFragment()).commit();
         mFragmentManager.beginTransaction().add(R.id.main_content_container, new NoteBookFragment()).commit();
+        SlideMenuNoteBookModel model = new SlideMenuNoteBookModel("笔记本", "1", false);
+        DBManager dbManager = new DBManager(this);
+        SlideMenuNoteBookModelDao dao = dbManager.getWriteDaoSession().getSlideMenuNoteBookModelDao();
+        dao.insert(model);
+        L.d(TAG, "写入数据库成功");
+        QueryBuilder<SlideMenuNoteBookModel> qb = dbManager.getReadDaoSession().getSlideMenuNoteBookModelDao().queryBuilder();
+        List<SlideMenuNoteBookModel> list = qb.list();
+        for (SlideMenuNoteBookModel m : list) {
+            L.d(TAG, "查询:" + m.getId() + "," + m.getName() + "," + m.getCount());
+        }
+
     }
 
     @Override

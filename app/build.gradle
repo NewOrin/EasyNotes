@@ -24,7 +24,7 @@ android {
     /**针对GreenDao的一些配置**/
     greendao {
         schemaVersion 1 //数据库版本号
-        daoPackage 'com.neworin.easynote.greendao.gen' //自动生成的工具类的包名
+        daoPackage 'com.neworin.easynotes.greendao.gen' //自动生成的工具类的包名
         targetGenDir 'src/main/java' //路径
     }
 }
