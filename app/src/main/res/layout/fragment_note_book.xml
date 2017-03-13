@@ -1,8 +1,15 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.design.widget.CoordinatorLayout android:id="@+id/note_book_fg_coordinatorlayout"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <data>
+
+        <variable
+            name="adapter"
+            type="com.neworin.easynotes.adapter.RecyclerViewCommonAdapter" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/note_book_fg_coordinatorlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.neworin.easynotes.ui.fragment.NoteBookFragment">
@@ -19,5 +26,12 @@
             app:borderWidth="@dimen/dp0"
             app:fabSize="normal"
             app:rippleColor="@color/colorPrimaryDark" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/note_book_fg_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/x5"
+            app:adapter="@{adapter}" />
     </android.support.design.widget.CoordinatorLayout>
 </layout>
