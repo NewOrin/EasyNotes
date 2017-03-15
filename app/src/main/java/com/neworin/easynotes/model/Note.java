@@ -19,18 +19,23 @@ public class Note extends BaseObservable {
 
     @Id
     private long id;
+    private String title;
     private String content;
-    private Date time;
+    private Date createTime;
+    private Date updateTime;
 
     @Generated(hash = 1272611929)
     public Note() {
     }
 
-    @Generated(hash = 1346765385)
-    public Note(long id, String content, Date time) {
+    @Generated(hash = 1784444317)
+    public Note(long id, String title, String content, Date createTime,
+            Date updateTime) {
         this.id = id;
+        this.title = title;
         this.content = content;
-        this.time = time;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
     }
 
     @Bindable
@@ -52,11 +57,29 @@ public class Note extends BaseObservable {
     }
 
     @Bindable
-    public Date getTime() {
-        return time;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    @Bindable
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Bindable
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
