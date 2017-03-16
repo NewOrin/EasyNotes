@@ -46,6 +46,10 @@ public class RecyclerViewCommonAdapter<T> extends RecyclerView.Adapter<MyViewHol
     public int getItemCount() {
         return mDatas.size();
     }
+
+    public void updateData(List<T> datas) {
+        this.mDatas = datas;
+    }
 }
 
 class MyViewHolder extends RecyclerView.ViewHolder {
