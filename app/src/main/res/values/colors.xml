@@ -7,4 +7,6 @@
     <color name="black">#000000</color>
     <color name="gray">#666666</color>
     <color name="slide_menu_item_selected">#E4F9F2</color>
+    <color name="note_text_default_color">#000000</color>
+    <color name="edittext_hint_color">#A7A2A2</color>
 </resources>

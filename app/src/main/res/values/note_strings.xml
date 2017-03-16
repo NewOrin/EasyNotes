@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="note_activity_title">添加笔记</string>
+    <string name="note_set_title_hint">标题</string>
+    <string name="note_set_content_hint">内容</string>
+    <string name="note_edit_done">完成</string>
+</resources>

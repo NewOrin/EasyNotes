@@ -18,7 +18,7 @@ public class DBManager {
     private DaoMaster.DevOpenHelper mOpenHelper;
     private Context mContext;
 
-    public DBManager(Context context) {
+    private DBManager(Context context) {
         this.mContext = context;
         mOpenHelper = new DaoMaster.DevOpenHelper(mContext, Constant.DB_NAME, null);
     }
@@ -29,7 +29,7 @@ public class DBManager {
      * @param context
      * @return
      */
-    public DBManager getInstance(Context context) {
+    public static DBManager getInstance(Context context) {
         if (mInstance == null) {
             synchronized (DBManager.class) {
                 if (mInstance == null) {

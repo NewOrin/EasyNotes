@@ -4,9 +4,14 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.neworin.easynotes.R;
+import com.neworin.easynotes.event.NoteBookFragmentEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by NewOrin Zhang
@@ -29,6 +34,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
             //将Toolbar显示到界面
             setSupportActionBar(mToolbar);
         }
+        getToolbar().setNavigationIcon(R.drawable.ic_arrow_back);
     }
 
     /**
@@ -39,6 +45,39 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
      */
     public Toolbar getToolbar() {
         return (Toolbar) findViewById(R.id.toolbar);
+    }
+
+    /**
+     * 设置Toolbar标题
+     *
+     * @param title
+     */
+    public void setToolbarTitle(String title) {
+        getToolbar().setTitle(title);
+    }
+
+    public void setNavigationIcon() {
+        getToolbar().setNavigationIcon(R.drawable.ic_arrow_back);
+        getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    /**
+     * Toolbar返回键事件
+     *
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**

@@ -5,6 +5,9 @@
         <variable
             name="adapter"
             type="com.neworin.easynotes.adapter.RecyclerViewCommonAdapter" />
+        <variable
+            name="handler"
+            type="com.neworin.easynotes.handlers.NoteBookFragmentHandler" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -25,6 +28,7 @@
             android:src="@drawable/ic_add_white"
             app:borderWidth="@dimen/dp0"
             app:fabSize="normal"
+            android:onClick="@{handler::onFloatingActionClick}"
             app:rippleColor="@color/colorPrimaryDark" />
 
         <android.support.v7.widget.RecyclerView

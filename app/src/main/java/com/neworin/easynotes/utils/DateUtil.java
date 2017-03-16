@@ -125,6 +125,14 @@ public class DateUtil {
     }
 
     /**
+     * 获取当前时间
+     *
+     * @return
+     */
+    public static Date getNowTime() {
+        return DateUtil.getDateTimeFormat(dateTimeFormat.format(new Date()));
+    }
+    /**
      * 获取当前日期星期一日期
      * 
      * @return date
@@ -150,8 +158,8 @@ public class DateUtil {
 
     /**
      * 获取日期星期一日期
-     * 
-     * @param 指定日期
+     *
+     * @param
      * @return date
      */
     public static Date getFirstDayOfWeek(Date date) {
@@ -166,8 +174,8 @@ public class DateUtil {
 
     /**
      * 获取日期星期一日期
-     * 
-     * @param 指定日期
+     *
+     * @param
      * @return date
      */
     public static Date getLastDayOfWeek(Date date) {
@@ -288,9 +296,9 @@ public class DateUtil {
 
     /**
      * 获取时间段的每一天
-     * 
-     * @param 开始日期
-     * @param 结算日期
+     *
+     * @param
+     * @param
      * @return 日期列表
      */
     public static List<Date> getEveryDay(Date startDate, Date endDate) {
