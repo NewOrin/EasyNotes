@@ -4,4 +4,5 @@
     <string name="note_set_title_hint">标题</string>
     <string name="note_set_content_hint">内容</string>
     <string name="note_edit_done">完成</string>
+    <string name="note_input_content_alert">请输入内容</string>
 </resources>

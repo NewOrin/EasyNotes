@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -30,7 +31,7 @@ import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.List;
 
-public class NoteBookFragment extends BaseFragment {
+public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private FragmentNoteBookBinding mBinding;
     private java.lang.String TAG = NoteBookFragment.class.getSimpleName();
@@ -39,8 +40,9 @@ public class NoteBookFragment extends BaseFragment {
     private List<Note> mDatas;
     private DaoSession mDaoSession;
     private NoteDao mNoteDao;
-    private QueryBuilder<Note> mQB;
+    private QueryBuilder<Note> mQueryBuilder;
     private RecyclerViewCommonAdapter<Note> mAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     public NoteBookFragment() {
     }
 
@@ -56,12 +58,13 @@ public class NoteBookFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mSwipeRefreshLayout = mBinding.noteBookFgSwipeLayout;
         mBinding.setHandler(new NoteBookFragmentHandler(this));
         mDBManager = DBManager.getInstance(getActivity());
         mDaoSession = mDBManager.getReadDaoSession();
         mNoteDao = mDaoSession.getNoteDao();
-        mQB = mNoteDao.queryBuilder();
-        mDatas = mQB.list();
+        mQueryBuilder = mNoteDao.queryBuilder();
+        mDatas = mQueryBuilder.list();
         if (null != mDatas) {
             mAdapter = new RecyclerViewCommonAdapter<>(getActivity(), mDatas, R.layout.item_note_fragment_layout, BR.note);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -69,14 +72,23 @@ public class NoteBookFragment extends BaseFragment {
             mBinding.noteBookFgRecyclerview.setItemAnimator(new DefaultItemAnimator());
             mBinding.setAdapter(mAdapter);
         }
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
+        mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
     /**
      * 刷新数据
      */
     private void refreshData() {
-        mAdapter.updateData(mQB.list());
+        mSwipeRefreshLayout.setRefreshing(true);
+        mAdapter.updateData(mQueryBuilder.list());
         mAdapter.notifyDataSetChanged();
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -99,6 +111,11 @@ public class NoteBookFragment extends BaseFragment {
     @Subscribe
     public void onMessageEvent(NoteBookFragmentEvent.RefreshNoteEvent event) {
         Log.d(TAG, "onMessageEvent刷新");
+        refreshData();
+    }
+
+    @Override
+    public void onRefresh() {
         refreshData();
     }
 }

@@ -31,11 +31,16 @@
             android:onClick="@{handler::onFloatingActionClick}"
             app:rippleColor="@color/colorPrimaryDark" />
 
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/note_book_fg_swipe_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/note_book_fg_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/x5"
             app:adapter="@{adapter}" />
+        </android.support.v4.widget.SwipeRefreshLayout>
     </android.support.design.widget.CoordinatorLayout>
 </layout>

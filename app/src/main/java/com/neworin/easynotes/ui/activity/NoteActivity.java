@@ -78,6 +78,9 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         if (item.getItemId() == R.id.note_menu_edit_done) {
             isDestroy = false;
             saveNote();
+            if (!isSaveNote()) {
+                showSnackBar(mBinding.getRoot(), getString(R.string.note_input_content_alert));
+            }
         }
         return true;
     }
