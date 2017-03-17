@@ -21,6 +21,11 @@ public class RecyclerViewCommonAdapter<T> extends RecyclerView.Adapter<MyViewHol
     private int mLayoutId;
     private List<T> mDatas;
     private int mVariableId;
+    private OnItemClickListener mOnItemClickListener;
+
+    public void setmOnItemClickListener(OnItemClickListener mOnItemClickListener) {
+        this.mOnItemClickListener = mOnItemClickListener;
+    }
 
     public RecyclerViewCommonAdapter(Context context, List<T> datas, int layoutId, int variableId) {
         this.mContext = context;
@@ -38,7 +43,13 @@ public class RecyclerViewCommonAdapter<T> extends RecyclerView.Adapter<MyViewHol
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
+        holder.getBinding().getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnItemClickListener.onItemClick(position);
+            }
+        });
         holder.getBinding().setVariable(mVariableId, mDatas.get(position));
     }
 
@@ -50,20 +61,24 @@ public class RecyclerViewCommonAdapter<T> extends RecyclerView.Adapter<MyViewHol
     public void updateData(List<T> datas) {
         this.mDatas = datas;
     }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
 }
 
 class MyViewHolder extends RecyclerView.ViewHolder {
     private ViewDataBinding binding;
 
-    public MyViewHolder(View itemView) {
+    MyViewHolder(View itemView) {
         super(itemView);
     }
 
-    public ViewDataBinding getBinding() {
+    ViewDataBinding getBinding() {
         return binding;
     }
 
-    public void setBinding(ViewDataBinding binding) {
+    void setBinding(ViewDataBinding binding) {
         this.binding = binding;
     }
 }
