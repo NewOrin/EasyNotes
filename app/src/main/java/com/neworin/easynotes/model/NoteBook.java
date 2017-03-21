@@ -6,6 +6,7 @@ import android.databinding.Bindable;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Keep;
 
 /**
  * Created by NewOrin Zhang
@@ -23,11 +24,11 @@ public class NoteBook extends BaseObservable {
     private String count;
     private Boolean isChecked;
 
-    @Generated(hash = 784618352)
+    @Keep
     public NoteBook() {
     }
 
-    @Generated(hash = 1390182820)
+    @Keep
     public NoteBook(long id, String name, String count, Boolean isChecked) {
         this.id = id;
         this.name = name;

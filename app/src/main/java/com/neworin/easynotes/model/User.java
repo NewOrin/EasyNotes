@@ -25,7 +25,18 @@ public class User extends BaseObservable {
     private Date joinTime;
     private long noteBookId;
 
-    @Generated
+    @Generated(hash = 926753409)
+    public User(long id, String wechatNumber, String nickName, String avatarUrl,
+            Date joinTime, long noteBookId) {
+        this.id = id;
+        this.wechatNumber = wechatNumber;
+        this.nickName = nickName;
+        this.avatarUrl = avatarUrl;
+        this.joinTime = joinTime;
+        this.noteBookId = noteBookId;
+    }
+
+    @Generated(hash = 586692638)
     public User() {
     }
 
