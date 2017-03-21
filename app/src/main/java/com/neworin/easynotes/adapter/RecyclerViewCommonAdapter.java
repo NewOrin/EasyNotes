@@ -22,9 +22,14 @@ public class RecyclerViewCommonAdapter<T> extends RecyclerView.Adapter<MyViewHol
     private List<T> mDatas;
     private int mVariableId;
     private OnItemClickListener mOnItemClickListener;
+    private OnItemLongClickListener mOnItemLongClickListener;
 
     public void setmOnItemClickListener(OnItemClickListener mOnItemClickListener) {
         this.mOnItemClickListener = mOnItemClickListener;
+    }
+
+    public void setmOnItemLongClickListener(OnItemLongClickListener mOnItemLongClickListener) {
+        this.mOnItemLongClickListener = mOnItemLongClickListener;
     }
 
     public RecyclerViewCommonAdapter(Context context, List<T> datas, int layoutId, int variableId) {
@@ -43,11 +48,18 @@ public class RecyclerViewCommonAdapter<T> extends RecyclerView.Adapter<MyViewHol
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         holder.getBinding().getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnItemClickListener.onItemClick(position);
+                mOnItemClickListener.onItemClick(holder.getLayoutPosition());
+            }
+        });
+        holder.getBinding().getRoot().setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mOnItemLongClickListener.onItemLongClick(holder.getLayoutPosition());
+                return false;
             }
         });
         holder.getBinding().setVariable(mVariableId, mDatas.get(position));
@@ -59,11 +71,16 @@ public class RecyclerViewCommonAdapter<T> extends RecyclerView.Adapter<MyViewHol
     }
 
     public void updateData(List<T> datas) {
+        this.mDatas.clear();
         this.mDatas = datas;
     }
 
     public interface OnItemClickListener {
         void onItemClick(int position);
+    }
+
+    public interface OnItemLongClickListener {
+        void onItemLongClick(int position);
     }
 }
 
