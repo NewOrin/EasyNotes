@@ -15,7 +15,7 @@ import com.neworin.easynotes.model.NoteBookModel;
 /** 
  * DAO for table "SLIDE_MENU_NOTE_BOOK_MODEL".
 */
-public class NoteBookModelDao extends AbstractDao<NoteBookModel, Long> {
+public class NoteBookDao extends AbstractDao<NoteBookModel, Long> {
 
     public static final String TABLENAME = "SLIDE_MENU_NOTE_BOOK_MODEL";
 
@@ -31,11 +31,11 @@ public class NoteBookModelDao extends AbstractDao<NoteBookModel, Long> {
     }
 
 
-    public NoteBookModelDao(DaoConfig config) {
+    public NoteBookDao(DaoConfig config) {
         super(config);
     }
     
-    public NoteBookModelDao(DaoConfig config, DaoSession daoSession) {
+    public NoteBookDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
     }
 

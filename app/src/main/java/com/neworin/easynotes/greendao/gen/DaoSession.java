@@ -24,7 +24,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig slideMenuNoteBookModelDaoConfig;
 
     private final NoteDao noteDao;
-    private final NoteBookModelDao mNoteBookModelDao;
+    private final NoteBookDao mNoteBookDao;
 
     public DaoSession(Database db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
@@ -33,14 +33,14 @@ public class DaoSession extends AbstractDaoSession {
         noteDaoConfig = daoConfigMap.get(NoteDao.class).clone();
         noteDaoConfig.initIdentityScope(type);
 
-        slideMenuNoteBookModelDaoConfig = daoConfigMap.get(NoteBookModelDao.class).clone();
+        slideMenuNoteBookModelDaoConfig = daoConfigMap.get(NoteBookDao.class).clone();
         slideMenuNoteBookModelDaoConfig.initIdentityScope(type);
 
         noteDao = new NoteDao(noteDaoConfig, this);
-        mNoteBookModelDao = new NoteBookModelDao(slideMenuNoteBookModelDaoConfig, this);
+        mNoteBookDao = new NoteBookDao(slideMenuNoteBookModelDaoConfig, this);
 
         registerDao(Note.class, noteDao);
-        registerDao(NoteBookModel.class, mNoteBookModelDao);
+        registerDao(NoteBookModel.class, mNoteBookDao);
     }
     
     public void clear() {
@@ -52,8 +52,8 @@ public class DaoSession extends AbstractDaoSession {
         return noteDao;
     }
 
-    public NoteBookModelDao getNoteBookModelDao() {
-        return mNoteBookModelDao;
+    public NoteBookDao getNoteBookDao() {
+        return mNoteBookDao;
     }
 
 }
