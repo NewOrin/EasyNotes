@@ -5,7 +5,7 @@
 
         <variable
             name="notebookBean"
-            type="com.neworin.easynotes.model.NoteBookModel" />
+            type="com.neworin.easynotes.model.NoteBook" />
 
         <import type="android.view.View" />
     </data>

@@ -12,7 +12,7 @@ import com.neworin.easynotes.adapter.ListViewCommonAdapter;
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.event.SlideMenuEvent;
 import com.neworin.easynotes.handlers.SlideMenuEventHandler;
-import com.neworin.easynotes.model.NoteBookModel;
+import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.databinding.FragmentSlideMenuBinding;
 import com.neworin.easynotes.ui.BaseFragment;
 import com.neworin.easynotes.utils.Constant;
@@ -53,11 +53,11 @@ public class SlideMenuFragment extends BaseFragment {
 
     private void initView() {
         mBinding.setHandler(new SlideMenuEventHandler(getActivity()));
-        List<NoteBookModel> datas = new ArrayList<>();
-        datas.add(new NoteBookModel("笔记本", "1", true));
-        datas.add(new NoteBookModel("笔记本", "3", false));
-        datas.add(new NoteBookModel("笔记本", "2", true));
-        ListViewCommonAdapter<NoteBookModel> adapter = new ListViewCommonAdapter<>(getActivity(), datas, R.layout.item_slide_menu_layout, com.neworin.easynotes.BR.notebookBean);
+        List<NoteBook> datas = new ArrayList<>();
+        datas.add(new NoteBook("笔记本", "1", true));
+        datas.add(new NoteBook("笔记本", "3", false));
+        datas.add(new NoteBook("笔记本", "2", true));
+        ListViewCommonAdapter<NoteBook> adapter = new ListViewCommonAdapter<>(getActivity(), datas, R.layout.item_slide_menu_layout, com.neworin.easynotes.BR.notebookBean);
         mBinding.setAdapter(adapter);
         View footViewSettings = LayoutInflater.from(getActivity()).inflate(R.layout.slide_menu_footer_settings_layout, null);
         View footViewEdit = LayoutInflater.from(getActivity()).inflate(R.layout.slide_menu_footer_edit_layout, null);

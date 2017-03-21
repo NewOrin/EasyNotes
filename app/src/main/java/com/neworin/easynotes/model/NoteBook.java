@@ -15,7 +15,7 @@ import org.greenrobot.greendao.annotation.Id;
  */
 
 @Entity
-public class NoteBookModel extends BaseObservable {
+public class NoteBook extends BaseObservable {
 
     @Id
     private long id;
@@ -24,18 +24,18 @@ public class NoteBookModel extends BaseObservable {
     private Boolean isChecked;
 
     @Generated(hash = 784618352)
-    public NoteBookModel() {
+    public NoteBook() {
     }
 
     @Generated(hash = 1390182820)
-    public NoteBookModel(long id, String name, String count, Boolean isChecked) {
+    public NoteBook(long id, String name, String count, Boolean isChecked) {
         this.id = id;
         this.name = name;
         this.count = count;
         this.isChecked = isChecked;
     }
 
-    public NoteBookModel(String name, String count, Boolean isChecked) {
+    public NoteBook(String name, String count, Boolean isChecked) {
         this.name = name;
         this.count = count;
         this.isChecked = isChecked;
