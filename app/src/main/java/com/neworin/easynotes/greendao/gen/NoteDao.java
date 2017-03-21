@@ -25,10 +25,11 @@ public class NoteDao extends AbstractDao<Note, Long> {
      */
     public static class Properties {
         public final static Property Id = new Property(0, long.class, "id", true, "_id");
-        public final static Property Title = new Property(1, String.class, "title", false, "TITLE");
-        public final static Property Content = new Property(2, String.class, "content", false, "CONTENT");
-        public final static Property CreateTime = new Property(3, java.util.Date.class, "createTime", false, "CREATE_TIME");
-        public final static Property UpdateTime = new Property(4, java.util.Date.class, "updateTime", false, "UPDATE_TIME");
+        public final static Property BookId = new Property(1, long.class, "bookId", false, "BOOK_ID");
+        public final static Property Title = new Property(2, String.class, "title", false, "TITLE");
+        public final static Property Content = new Property(3, String.class, "content", false, "CONTENT");
+        public final static Property CreateTime = new Property(4, java.util.Date.class, "createTime", false, "CREATE_TIME");
+        public final static Property UpdateTime = new Property(5, java.util.Date.class, "updateTime", false, "UPDATE_TIME");
     }
 
 
@@ -45,10 +46,11 @@ public class NoteDao extends AbstractDao<Note, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"NOTE\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY NOT NULL ," + // 0: id
-                "\"TITLE\" TEXT," + // 1: title
-                "\"CONTENT\" TEXT," + // 2: content
-                "\"CREATE_TIME\" INTEGER," + // 3: createTime
-                "\"UPDATE_TIME\" INTEGER);"); // 4: updateTime
+                "\"BOOK_ID\" INTEGER NOT NULL ," + // 1: bookId
+                "\"TITLE\" TEXT," + // 2: title
+                "\"CONTENT\" TEXT," + // 3: content
+                "\"CREATE_TIME\" INTEGER," + // 4: createTime
+                "\"UPDATE_TIME\" INTEGER);"); // 5: updateTime
     }
 
     /** Drops the underlying database table. */
@@ -61,25 +63,26 @@ public class NoteDao extends AbstractDao<Note, Long> {
     protected final void bindValues(DatabaseStatement stmt, Note entity) {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getId());
+        stmt.bindLong(2, entity.getBookId());
  
         String title = entity.getTitle();
         if (title != null) {
-            stmt.bindString(2, title);
+            stmt.bindString(3, title);
         }
  
         String content = entity.getContent();
         if (content != null) {
-            stmt.bindString(3, content);
+            stmt.bindString(4, content);
         }
  
         java.util.Date createTime = entity.getCreateTime();
         if (createTime != null) {
-            stmt.bindLong(4, createTime.getTime());
+            stmt.bindLong(5, createTime.getTime());
         }
  
         java.util.Date updateTime = entity.getUpdateTime();
         if (updateTime != null) {
-            stmt.bindLong(5, updateTime.getTime());
+            stmt.bindLong(6, updateTime.getTime());
         }
     }
 
@@ -87,25 +90,26 @@ public class NoteDao extends AbstractDao<Note, Long> {
     protected final void bindValues(SQLiteStatement stmt, Note entity) {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getId());
+        stmt.bindLong(2, entity.getBookId());
  
         String title = entity.getTitle();
         if (title != null) {
-            stmt.bindString(2, title);
+            stmt.bindString(3, title);
         }
  
         String content = entity.getContent();
         if (content != null) {
-            stmt.bindString(3, content);
+            stmt.bindString(4, content);
         }
  
         java.util.Date createTime = entity.getCreateTime();
         if (createTime != null) {
-            stmt.bindLong(4, createTime.getTime());
+            stmt.bindLong(5, createTime.getTime());
         }
  
         java.util.Date updateTime = entity.getUpdateTime();
         if (updateTime != null) {
-            stmt.bindLong(5, updateTime.getTime());
+            stmt.bindLong(6, updateTime.getTime());
         }
     }
 
@@ -118,10 +122,11 @@ public class NoteDao extends AbstractDao<Note, Long> {
     public Note readEntity(Cursor cursor, int offset) {
         Note entity = new Note( //
             cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // title
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // content
-            cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)), // createTime
-            cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)) // updateTime
+            cursor.getLong(offset + 1), // bookId
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // title
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // content
+            cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)), // createTime
+            cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)) // updateTime
         );
         return entity;
     }
@@ -129,10 +134,11 @@ public class NoteDao extends AbstractDao<Note, Long> {
     @Override
     public void readEntity(Cursor cursor, Note entity, int offset) {
         entity.setId(cursor.getLong(offset + 0));
-        entity.setTitle(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setContent(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setCreateTime(cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)));
-        entity.setUpdateTime(cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)));
+        entity.setBookId(cursor.getLong(offset + 1));
+        entity.setTitle(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setContent(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setCreateTime(cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)));
+        entity.setUpdateTime(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
      }
     
     @Override

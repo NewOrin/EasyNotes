@@ -25,9 +25,13 @@ public class NoteBookDao extends AbstractDao<NoteBook, Long> {
      */
     public static class Properties {
         public final static Property Id = new Property(0, long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Count = new Property(2, String.class, "count", false, "COUNT");
-        public final static Property IsChecked = new Property(3, Boolean.class, "isChecked", false, "IS_CHECKED");
+        public final static Property UserId = new Property(1, long.class, "userId", false, "USER_ID");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property Count = new Property(3, String.class, "count", false, "COUNT");
+        public final static Property IsChecked = new Property(4, Boolean.class, "isChecked", false, "IS_CHECKED");
+        public final static Property CreateTime = new Property(5, java.util.Date.class, "createTime", false, "CREATE_TIME");
+        public final static Property UpdateTime = new Property(6, java.util.Date.class, "updateTime", false, "UPDATE_TIME");
+        public final static Property SyncTime = new Property(7, java.util.Date.class, "syncTime", false, "SYNC_TIME");
     }
 
 
@@ -44,9 +48,13 @@ public class NoteBookDao extends AbstractDao<NoteBook, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"NOTE_BOOK\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY NOT NULL ," + // 0: id
-                "\"NAME\" TEXT," + // 1: name
-                "\"COUNT\" TEXT," + // 2: count
-                "\"IS_CHECKED\" INTEGER);"); // 3: isChecked
+                "\"USER_ID\" INTEGER NOT NULL ," + // 1: userId
+                "\"NAME\" TEXT," + // 2: name
+                "\"COUNT\" TEXT," + // 3: count
+                "\"IS_CHECKED\" INTEGER," + // 4: isChecked
+                "\"CREATE_TIME\" INTEGER," + // 5: createTime
+                "\"UPDATE_TIME\" INTEGER," + // 6: updateTime
+                "\"SYNC_TIME\" INTEGER);"); // 7: syncTime
     }
 
     /** Drops the underlying database table. */
@@ -59,20 +67,36 @@ public class NoteBookDao extends AbstractDao<NoteBook, Long> {
     protected final void bindValues(DatabaseStatement stmt, NoteBook entity) {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getId());
+        stmt.bindLong(2, entity.getUserId());
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
  
         String count = entity.getCount();
         if (count != null) {
-            stmt.bindString(3, count);
+            stmt.bindString(4, count);
         }
  
         Boolean isChecked = entity.getIsChecked();
         if (isChecked != null) {
-            stmt.bindLong(4, isChecked ? 1L: 0L);
+            stmt.bindLong(5, isChecked ? 1L: 0L);
+        }
+ 
+        java.util.Date createTime = entity.getCreateTime();
+        if (createTime != null) {
+            stmt.bindLong(6, createTime.getTime());
+        }
+ 
+        java.util.Date updateTime = entity.getUpdateTime();
+        if (updateTime != null) {
+            stmt.bindLong(7, updateTime.getTime());
+        }
+ 
+        java.util.Date syncTime = entity.getSyncTime();
+        if (syncTime != null) {
+            stmt.bindLong(8, syncTime.getTime());
         }
     }
 
@@ -80,20 +104,36 @@ public class NoteBookDao extends AbstractDao<NoteBook, Long> {
     protected final void bindValues(SQLiteStatement stmt, NoteBook entity) {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getId());
+        stmt.bindLong(2, entity.getUserId());
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
  
         String count = entity.getCount();
         if (count != null) {
-            stmt.bindString(3, count);
+            stmt.bindString(4, count);
         }
  
         Boolean isChecked = entity.getIsChecked();
         if (isChecked != null) {
-            stmt.bindLong(4, isChecked ? 1L: 0L);
+            stmt.bindLong(5, isChecked ? 1L: 0L);
+        }
+ 
+        java.util.Date createTime = entity.getCreateTime();
+        if (createTime != null) {
+            stmt.bindLong(6, createTime.getTime());
+        }
+ 
+        java.util.Date updateTime = entity.getUpdateTime();
+        if (updateTime != null) {
+            stmt.bindLong(7, updateTime.getTime());
+        }
+ 
+        java.util.Date syncTime = entity.getSyncTime();
+        if (syncTime != null) {
+            stmt.bindLong(8, syncTime.getTime());
         }
     }
 
@@ -106,9 +146,13 @@ public class NoteBookDao extends AbstractDao<NoteBook, Long> {
     public NoteBook readEntity(Cursor cursor, int offset) {
         NoteBook entity = new NoteBook( //
             cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // count
-            cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0 // isChecked
+            cursor.getLong(offset + 1), // userId
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // count
+            cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0, // isChecked
+            cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)), // createTime
+            cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // updateTime
+            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)) // syncTime
         );
         return entity;
     }
@@ -116,9 +160,13 @@ public class NoteBookDao extends AbstractDao<NoteBook, Long> {
     @Override
     public void readEntity(Cursor cursor, NoteBook entity, int offset) {
         entity.setId(cursor.getLong(offset + 0));
-        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setCount(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setIsChecked(cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0);
+        entity.setUserId(cursor.getLong(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setCount(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setIsChecked(cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0);
+        entity.setCreateTime(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
+        entity.setUpdateTime(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
+        entity.setSyncTime(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
      }
     
     @Override

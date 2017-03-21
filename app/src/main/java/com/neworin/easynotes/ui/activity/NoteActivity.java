@@ -12,6 +12,7 @@ import com.neworin.easynotes.databinding.ActivityNoteLayoutBinding;
 import com.neworin.easynotes.event.NoteBookFragmentEvent;
 import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.model.Note;
+import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.ui.BaseAppCompatActivity;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
@@ -35,6 +36,7 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     private boolean mIsDestroy = true;
     private boolean mIsEdit = false;//判断该页面是否为编辑状态
     private Note mNote;
+    private NoteBook mNoteBook;
     private DBManager mDbManager;
     private DaoSession mDaoSession;
 
@@ -42,10 +44,13 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, getLayoutId());
-        if (null != getIntent().getExtras()) {
-            mIsEdit = true;
-            mNote = (Note) getIntent().getExtras().getSerializable(Constant.ARG0);
+        if (null != getIntent().getExtras().getString(Constant.ARG2)) {
+            if (getIntent().getExtras().getString(Constant.ARG2).equals(Constant.NOTE_EDIT_FLAG)) {
+                mIsEdit = true;
+                mNote = getIntent().getExtras().getParcelable(Constant.ARG0);
+            }
         }
+        mNoteBook = getIntent().getExtras().getParcelable(Constant.ARG1);
         mDbManager = DBManager.getInstance(this);
         initView();
     }
@@ -138,6 +143,7 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
             mDaoSession = mDbManager.getWriteDaoSession();
             Note note = new Note();
             note.setId(GenerateSequenceUtil.generateSequenceNo());
+            note.setBookId(mNoteBook.getId());
             note.setTitle(mTitle);
             note.setContent(mContent);
             note.setCreateTime(DateUtil.getNowTime());

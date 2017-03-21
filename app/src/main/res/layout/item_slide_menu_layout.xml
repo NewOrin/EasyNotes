@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:src="@{notebookBean.checked ? @drawable/ic_notebook_normal : @drawable/ic_notebook_selected}" />
+            android:src="@{notebookBean.checked ?  @drawable/ic_notebook_selected: @drawable/ic_notebook_normal}" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -36,14 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="@{notebookBean.count}" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@{String.valueOf(notebookBean.checked)}" />
+            android:layout_centerVertical="true" />
 
     </RelativeLayout>
 </layout>

@@ -2,6 +2,8 @@ package com.neworin.easynotes.model;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
@@ -16,12 +18,11 @@ import java.util.Date;
  */
 
 @Entity
-public class Note extends BaseObservable implements Serializable {
-
-    private static final long serialVersionUID = 2631445312694905530L;
+public class Note extends BaseObservable implements Parcelable {
 
     @Id
     private long id;
+    private long bookId;
     private String title;
     private String content;
     private Date createTime;
@@ -31,16 +32,6 @@ public class Note extends BaseObservable implements Serializable {
     public Note() {
     }
 
-    @Generated(hash = 1784444317)
-    public Note(long id, String title, String content, Date createTime,
-            Date updateTime) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.createTime = createTime;
-        this.updateTime = updateTime;
-    }
-
     @Bindable
     public long getId() {
         return id;
@@ -48,6 +39,14 @@ public class Note extends BaseObservable implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(long bookId) {
+        this.bookId = bookId;
     }
 
     @Bindable
@@ -85,4 +84,53 @@ public class Note extends BaseObservable implements Serializable {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeLong(this.bookId);
+        dest.writeString(this.title);
+        dest.writeString(this.content);
+        dest.writeLong(this.createTime != null ? this.createTime.getTime() : -1);
+        dest.writeLong(this.updateTime != null ? this.updateTime.getTime() : -1);
+    }
+
+    protected Note(Parcel in) {
+        this.id = in.readLong();
+        this.bookId = in.readLong();
+        this.title = in.readString();
+        this.content = in.readString();
+        long tmpCreateTime = in.readLong();
+        this.createTime = tmpCreateTime == -1 ? null : new Date(tmpCreateTime);
+        long tmpUpdateTime = in.readLong();
+        this.updateTime = tmpUpdateTime == -1 ? null : new Date(tmpUpdateTime);
+    }
+
+    @Generated(hash = 435923545)
+    public Note(long id, long bookId, String title, String content, Date createTime,
+            Date updateTime) {
+        this.id = id;
+        this.bookId = bookId;
+        this.title = title;
+        this.content = content;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+    }
+
+    public static final Parcelable.Creator<Note> CREATOR = new Parcelable.Creator<Note>() {
+        @Override
+        public Note createFromParcel(Parcel source) {
+            return new Note(source);
+        }
+
+        @Override
+        public Note[] newArray(int size) {
+            return new Note[size];
+        }
+    };
 }

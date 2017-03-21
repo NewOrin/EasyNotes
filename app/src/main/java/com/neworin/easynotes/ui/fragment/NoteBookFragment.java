@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +19,12 @@ import com.neworin.easynotes.R;
 import com.neworin.easynotes.adapter.RecyclerViewCommonAdapter;
 import com.neworin.easynotes.databinding.FragmentNoteBookBinding;
 import com.neworin.easynotes.event.NoteBookFragmentEvent;
+import com.neworin.easynotes.event.SlideMenuEvent;
 import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.greendao.gen.NoteDao;
 import com.neworin.easynotes.handlers.NoteBookFragmentHandler;
 import com.neworin.easynotes.model.Note;
+import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.ui.BaseFragment;
 import com.neworin.easynotes.ui.activity.NoteActivity;
 import com.neworin.easynotes.utils.Constant;
@@ -47,6 +49,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
     private List<Note> mDatas;
     private DaoSession mDaoSession;
     private NoteDao mNoteDao;
+    private NoteBook mNoteBook;
     private QueryBuilder<Note> mQueryBuilder;
     private RecyclerViewCommonAdapter<Note> mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -56,6 +59,11 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
     public NoteBookFragment() {
     }
 
+    public static Fragment newsInstance(Bundle bundle) {
+        NoteBookFragment noteBookFragment = new NoteBookFragment();
+        noteBookFragment.setArguments(bundle);
+        return noteBookFragment;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -73,9 +81,10 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
     private void initView() {
+        mNoteBook = getArguments().getParcelable(Constant.ARG0);
         mDialogItems = new String[]{getString(R.string.note_book_delete)};
         mSwipeRefreshLayout = mBinding.noteBookFgSwipeLayout;
-        mBinding.setHandler(new NoteBookFragmentHandler(this));
+        mBinding.setHandler(new NoteBookFragmentHandler(this, mNoteBook));
         mDBManager = DBManager.getInstance(getActivity());
         mDaoSession = mDBManager.getReadDaoSession();
         mNoteDao = mDaoSession.getNoteDao();
@@ -98,7 +107,9 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
             @Override
             public void onItemClick(int position) {
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(Constant.ARG0, mDatas.get(position));
+                bundle.putParcelable(Constant.ARG0, mDatas.get(position));
+                bundle.putParcelable(Constant.ARG1, mNoteBook);
+                bundle.putString(Constant.ARG2, Constant.NOTE_EDIT_FLAG);
                 Intent intent = new Intent(getActivity(), NoteActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, Constant.NOTE_BOOK_FRAGMENT_RESULT_CODE);
@@ -150,8 +161,12 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
      */
     @Subscribe
     public void onMessageEvent(NoteBookFragmentEvent.RefreshNoteEvent event) {
-        Log.d(TAG, "onMessageEvent刷新");
         refreshData();
+    }
+
+    @Subscribe
+    public void onMessageEvent(SlideMenuEvent.ListItemEvent event) {
+        mNoteBook = event.getNoteBook();
     }
 
     @Override
