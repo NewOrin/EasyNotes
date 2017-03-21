@@ -15,7 +15,7 @@ import java.util.Date;
  */
 
 @Entity
-public class UserModel extends BaseObservable {
+public class User extends BaseObservable {
 
     @Id
     private long id;
@@ -26,7 +26,7 @@ public class UserModel extends BaseObservable {
     private long noteBookId;
 
     @Generated
-    public UserModel() {
+    public User() {
     }
 
     @Bindable
