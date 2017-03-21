@@ -7,6 +7,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -15,7 +16,9 @@ import java.util.Date;
  */
 
 @Entity
-public class Note extends BaseObservable {
+public class Note extends BaseObservable implements Serializable {
+
+    private static final long serialVersionUID = 2631445312694905530L;
 
     @Id
     private long id;

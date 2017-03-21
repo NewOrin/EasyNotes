@@ -11,4 +11,6 @@ public class Constant {
     public static final String DB_NAME = "easynote_db";
 
     public static final int NOTE_BOOK_FRAGMENT_RESULT_CODE = 1000;
+
+    public static final String ARG0 = "arg0";
 }

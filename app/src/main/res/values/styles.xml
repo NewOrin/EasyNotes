@@ -17,4 +17,6 @@
         <item name="colorControlNormal">@color/black</item>
         <item name="android:textColorSecondary">@color/black</item>
     </style>
+
+    <style name="EasyNoteDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert"/>
 </resources>

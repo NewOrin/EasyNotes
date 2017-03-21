@@ -10,10 +10,12 @@ import com.neworin.easynotes.DBManager;
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.databinding.ActivityNoteLayoutBinding;
 import com.neworin.easynotes.event.NoteBookFragmentEvent;
+import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.model.Note;
 import com.neworin.easynotes.ui.BaseAppCompatActivity;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
+import com.neworin.easynotes.utils.DialogUtils;
 import com.neworin.easynotes.utils.GenerateSequenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -21,6 +23,7 @@ import org.greenrobot.eventbus.EventBus;
 /**
  * Created by NewOrin Zhang on 2017/3/13.
  * E-mail : NewOrinZhang@Gmail.com
+ * 添加笔记，编辑笔记页面
  */
 
 public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMenuItemClickListener {
@@ -29,17 +32,30 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     private String mTitle;
     private String mContent;
     private String mTime;
-    private boolean isDestroy = true;
+    private boolean mIsDestroy = true;
+    private boolean mIsEdit = false;//判断该页面是否为编辑状态
+    private Note mNote;
+    private DBManager mDbManager;
+    private DaoSession mDaoSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, getLayoutId());
+        if (null != getIntent().getExtras()) {
+            mIsEdit = true;
+            mNote = (Note) getIntent().getExtras().getSerializable(Constant.ARG0);
+        }
+        mDbManager = DBManager.getInstance(this);
         initView();
     }
 
     private void initView() {
-        setToolbarTitle(getString(R.string.note_activity_title));
+        if (mIsEdit) {
+            initEditView();
+        } else {
+            initAddView();
+        }
         getToolbar().inflateMenu(R.menu.note_menu);
         getToolbar().setOnMenuItemClickListener(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -47,13 +63,38 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isDestroy = false;
-                saveNote();
-                if (!isSaveNote()) {
-                    finish();
+                if (mIsEdit) {
+                    updateNote();
+                } else {
+                    mIsDestroy = false;
+                    saveNote();
+                    if (!isSaveNote()) {
+                        finish();
+                    }
                 }
             }
         });
+    }
+
+    /**
+     * 添加笔记状态下需要初始化的View
+     */
+    private void initAddView() {
+        setToolbarTitle(getString(R.string.note_activity_title));
+    }
+
+    /**
+     * 编辑状态下需要初始化的View
+     */
+    private void initEditView() {
+        if (mNote.getTitle().equals("")) {
+            setToolbarTitle(getString(R.string.note_activity_edit_title));
+        } else {
+            setToolbarTitle(mNote.getTitle());
+        }
+        mBinding.noteEditTitle.setText(mNote.getTitle());
+        mBinding.noteEditTitle.setSelection(mNote.getTitle().length());
+        mBinding.noteEditContent.setText(mNote.getContent());
     }
 
     /**
@@ -62,8 +103,8 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
      * @return
      */
     private boolean isSaveNote() {
-        mTitle = mBinding.noteEditTitle.getText().toString();
-        mContent = mBinding.noteEditContent.getText().toString();
+        mTitle = getTitleText();
+        mContent = getContentText();
         return !(mTitle.isEmpty() && mContent.isEmpty());
     }
 
@@ -76,10 +117,14 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     public boolean onMenuItemClick(MenuItem item) {
         //完成
         if (item.getItemId() == R.id.note_menu_edit_done) {
-            isDestroy = false;
-            saveNote();
-            if (!isSaveNote()) {
-                showSnackBar(mBinding.getRoot(), getString(R.string.note_input_content_alert));
+            if (mIsEdit) {
+                finish();
+            } else {
+                mIsDestroy = false;
+                saveNote();
+                if (!isSaveNote()) {
+                    showSnackBar(mBinding.getRoot(), getString(R.string.note_input_content_alert));
+                }
             }
         }
         return true;
@@ -90,27 +135,69 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
      */
     private void saveNote() {
         if (isSaveNote()) {
-            DBManager dbManager = DBManager.getInstance(this);
+            mDaoSession = mDbManager.getWriteDaoSession();
             Note note = new Note();
             note.setId(GenerateSequenceUtil.generateSequenceNo());
             note.setTitle(mTitle);
             note.setContent(mContent);
             note.setCreateTime(DateUtil.getNowTime());
-            dbManager.getWriteDaoSession().getNoteDao().insert(note);
-            if (!isDestroy) {
+            mDaoSession.getNoteDao().insert(note);
+            mDaoSession.clear();
+            if (!mIsDestroy) {
                 setResult(Constant.NOTE_BOOK_FRAGMENT_RESULT_CODE);
                 finish();
             }
         }
     }
 
+    /**
+     * 更新笔记
+     */
+    private void updateNote() {
+        if (getTitleText().equals(mNote.getTitle()) && getContentText().equals(mNote.getContent())) {
+            finish();
+            return;
+        }
+        mDaoSession = mDbManager.getWriteDaoSession();
+        Note note = new Note();
+        note.setId(mNote.getId());
+        note.setTitle(getTitleText());
+        note.setContent(getContentText());
+        note.setCreateTime(mNote.getCreateTime());
+        note.setUpdateTime(DateUtil.getNowTime());
+        mDaoSession.getNoteDao().update(note);
+        finish();
+    }
+
+    /**
+     * 获取标题
+     *
+     * @return
+     */
+    private String getTitleText() {
+        return mBinding.noteEditTitle.getText().toString();
+    }
+
+    /**
+     * 获取内容
+     *
+     * @return
+     */
+    private String getContentText() {
+        return mBinding.noteEditContent.getText().toString();
+    }
+
     @Override
     protected void onDestroy() {
-        if (isDestroy) {
-            //直接退出
-            saveNote();
-            EventBus.getDefault().post(new NoteBookFragmentEvent.RefreshNoteEvent());
+        if (mIsEdit) {
+            updateNote();
+        } else {
+            if (mIsDestroy) {
+                //直接退出
+                saveNote();
+            }
         }
+        EventBus.getDefault().post(new NoteBookFragmentEvent.RefreshNoteEvent());
         super.onDestroy();
     }
 }
