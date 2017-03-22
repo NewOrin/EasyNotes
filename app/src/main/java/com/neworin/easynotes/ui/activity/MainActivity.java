@@ -114,7 +114,7 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     private void insertFirstNoteBook(NoteBookDao noteBookDao) {
         NoteBook noteBook = new NoteBook();
         noteBook.setId(1);
-        noteBook.setName(getString(R.string.all));
+        noteBook.setName(getString(R.string.note_my_notebook));
         noteBook.setCreateTime(DateUtil.getNowTime());
         noteBookDao.insert(noteBook);
     }

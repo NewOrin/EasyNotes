@@ -33,7 +33,7 @@ public class NoteBook extends BaseObservable implements Parcelable {
     private long id;
     private long userId;
     private String name;
-    private String count;
+    private int count;
     private Boolean isChecked;
     private Date createTime;
     private Date updateTime;
@@ -46,21 +46,21 @@ public class NoteBook extends BaseObservable implements Parcelable {
     }
 
     @Keep
-    public NoteBook(long id, String name, String count, Boolean isChecked) {
+    public NoteBook(long id, String name, int count, Boolean isChecked) {
         this.id = id;
         this.name = name;
         this.count = count;
         this.isChecked = isChecked;
     }
 
-    public NoteBook(String name, String count, Boolean isChecked) {
+    public NoteBook(String name, int count, Boolean isChecked) {
         this.name = name;
         this.count = count;
         this.isChecked = isChecked;
     }
 
     @Keep
-    public NoteBook(long id, String name, String count, Boolean isChecked, Date createTime, Date updateTime, Date syncTime, User user) {
+    public NoteBook(long id, String name, int count, Boolean isChecked, Date createTime, Date updateTime, Date syncTime, User user) {
         this.id = id;
         this.name = name;
         this.count = count;
@@ -97,11 +97,11 @@ public class NoteBook extends BaseObservable implements Parcelable {
     }
 
     @Bindable
-    public String getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(String count) {
+    public void setCount(int count) {
         this.count = count;
     }
 
@@ -167,7 +167,7 @@ public class NoteBook extends BaseObservable implements Parcelable {
         dest.writeLong(this.id);
         dest.writeLong(this.userId);
         dest.writeString(this.name);
-        dest.writeString(this.count);
+        dest.writeInt(this.count);
         dest.writeValue(this.isChecked);
         dest.writeLong(this.createTime != null ? this.createTime.getTime() : -1);
         dest.writeLong(this.updateTime != null ? this.updateTime.getTime() : -1);
@@ -254,7 +254,7 @@ public class NoteBook extends BaseObservable implements Parcelable {
         this.id = in.readLong();
         this.userId = in.readLong();
         this.name = in.readString();
-        this.count = in.readString();
+        this.count = in.readInt();
         this.isChecked = (Boolean) in.readValue(Boolean.class.getClassLoader());
         long tmpCreateTime = in.readLong();
         this.createTime = tmpCreateTime == -1 ? null : new Date(tmpCreateTime);
@@ -265,8 +265,8 @@ public class NoteBook extends BaseObservable implements Parcelable {
         this.mUser = in.readParcelable(User.class.getClassLoader());
     }
 
-    @Generated(hash = 1745787609)
-    public NoteBook(long id, long userId, String name, String count, Boolean isChecked, Date createTime, Date updateTime, Date syncTime) {
+    @Keep
+    public NoteBook(long id, long userId, String name, int count, Boolean isChecked, Date createTime, Date updateTime, Date syncTime) {
         this.id = id;
         this.userId = userId;
         this.name = name;
