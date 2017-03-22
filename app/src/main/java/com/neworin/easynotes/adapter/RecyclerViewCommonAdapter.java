@@ -52,13 +52,17 @@ public class RecyclerViewCommonAdapter<T> extends RecyclerView.Adapter<MyViewHol
         holder.getBinding().getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnItemClickListener.onItemClick(holder.getLayoutPosition());
+                if (null != mOnItemClickListener) {
+                    mOnItemClickListener.onItemClick(holder.getLayoutPosition());
+                }
             }
         });
         holder.getBinding().getRoot().setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                mOnItemLongClickListener.onItemLongClick(holder.getLayoutPosition());
+                if (null != mOnItemLongClickListener) {
+                    mOnItemLongClickListener.onItemLongClick(holder.getLayoutPosition());
+                }
                 return false;
             }
         });
