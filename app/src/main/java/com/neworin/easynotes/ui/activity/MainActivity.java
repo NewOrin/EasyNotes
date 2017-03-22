@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.neworin.easynotes.DBManager;
@@ -21,7 +20,6 @@ import com.neworin.easynotes.ui.fragment.NoteBookFragment;
 import com.neworin.easynotes.ui.fragment.SlideMenuFragment;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
-import com.neworin.easynotes.utils.GenerateSequenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -92,7 +90,6 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
 
     @Subscribe
     public void onMessageEvent(SlideMenuEvent.HeaderLayoutEvent event) {
-        showSnackBar(mBinding.mainDrawerlayout, "点击了");
         mBinding.mainDrawerlayout.closeDrawers();
     }
 
@@ -100,6 +97,12 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     public void onMessageEvent(SlideMenuEvent.ListItemEvent event) {
         mBinding.mainDrawerlayout.closeDrawers();
     }
+
+    @Subscribe
+    public void onMessageEvent(SlideMenuEvent.SettingItemEvent event) {
+        mBinding.mainDrawerlayout.closeDrawers();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

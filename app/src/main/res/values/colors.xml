@@ -9,4 +9,10 @@
     <color name="slide_menu_item_selected">#E4F9F2</color>
     <color name="note_text_default_color">#000000</color>
     <color name="edittext_hint_color">#A7A2A2</color>
+
+    <color name="background_undercard">#ffe4e2d7</color>
+
+    <color name="background_undercard_press">#E4F9F2</color>
+
+    <color name="transparent">#00000000</color>
 </resources>

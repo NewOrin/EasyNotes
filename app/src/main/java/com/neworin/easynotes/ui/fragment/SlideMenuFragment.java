@@ -9,20 +9,19 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.neworin.easynotes.DBManager;
-import com.neworin.easynotes.adapter.ListViewCommonAdapter;
 import com.neworin.easynotes.R;
+import com.neworin.easynotes.adapter.ListViewCommonAdapter;
+import com.neworin.easynotes.databinding.FragmentSlideMenuBinding;
 import com.neworin.easynotes.event.SlideMenuEvent;
 import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.greendao.gen.NoteBookDao;
 import com.neworin.easynotes.handlers.SlideMenuEventHandler;
 import com.neworin.easynotes.model.NoteBook;
-import com.neworin.easynotes.databinding.FragmentSlideMenuBinding;
 import com.neworin.easynotes.ui.BaseFragment;
 import com.neworin.easynotes.utils.Constant;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,6 +62,7 @@ public class SlideMenuFragment extends BaseFragment {
         mDaoSession = mDBManager.getWriteDaoSession();
         mNoteBookDao = mDaoSession.getNoteBookDao();
         mNoteBookList = mNoteBookDao.queryBuilder().list();
+        mNoteBookList.get(0).setChecked(true);//The first one checked default
         mBinding.setHandler(new SlideMenuEventHandler(getActivity()));
         ListViewCommonAdapter<NoteBook> adapter = new ListViewCommonAdapter<>(getActivity(), mNoteBookList, R.layout.item_slide_menu_layout, com.neworin.easynotes.BR.notebookBean);
         mBinding.setAdapter(adapter);
@@ -73,13 +73,13 @@ public class SlideMenuFragment extends BaseFragment {
         footViewEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new SlideMenuEvent.SettingItemEvent(Constant.SLIDE_ITEM_EDIT));
+                EventBus.getDefault().post(new SlideMenuEvent.SettingItemEvent(Constant.SLIDE_ITEM_EDIT, getActivity()));
             }
         });
         footViewSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new SlideMenuEvent.SettingItemEvent(Constant.SLIDE_ITEM_SETTINGS));
+                EventBus.getDefault().post(new SlideMenuEvent.SettingItemEvent(Constant.SLIDE_ITEM_SETTINGS, getActivity()));
             }
         });
     }

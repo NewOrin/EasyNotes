@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:background="@color/white"
-    android:layout_height="@dimen/y55"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/y55"
+              android:background="@drawable/listview_selector"
+              android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/gray" />
+        android:background="@color/gray"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/y55"
@@ -21,7 +22,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/x20"
             android:gravity="center_vertical"
-            android:src="@drawable/ic_settings" />
+            android:src="@drawable/ic_settings"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -29,6 +30,6 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/x20"
             android:gravity="center_vertical"
-            android:text="@string/settings" />
+            android:text="@string/settings"/>
     </LinearLayout>
 </LinearLayout>
