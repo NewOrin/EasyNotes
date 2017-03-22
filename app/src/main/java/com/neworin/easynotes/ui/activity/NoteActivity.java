@@ -1,7 +1,6 @@
 package com.neworin.easynotes.ui.activity;
 
 import android.databinding.DataBindingUtil;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,8 +39,7 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     private DaoSession mDaoSession;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initView() {
         mBinding = DataBindingUtil.setContentView(this, getLayoutId());
         if (null != getIntent().getExtras().getString(Constant.ARG2)) {
             if (getIntent().getExtras().getString(Constant.ARG2).equals(Constant.NOTE_EDIT_FLAG)) {
@@ -51,10 +49,6 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         }
         mNoteBook = getIntent().getExtras().getParcelable(Constant.ARG1);
         mDbManager = DBManager.getInstance(this);
-        initView();
-    }
-
-    private void initView() {
         if (mIsEdit) {
             initEditView();
         } else {
@@ -79,7 +73,6 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
             }
         });
     }
-
     /**
      * 添加笔记状态下需要初始化的View
      */
@@ -116,6 +109,7 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     protected int getLayoutId() {
         return R.layout.activity_note_layout;
     }
+
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {

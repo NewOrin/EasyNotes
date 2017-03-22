@@ -4,14 +4,10 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.neworin.easynotes.R;
-import com.neworin.easynotes.event.NoteBookFragmentEvent;
-
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by NewOrin Zhang
@@ -35,6 +31,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
             setSupportActionBar(mToolbar);
         }
         getToolbar().setNavigationIcon(R.drawable.ic_arrow_back);
+        initView();
     }
 
     /**
@@ -87,7 +84,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
      * @return res layout xml id
      */
     protected abstract int getLayoutId();
-
+    protected abstract void initView();
     /**
      * 显示SnackBar
      *

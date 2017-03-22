@@ -38,16 +38,11 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     private NoteBook mNoteBook;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initView() {
         mBinding = DataBindingUtil.setContentView(this, getLayoutId());
         EventBus.getDefault().register(this);
         mDBManager = DBManager.getInstance(this);
         initNoteDao();
-        initView();
-    }
-
-    private void initView() {
         setToolbarTitle(mNoteBook.getName());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mBinding.mainDrawerlayout, getToolbar(), R.string.open, R.string.close);
@@ -61,6 +56,7 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         bundle.putParcelable(Constant.ARG0, mNoteBook);
         mFragmentManager.beginTransaction().add(R.id.main_content_container, NoteBookFragment.newsInstance(bundle)).commit();
     }
+
 
     /**
      * 初始化笔记本
@@ -79,6 +75,7 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     protected int getLayoutId() {
         return R.layout.activity_main;
     }
+
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
