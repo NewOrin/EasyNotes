@@ -5,10 +5,17 @@ import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.neworin.easynotes.greendao.gen.DaoSession;
+import com.neworin.easynotes.greendao.gen.NoteBookDao;
+import com.neworin.easynotes.greendao.gen.UserDao;
+
+import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Keep;
+import org.greenrobot.greendao.annotation.NotNull;
+import org.greenrobot.greendao.annotation.ToOne;
 
 import java.util.Date;
 
@@ -24,12 +31,14 @@ public class NoteBook extends BaseObservable implements Parcelable {
 
     @Id
     private long id;
+    private long userId;
     private String name;
     private String count;
     private Boolean isChecked;
     private Date createTime;
     private Date updateTime;
     private Date syncTime;
+    @ToOne(joinProperty = "userId")
     private User mUser;
 
     @Keep
@@ -50,9 +59,8 @@ public class NoteBook extends BaseObservable implements Parcelable {
         this.isChecked = isChecked;
     }
 
-    @Generated(hash = 1745787609)
-    public NoteBook(long id, String name, String count,
-            Boolean isChecked, Date createTime, Date updateTime, Date syncTime) {
+    @Keep
+    public NoteBook(long id, String name, String count, Boolean isChecked, Date createTime, Date updateTime, Date syncTime, User user) {
         this.id = id;
         this.name = name;
         this.count = count;
@@ -60,6 +68,7 @@ public class NoteBook extends BaseObservable implements Parcelable {
         this.createTime = createTime;
         this.updateTime = updateTime;
         this.syncTime = syncTime;
+        this.mUser = user;
     }
 
     public User getUser() {
@@ -140,6 +149,14 @@ public class NoteBook extends BaseObservable implements Parcelable {
         this.syncTime = syncTime;
     }
 
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -148,6 +165,7 @@ public class NoteBook extends BaseObservable implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
+        dest.writeLong(this.userId);
         dest.writeString(this.name);
         dest.writeString(this.count);
         dest.writeValue(this.isChecked);
@@ -157,8 +175,84 @@ public class NoteBook extends BaseObservable implements Parcelable {
         dest.writeParcelable(this.mUser, flags);
     }
 
+    /** To-one relationship, resolved on first access. */
+    @Generated(hash = 395820747)
+    public User getMUser() {
+        long __key = this.userId;
+        if (mUser__resolvedKey == null || !mUser__resolvedKey.equals(__key)) {
+            final DaoSession daoSession = this.daoSession;
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            UserDao targetDao = daoSession.getUserDao();
+            User mUserNew = targetDao.load(__key);
+            synchronized (this) {
+                mUser = mUserNew;
+                mUser__resolvedKey = __key;
+            }
+        }
+        return mUser;
+    }
+
+    /** called by internal mechanisms, do not call yourself. */
+    @Generated(hash = 1128592984)
+    public void setMUser(@NotNull User mUser) {
+        if (mUser == null) {
+            throw new DaoException("To-one property 'userId' has not-null constraint; cannot set to-one to null");
+        }
+        synchronized (this) {
+            this.mUser = mUser;
+            userId = mUser.getId();
+            mUser__resolvedKey = userId;
+        }
+    }
+
+    /**
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
+     * Entity must attached to an entity context.
+     */
+    @Generated(hash = 128553479)
+    public void delete() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.delete(this);
+    }
+
+    /**
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
+     * Entity must attached to an entity context.
+     */
+    @Generated(hash = 1942392019)
+    public void refresh() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.refresh(this);
+    }
+
+    /**
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
+     * Entity must attached to an entity context.
+     */
+    @Generated(hash = 713229351)
+    public void update() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.update(this);
+    }
+
+    /** called by internal mechanisms, do not call yourself. */
+    @Generated(hash = 1888691330)
+    public void __setDaoSession(DaoSession daoSession) {
+        this.daoSession = daoSession;
+        myDao = daoSession != null ? daoSession.getNoteBookDao() : null;
+    }
+
     protected NoteBook(Parcel in) {
         this.id = in.readLong();
+        this.userId = in.readLong();
         this.name = in.readString();
         this.count = in.readString();
         this.isChecked = (Boolean) in.readValue(Boolean.class.getClassLoader());
@@ -169,6 +263,18 @@ public class NoteBook extends BaseObservable implements Parcelable {
         long tmpSyncTime = in.readLong();
         this.syncTime = tmpSyncTime == -1 ? null : new Date(tmpSyncTime);
         this.mUser = in.readParcelable(User.class.getClassLoader());
+    }
+
+    @Generated(hash = 1745787609)
+    public NoteBook(long id, long userId, String name, String count, Boolean isChecked, Date createTime, Date updateTime, Date syncTime) {
+        this.id = id;
+        this.userId = userId;
+        this.name = name;
+        this.count = count;
+        this.isChecked = isChecked;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.syncTime = syncTime;
     }
 
     public static final Parcelable.Creator<NoteBook> CREATOR = new Parcelable.Creator<NoteBook>() {
@@ -182,4 +288,12 @@ public class NoteBook extends BaseObservable implements Parcelable {
             return new NoteBook[size];
         }
     };
+    /** Used to resolve relations */
+    @Generated(hash = 2040040024)
+    private transient DaoSession daoSession;
+    /** Used for active entity operations. */
+    @Generated(hash = 1692630944)
+    private transient NoteBookDao myDao;
+    @Generated(hash = 1377221062)
+    private transient Long mUser__resolvedKey;
 }

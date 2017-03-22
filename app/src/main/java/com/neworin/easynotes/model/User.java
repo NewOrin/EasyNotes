@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Keep;
 
 import java.util.Date;
 
@@ -26,7 +27,7 @@ public class User extends BaseObservable implements Parcelable {
     private String avatarUrl;
     private Date joinTime;
 
-    @Generated(hash = 926753409)
+    @Keep
     public User(long id, String wechatNumber, String nickName, String avatarUrl,
             Date joinTime) {
         this.id = id;

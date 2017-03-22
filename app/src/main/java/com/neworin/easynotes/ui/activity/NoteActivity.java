@@ -142,6 +142,7 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
             mDaoSession = mDbManager.getWriteDaoSession();
             Note note = new Note();
             note.setId(GenerateSequenceUtil.generateSequenceNo());
+            note.setNotebookId(mNoteBook.getId());
             note.setNoteBook(mNoteBook);
             note.setTitle(mTitle);
             note.setContent(mContent);

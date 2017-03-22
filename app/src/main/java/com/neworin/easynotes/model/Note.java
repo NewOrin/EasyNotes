@@ -5,9 +5,17 @@ import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.neworin.easynotes.greendao.gen.DaoSession;
+import com.neworin.easynotes.greendao.gen.NoteBookDao;
+import com.neworin.easynotes.greendao.gen.NoteDao;
+
+import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Keep;
+import org.greenrobot.greendao.annotation.NotNull;
+import org.greenrobot.greendao.annotation.ToOne;
 
 import java.util.Date;
 
@@ -21,10 +29,12 @@ public class Note extends BaseObservable implements Parcelable {
 
     @Id
     private long id;
+    private long notebookId;
     private String title;
     private String content;
     private Date createTime;
     private Date updateTime;
+    @ToOne(joinProperty = "notebookId")
     private NoteBook mNoteBook;
 
     @Generated(hash = 1272611929)
@@ -84,14 +94,22 @@ public class Note extends BaseObservable implements Parcelable {
         mNoteBook = noteBook;
     }
 
-    @Generated(hash = 435923545)
-    public Note(long id, String title, String content, Date createTime,
-            Date updateTime) {
+    public long getNotebookId() {
+        return notebookId;
+    }
+
+    public void setNotebookId(long notebookId) {
+        this.notebookId = notebookId;
+    }
+
+    @Keep
+    public Note(long id, String title, String content, Date createTime, Date updateTime, NoteBook noteBook) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.createTime = createTime;
         this.updateTime = updateTime;
+        this.mNoteBook = noteBook;
     }
 
     @Override
@@ -102,6 +120,7 @@ public class Note extends BaseObservable implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
+        dest.writeLong(this.notebookId);
         dest.writeString(this.title);
         dest.writeString(this.content);
         dest.writeLong(this.createTime != null ? this.createTime.getTime() : -1);
@@ -109,8 +128,85 @@ public class Note extends BaseObservable implements Parcelable {
         dest.writeParcelable(this.mNoteBook, flags);
     }
 
+    /** To-one relationship, resolved on first access. */
+    @Generated(hash = 599181167)
+    public NoteBook getMNoteBook() {
+        long __key = this.notebookId;
+        if (mNoteBook__resolvedKey == null || !mNoteBook__resolvedKey.equals(__key)) {
+            final DaoSession daoSession = this.daoSession;
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            NoteBookDao targetDao = daoSession.getNoteBookDao();
+            NoteBook mNoteBookNew = targetDao.load(__key);
+            synchronized (this) {
+                mNoteBook = mNoteBookNew;
+                mNoteBook__resolvedKey = __key;
+            }
+        }
+        return mNoteBook;
+    }
+
+    /** called by internal mechanisms, do not call yourself. */
+    @Generated(hash = 1124274750)
+    public void setMNoteBook(@NotNull NoteBook mNoteBook) {
+        if (mNoteBook == null) {
+            throw new DaoException(
+                    "To-one property 'notebookId' has not-null constraint; cannot set to-one to null");
+        }
+        synchronized (this) {
+            this.mNoteBook = mNoteBook;
+            notebookId = mNoteBook.getId();
+            mNoteBook__resolvedKey = notebookId;
+        }
+    }
+
+    /**
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
+     * Entity must attached to an entity context.
+     */
+    @Generated(hash = 128553479)
+    public void delete() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.delete(this);
+    }
+
+    /**
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
+     * Entity must attached to an entity context.
+     */
+    @Generated(hash = 1942392019)
+    public void refresh() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.refresh(this);
+    }
+
+    /**
+     * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
+     * Entity must attached to an entity context.
+     */
+    @Generated(hash = 713229351)
+    public void update() {
+        if (myDao == null) {
+            throw new DaoException("Entity is detached from DAO context");
+        }
+        myDao.update(this);
+    }
+
+    /** called by internal mechanisms, do not call yourself. */
+    @Generated(hash = 799086675)
+    public void __setDaoSession(DaoSession daoSession) {
+        this.daoSession = daoSession;
+        myDao = daoSession != null ? daoSession.getNoteDao() : null;
+    }
+
     protected Note(Parcel in) {
         this.id = in.readLong();
+        this.notebookId = in.readLong();
         this.title = in.readString();
         this.content = in.readString();
         long tmpCreateTime = in.readLong();
@@ -118,6 +214,16 @@ public class Note extends BaseObservable implements Parcelable {
         long tmpUpdateTime = in.readLong();
         this.updateTime = tmpUpdateTime == -1 ? null : new Date(tmpUpdateTime);
         this.mNoteBook = in.readParcelable(NoteBook.class.getClassLoader());
+    }
+
+    @Generated(hash = 293051043)
+    public Note(long id, long notebookId, String title, String content, Date createTime, Date updateTime) {
+        this.id = id;
+        this.notebookId = notebookId;
+        this.title = title;
+        this.content = content;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
     }
 
     public static final Parcelable.Creator<Note> CREATOR = new Parcelable.Creator<Note>() {
@@ -131,4 +237,12 @@ public class Note extends BaseObservable implements Parcelable {
             return new Note[size];
         }
     };
+    /** Used to resolve relations */
+    @Generated(hash = 2040040024)
+    private transient DaoSession daoSession;
+    /** Used for active entity operations. */
+    @Generated(hash = 363862535)
+    private transient NoteDao myDao;
+    @Generated(hash = 1268916075)
+    private transient Long mNoteBook__resolvedKey;
 }
