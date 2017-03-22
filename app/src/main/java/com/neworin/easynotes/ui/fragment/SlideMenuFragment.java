@@ -2,10 +2,8 @@ package com.neworin.easynotes.ui.fragment;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.neworin.easynotes.DBManager;
@@ -34,25 +32,19 @@ import java.util.List;
 public class SlideMenuFragment extends BaseFragment {
 
     private FragmentSlideMenuBinding mBinding;
-    private View mView;
     private DBManager mDBManager;
     private DaoSession mDaoSession;
     private NoteBookDao mNoteBookDao;
     private List<NoteBook> mNoteBookList;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_slide_menu, container, false);
-        mBinding = DataBindingUtil.bind(mView);
-        return mView;
+    protected int getLayoutId() {
+        return R.layout.fragment_slide_menu;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected void afterCreate(Bundle savedInstanceState) {
+        mBinding = DataBindingUtil.bind(getRootView());
         mDBManager = DBManager.getInstance(getActivity());
         initView();
         initEvent();

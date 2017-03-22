@@ -1,10 +1,6 @@
 package com.neworin.easynotes.ui.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.ui.BaseFragment;
@@ -16,9 +12,13 @@ import com.neworin.easynotes.ui.BaseFragment;
 
 public class SettingFragment extends BaseFragment {
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_setting, container, false);
+    protected int getLayoutId() {
+        return R.layout.fragment_setting;
+    }
+
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
+
     }
 }

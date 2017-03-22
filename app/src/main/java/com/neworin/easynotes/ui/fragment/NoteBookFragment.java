@@ -4,14 +4,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.neworin.easynotes.BR;
 import com.neworin.easynotes.DBManager;
@@ -64,18 +61,16 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
         noteBookFragment.setArguments(bundle);
         return noteBookFragment;
     }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_note_book, container, false);
-        mBinding = DataBindingUtil.bind(mView);
-        EventBus.getDefault().register(this);
-        return mView;
+    protected int getLayoutId() {
+        return R.layout.fragment_note_book;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected void afterCreate(Bundle savedInstanceState) {
+        mBinding = DataBindingUtil.bind(getRootView());
+        EventBus.getDefault().register(this);
         initView();
         initEvent();
     }
