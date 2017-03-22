@@ -9,7 +9,6 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -22,11 +21,11 @@ public class Note extends BaseObservable implements Parcelable {
 
     @Id
     private long id;
-    private long bookId;
     private String title;
     private String content;
     private Date createTime;
     private Date updateTime;
+    private NoteBook mNoteBook;
 
     @Generated(hash = 1272611929)
     public Note() {
@@ -39,14 +38,6 @@ public class Note extends BaseObservable implements Parcelable {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(long bookId) {
-        this.bookId = bookId;
     }
 
     @Bindable
@@ -85,6 +76,24 @@ public class Note extends BaseObservable implements Parcelable {
         this.updateTime = updateTime;
     }
 
+    public NoteBook getNoteBook() {
+        return mNoteBook;
+    }
+
+    public void setNoteBook(NoteBook noteBook) {
+        mNoteBook = noteBook;
+    }
+
+    @Generated(hash = 435923545)
+    public Note(long id, String title, String content, Date createTime,
+            Date updateTime) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -93,33 +102,22 @@ public class Note extends BaseObservable implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
-        dest.writeLong(this.bookId);
         dest.writeString(this.title);
         dest.writeString(this.content);
         dest.writeLong(this.createTime != null ? this.createTime.getTime() : -1);
         dest.writeLong(this.updateTime != null ? this.updateTime.getTime() : -1);
+        dest.writeParcelable(this.mNoteBook, flags);
     }
 
     protected Note(Parcel in) {
         this.id = in.readLong();
-        this.bookId = in.readLong();
         this.title = in.readString();
         this.content = in.readString();
         long tmpCreateTime = in.readLong();
         this.createTime = tmpCreateTime == -1 ? null : new Date(tmpCreateTime);
         long tmpUpdateTime = in.readLong();
         this.updateTime = tmpUpdateTime == -1 ? null : new Date(tmpUpdateTime);
-    }
-
-    @Generated(hash = 435923545)
-    public Note(long id, long bookId, String title, String content, Date createTime,
-            Date updateTime) {
-        this.id = id;
-        this.bookId = bookId;
-        this.title = title;
-        this.content = content;
-        this.createTime = createTime;
-        this.updateTime = updateTime;
+        this.mNoteBook = in.readParcelable(NoteBook.class.getClassLoader());
     }
 
     public static final Parcelable.Creator<Note> CREATOR = new Parcelable.Creator<Note>() {

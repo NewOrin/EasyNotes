@@ -16,7 +16,6 @@ import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.ui.BaseAppCompatActivity;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
-import com.neworin.easynotes.utils.DialogUtils;
 import com.neworin.easynotes.utils.GenerateSequenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -143,7 +142,7 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
             mDaoSession = mDbManager.getWriteDaoSession();
             Note note = new Note();
             note.setId(GenerateSequenceUtil.generateSequenceNo());
-            note.setBookId(mNoteBook.getId());
+            note.setNoteBook(mNoteBook);
             note.setTitle(mTitle);
             note.setContent(mContent);
             note.setCreateTime(DateUtil.getNowTime());

@@ -2,6 +2,8 @@ package com.neworin.easynotes.model;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
@@ -15,7 +17,7 @@ import java.util.Date;
  */
 
 @Entity
-public class User extends BaseObservable {
+public class User extends BaseObservable implements Parcelable {
 
     @Id
     private long id;
@@ -23,17 +25,15 @@ public class User extends BaseObservable {
     private String nickName;
     private String avatarUrl;
     private Date joinTime;
-    private long noteBookId;
 
     @Generated(hash = 926753409)
     public User(long id, String wechatNumber, String nickName, String avatarUrl,
-            Date joinTime, long noteBookId) {
+            Date joinTime) {
         this.id = id;
         this.wechatNumber = wechatNumber;
         this.nickName = nickName;
         this.avatarUrl = avatarUrl;
         this.joinTime = joinTime;
-        this.noteBookId = noteBookId;
     }
 
     @Generated(hash = 586692638)
@@ -85,12 +85,38 @@ public class User extends BaseObservable {
         this.joinTime = joinTime;
     }
 
-    @Bindable
-    public long getNoteBookId() {
-        return noteBookId;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setNoteBookId(long noteBookId) {
-        this.noteBookId = noteBookId;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeString(this.wechatNumber);
+        dest.writeString(this.nickName);
+        dest.writeString(this.avatarUrl);
+        dest.writeLong(this.joinTime != null ? this.joinTime.getTime() : -1);
     }
+
+    protected User(Parcel in) {
+        this.id = in.readLong();
+        this.wechatNumber = in.readString();
+        this.nickName = in.readString();
+        this.avatarUrl = in.readString();
+        long tmpJoinTime = in.readLong();
+        this.joinTime = tmpJoinTime == -1 ? null : new Date(tmpJoinTime);
+    }
+
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel source) {
+            return new User(source);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }
