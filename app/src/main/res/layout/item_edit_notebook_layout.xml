@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="notebookBean"
+            type="com.neworin.easynotes.model.NoteBook"/>
+
+        <import type="android.view.View"/>
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/y55"
+                    android:background="@drawable/listview_selector"
+                    android:paddingLeft="@dimen/x20"
+                    android:paddingRight="@dimen/x20">
+
+        <ImageView
+            android:id="@+id/item_slide_menu_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@{notebookBean.checked ?  @drawable/ic_notebook_selected: @drawable/ic_notebook_normal}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_toRightOf="@+id/item_slide_menu_img"
+            android:text="@{notebookBean.name}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@{String.valueOf(notebookBean.count)}"/>
+
+    </RelativeLayout>
+</layout>

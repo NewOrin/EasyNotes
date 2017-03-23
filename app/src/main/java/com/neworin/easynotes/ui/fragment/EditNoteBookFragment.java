@@ -10,10 +10,14 @@ import com.neworin.easynotes.DBManager;
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.adapter.RecyclerViewCommonAdapter;
 import com.neworin.easynotes.databinding.FragmentEditnotebookBinding;
+import com.neworin.easynotes.event.NoteBookFragmentEvent;
 import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.greendao.gen.NoteBookDao;
 import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.ui.BaseFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -38,6 +42,7 @@ public class EditNoteBookFragment extends BaseFragment {
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         mBinding = DataBindingUtil.bind(getRootView());
         mDBManager = DBManager.getInstance(getActivity());
         initViewData();
@@ -45,7 +50,7 @@ public class EditNoteBookFragment extends BaseFragment {
 
     private void initViewData() {
         mNoteBookList = mDBManager.getWriteDaoSession().getNoteBookDao().queryBuilder().list();
-        mAdapter = new RecyclerViewCommonAdapter(getActivity(), mNoteBookList, R.layout.item_slide_menu_layout, BR.notebookBean);
+        mAdapter = new RecyclerViewCommonAdapter(getActivity(), mNoteBookList, R.layout.item_edit_notebook_layout, BR.notebookBean);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         getRecyclerView().setLayoutManager(linearLayoutManager);
         getRecyclerView().setAdapter(mAdapter);
@@ -53,5 +58,25 @@ public class EditNoteBookFragment extends BaseFragment {
 
     private RecyclerView getRecyclerView() {
         return mBinding.fragmentContainerRecyclerview;
+    }
+
+    @Subscribe
+    public void onMessageEvent(NoteBookFragmentEvent.RefreshNoteEvent event) {
+        refreshData();
+    }
+
+    /**
+     * 刷新列表
+     */
+    private void refreshData() {
+        mNoteBookList = mDBManager.getWriteDaoSession().getNoteBookDao().queryBuilder().list();
+        mAdapter.updateData(mNoteBookList);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

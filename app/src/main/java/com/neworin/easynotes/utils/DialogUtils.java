@@ -3,6 +3,8 @@ package com.neworin.easynotes.utils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.widget.EditText;
 
 import com.neworin.easynotes.R;
 
@@ -15,13 +17,14 @@ import com.neworin.easynotes.R;
 public class DialogUtils {
 
     private Context mContext;
+    private EditText mEditText;
 
     public DialogUtils(Context context) {
         this.mContext = context;
     }
 
     public void showAlertDialog(String alertMsg, final DialogInterface.OnClickListener listener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.EasyNoteDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(alertMsg).setPositiveButton(R.string.confirm, listener).setNegativeButton(R.string.cancel, null);
         builder.create().show();
     }
@@ -33,7 +36,7 @@ public class DialogUtils {
      * @param listener
      */
     public void showItemDialog(CharSequence[] items, DialogInterface.OnClickListener listener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.EasyNoteDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(R.string.note_book_choose);
         builder.setItems(items, listener);
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -43,5 +46,35 @@ public class DialogUtils {
             }
         });
         builder.create().show();
+    }
+
+    /**
+     * 带有EditText对话框
+     *
+     * @param titleId
+     * @param listener
+     */
+    public void showEditTextDialog(int titleId, DialogInterface.OnClickListener listener) {
+        mEditText = new EditText(mContext);
+        mEditText.setTextColor(Color.BLACK);
+        mEditText.setSingleLine(true);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(titleId);
+        builder.setView(mEditText);
+        builder.setPositiveButton(R.string.confirm, listener);
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.create().show();
+    }
+
+    /**
+     * 获取EditText值
+     *
+     * @return
+     */
+    public String getEditText() {
+        if (null != mEditText) {
+            return mEditText.getText().toString();
+        }
+        return "";
     }
 }
