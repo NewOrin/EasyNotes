@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -19,7 +20,6 @@ import com.neworin.easynotes.event.NoteBookFragmentEvent;
 import com.neworin.easynotes.event.SlideMenuEvent;
 import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.greendao.gen.NoteDao;
-import com.neworin.easynotes.handlers.NoteBookFragmentHandler;
 import com.neworin.easynotes.model.Note;
 import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.ui.BaseFragment;
@@ -37,7 +37,7 @@ import java.util.List;
  * 显示笔记列表页面
  */
 
-public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, RecyclerViewCommonAdapter.OnItemLongClickListener {
+public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, RecyclerViewCommonAdapter.OnItemLongClickListener, View.OnClickListener {
 
     private FragmentNoteBookBinding mBinding;
     private java.lang.String TAG = NoteBookFragment.class.getSimpleName();
@@ -79,7 +79,6 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
         mNoteBook = getArguments().getParcelable(Constant.ARG0);
         mDialogItems = new String[]{getString(R.string.note_book_delete)};
         mSwipeRefreshLayout = mBinding.noteBookFgSwipeLayout;
-        mBinding.setHandler(new NoteBookFragmentHandler(this, mNoteBook));
         mDBManager = DBManager.getInstance(getActivity());
         mDaoSession = mDBManager.getReadDaoSession();
         mNoteDao = mDaoSession.getNoteDao();
@@ -111,6 +110,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
             }
         });
         mAdapter.setmOnItemLongClickListener(this);
+        getFAButton().setOnClickListener(this);
     }
 
     /**
@@ -214,5 +214,21 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
         mDaoSession = mDBManager.getWriteDaoSession();
         mNoteDao = mDaoSession.getNoteDao();
         mNoteDao.deleteByKey(mDatas.get(position).getId());
+    }
+
+    private FloatingActionButton getFAButton() {
+        return mBinding.noteBookFgFloatBtn;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == getFAButton()) {
+            Intent intent = new Intent(getActivity(), NoteActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(Constant.ARG1, mNoteBook);
+            bundle.putString(Constant.ARG2, Constant.NOTE_ADD_FLAG);
+            intent.putExtras(bundle);
+            getActivity().startActivityForResult(intent, Constant.NOTE_BOOK_FRAGMENT_RESULT_CODE);
+        }
     }
 }

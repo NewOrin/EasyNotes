@@ -28,7 +28,6 @@
             android:src="@drawable/ic_add_white"
             app:borderWidth="@dimen/dp0"
             app:fabSize="normal"
-            android:onClick="@{handler::onFloatingActionClick}"
             app:rippleColor="@color/colorPrimaryDark" />
 
         <android.support.v4.widget.SwipeRefreshLayout
