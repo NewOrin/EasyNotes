@@ -1,5 +1,6 @@
 package com.neworin.easynotes.ui.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -57,7 +58,6 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         mFragmentManager.beginTransaction().add(R.id.main_content_container, NoteBookFragment.newsInstance(bundle)).commit();
     }
 
-
     /**
      * 初始化笔记本
      */
@@ -93,6 +93,8 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     @Subscribe
     public void onMessageEvent(SlideMenuEvent.ListItemEvent event) {
         mBinding.mainDrawerlayout.closeDrawers();
+        this.mNoteBook = event.getNoteBook();
+        setToolbarTitle(mNoteBook.getName());
     }
 
     @Subscribe
@@ -117,5 +119,13 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         noteBook.setName(getString(R.string.note_my_notebook));
         noteBook.setCreateTime(DateUtil.getNowTime());
         noteBookDao.insert(noteBook);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constant.EDIT_BOOK_RESULT_CODE) {
+            EventBus.getDefault().post(new SlideMenuEvent.RefreshEvent());
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.neworin.easynotes.DBManager;
 import com.neworin.easynotes.R;
@@ -12,6 +13,7 @@ import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.ui.BaseAppCompatActivity;
 import com.neworin.easynotes.ui.fragment.EditNoteBookFragment;
+import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
 import com.neworin.easynotes.utils.DialogUtils;
 import com.neworin.easynotes.utils.GenerateSequenceUtil;
@@ -42,6 +44,13 @@ public class EditNoteBookActivity extends BaseAppCompatActivity implements Toolb
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setNavigationIcon();
         getToolbar().setOnMenuItemClickListener(this);
+        getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(Constant.EDIT_BOOK_RESULT_CODE);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -85,5 +94,12 @@ public class EditNoteBookActivity extends BaseAppCompatActivity implements Toolb
         mDaoSession.getNoteBookDao().insert(noteBook);
         mDaoSession.clear();
         EventBus.getDefault().post(new NoteBookFragmentEvent.RefreshNoteEvent());
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(Constant.EDIT_BOOK_RESULT_CODE);
+        finish();
+        super.onBackPressed();
     }
 }

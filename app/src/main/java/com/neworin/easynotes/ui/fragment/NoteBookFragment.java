@@ -83,7 +83,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
         mDBManager = DBManager.getInstance(getActivity());
         mDaoSession = mDBManager.getReadDaoSession();
         mNoteDao = mDaoSession.getNoteDao();
-        mQueryBuilder = mNoteDao.queryBuilder();
+        mQueryBuilder = mNoteDao.queryBuilder().where(NoteDao.Properties.NotebookId.eq(mNoteBook.getId())).orderDesc(NoteDao.Properties.CreateTime);
         mDatas = mQueryBuilder.list();
         mDaoSession.clear();
         if (null != mDatas) {
@@ -120,7 +120,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
         mSwipeRefreshLayout.setRefreshing(true);
         mDaoSession = mDBManager.getReadDaoSession();
         mNoteDao = mDaoSession.getNoteDao();
-        mQueryBuilder = mNoteDao.queryBuilder();
+        mQueryBuilder = mNoteDao.queryBuilder().where(NoteDao.Properties.NotebookId.eq(mNoteBook.getId())).orderDesc(NoteDao.Properties.CreateTime);
         mAdapter.updateData(mDatas = mQueryBuilder.list());
         mAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.post(new Runnable() {
@@ -162,6 +162,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
     @Subscribe
     public void onMessageEvent(SlideMenuEvent.ListItemEvent event) {
         mNoteBook = event.getNoteBook();
+        refreshData();
     }
 
     @Override

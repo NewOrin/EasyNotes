@@ -19,6 +19,7 @@ import com.neworin.easynotes.ui.BaseFragment;
 import com.neworin.easynotes.utils.Constant;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -36,6 +37,8 @@ public class SlideMenuFragment extends BaseFragment {
     private DaoSession mDaoSession;
     private NoteBookDao mNoteBookDao;
     private List<NoteBook> mNoteBookList;
+    private ListViewCommonAdapter<NoteBook> mAdapter;
+    private int mCheckPosition;
 
     @Override
     protected int getLayoutId() {
@@ -44,6 +47,7 @@ public class SlideMenuFragment extends BaseFragment {
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         mBinding = DataBindingUtil.bind(getRootView());
         mDBManager = DBManager.getInstance(getActivity());
         initView();
@@ -54,10 +58,11 @@ public class SlideMenuFragment extends BaseFragment {
         mDaoSession = mDBManager.getWriteDaoSession();
         mNoteBookDao = mDaoSession.getNoteBookDao();
         mNoteBookList = mNoteBookDao.queryBuilder().list();
+        mCheckPosition = 0;
         mNoteBookList.get(0).setChecked(true);//The first one checked default
         mBinding.setHandler(new SlideMenuEventHandler(getActivity()));
-        ListViewCommonAdapter<NoteBook> adapter = new ListViewCommonAdapter<>(getActivity(), mNoteBookList, R.layout.item_slide_menu_layout, com.neworin.easynotes.BR.notebookBean);
-        mBinding.setAdapter(adapter);
+        mAdapter = new ListViewCommonAdapter<>(getActivity(), mNoteBookList, R.layout.item_slide_menu_layout, com.neworin.easynotes.BR.notebookBean);
+        mBinding.setAdapter(mAdapter);
         View footViewSettings = LayoutInflater.from(getActivity()).inflate(R.layout.slide_menu_footer_settings_layout, null);
         View footViewEdit = LayoutInflater.from(getActivity()).inflate(R.layout.slide_menu_footer_edit_layout, null);
         mBinding.slideMenuListview.addFooterView(footViewSettings);
@@ -80,8 +85,39 @@ public class SlideMenuFragment extends BaseFragment {
         mBinding.slideMenuListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mNoteBookList.get(getCheckPos()).setChecked(false);
+                mNoteBookList.get(position).setChecked(true);
+                setCheckPos(position);
+                mAdapter.notifyDataSetChanged();
                 EventBus.getDefault().post(new SlideMenuEvent.ListItemEvent(mNoteBookList.get(position)));
             }
         });
+    }
+
+    private void refreshData() {
+        if (null != mNoteBookList && null != mAdapter) {
+            mNoteBookList = mDBManager.getWriteDaoSession().getNoteBookDao().queryBuilder().list();
+            mAdapter = new ListViewCommonAdapter<>(getActivity(), mNoteBookList, R.layout.item_slide_menu_layout, com.neworin.easynotes.BR.notebookBean);
+            mBinding.setAdapter(mAdapter);
+        }
+    }
+
+    private int getCheckPos() {
+        return mCheckPosition;
+    }
+
+    private void setCheckPos(int checkPosition) {
+        this.mCheckPosition = checkPosition;
+    }
+
+    @Subscribe
+    public void onMessageEvent(SlideMenuEvent.RefreshEvent event) {
+        refreshData();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

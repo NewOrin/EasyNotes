@@ -1,6 +1,6 @@
 package com.neworin.easynotes.event;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
@@ -45,12 +45,17 @@ public class SlideMenuEvent {
     }
 
     public static class SettingItemEvent {
-        public SettingItemEvent(int flag, Context context) {
+        public SettingItemEvent(int flag, Activity activity) {
             if (flag == Constant.SLIDE_ITEM_SETTINGS) {
-                context.startActivity(new Intent(context, SettingActivity.class));
+                activity.startActivity(new Intent(activity, SettingActivity.class));
             } else if (flag == Constant.SLIDE_ITEM_EDIT) {
-                context.startActivity(new Intent(context, EditNoteBookActivity.class));
+                activity.startActivityForResult(new Intent(activity, EditNoteBookActivity.class), Constant.EDIT_BOOK_RESULT_CODE);
             }
+        }
+    }
+
+    public static class RefreshEvent {
+        public RefreshEvent() {
         }
     }
 }
