@@ -7,4 +7,8 @@
     <string name="edit_notebook_show_update_time">上次修改时间</string>
     <string name="edit_notebook_show_create_time">创建时间</string>
     <string name="edit_notebook_show_info">详细信息</string>
+    <string name="edit_notebook_cannot_delete_default_hint">默认笔记本不能删除</string>
+    <string name="edit_notebook_delete_alert">确认删除? 删除后该笔记本中的笔记均会删除!</string>
+    <string name="edit_notebook_success">删除成功!</string>
+    <string name="edit_notebook_recall">撤销</string>
 </resources>

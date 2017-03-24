@@ -44,6 +44,16 @@ public class NoteBookManager {
         mDaoSession.clear();
     }
 
+    /**
+     * 插入NoteBook
+     *
+     * @param noteBook
+     */
+    public void insert(NoteBook noteBook) {
+        mDaoSession = getDaoSession();
+        mDaoSession.getNoteBookDao().insert(noteBook);
+        mDaoSession.clear();
+    }
     private DaoSession getDaoSession() {
         return mDBManager.getWriteDaoSession();
     }

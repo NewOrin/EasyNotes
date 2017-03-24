@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import com.neworin.easynotes.BR;
 import com.neworin.easynotes.DBManager;
@@ -148,7 +149,7 @@ public class EditNoteBookFragment extends BaseFragment {
                 showNoteBookInfoDialog(pos);
                 break;
             case 2:
-                mNoteBookManager.deleteByKey(mNoteBookList.get(pos).getId());
+                handleDeleteNoteBook(pos);
                 break;
         }
     }
@@ -180,6 +181,34 @@ public class EditNoteBookFragment extends BaseFragment {
         mNoteBookInfoBinding.setNotebook(mNoteBookList.get(pos));
         mDialogUtils.showInfoDialog(mNoteBookInfoBinding.getRoot());
     }
+
+    /**
+     * 处理笔记本删除
+     *
+     * @param pos
+     */
+    private void handleDeleteNoteBook(final int pos) {
+        final NoteBook nb = mNoteBookList.get(pos);
+        if (nb.getId() == 1) {
+            showSnackBar(getRootView(), getString(R.string.edit_notebook_cannot_delete_default_hint));
+            return;
+        }
+        mDialogUtils.showAlertDialog(getString(R.string.edit_notebook_delete_alert), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mNoteBookManager.deleteByKey(nb.getId());
+                showSnackBarWithAction(getRootView(), getString(R.string.edit_notebook_success), getString(R.string.edit_notebook_recall), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mNoteBookManager.insert(nb);
+                        refreshData();
+                    }
+                });
+                refreshData();
+            }
+        });
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
