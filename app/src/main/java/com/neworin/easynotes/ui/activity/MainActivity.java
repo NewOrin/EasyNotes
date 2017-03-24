@@ -82,6 +82,9 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         if (item.getItemId() == R.id.main_menu_refresh) {
             EventBus.getDefault().post(new NoteBookFragmentEvent.RefreshNoteEvent());
         }
+        if (item.getItemId() == R.id.main_menu_thumb) {
+            EventBus.getDefault().post(new NoteBookFragmentEvent.ShowThumbEvent());
+        }
         return false;
     }
 

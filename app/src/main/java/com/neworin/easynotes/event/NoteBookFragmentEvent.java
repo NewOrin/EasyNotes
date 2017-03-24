@@ -16,4 +16,9 @@ public class NoteBookFragmentEvent {
         public RefreshNoteEvent() {
         }
     }
+
+    public static class ShowThumbEvent {
+        public ShowThumbEvent() {
+        }
+    }
 }

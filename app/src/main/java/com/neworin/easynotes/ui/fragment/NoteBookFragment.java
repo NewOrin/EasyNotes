@@ -8,7 +8,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.neworin.easynotes.BR;
@@ -52,6 +54,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private DialogUtils mDialogUtils;
     private String mDialogItems[];
+    private boolean mIsThumb;
 
     public NoteBookFragment() {
     }
@@ -76,6 +79,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
     private void initView() {
+        mIsThumb = false;
         mNoteBook = getArguments().getParcelable(Constant.ARG0);
         mDialogItems = new String[]{getString(R.string.note_book_delete)};
         mSwipeRefreshLayout = mBinding.noteBookFgSwipeLayout;
@@ -160,6 +164,17 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
     @Subscribe
+    public void onMessageEvent(NoteBookFragmentEvent.ShowThumbEvent event) {
+        if (mIsThumb) {
+            getRecyclerView().setLayoutManager(new LinearLayoutManager(getActivity()));
+            mIsThumb = false;
+        } else {
+            mBinding.noteBookFgRecyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            mIsThumb = true;
+        }
+    }
+
+    @Subscribe
     public void onMessageEvent(SlideMenuEvent.ListItemEvent event) {
         mNoteBook = event.getNoteBook();
         refreshData();
@@ -230,5 +245,9 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
             intent.putExtras(bundle);
             getActivity().startActivityForResult(intent, Constant.NOTE_BOOK_FRAGMENT_RESULT_CODE);
         }
+    }
+
+    private RecyclerView getRecyclerView() {
+        return mBinding.noteBookFgRecyclerview;
     }
 }
