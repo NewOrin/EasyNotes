@@ -5,18 +5,22 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 
 import com.neworin.easynotes.BR;
 import com.neworin.easynotes.DBManager;
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.adapter.RecyclerViewCommonAdapter;
+import com.neworin.easynotes.databinding.EditNotebookInfoLayoutBinding;
 import com.neworin.easynotes.databinding.FragmentEditnotebookBinding;
 import com.neworin.easynotes.event.NoteBookFragmentEvent;
 import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.greendao.gen.NoteBookDao;
 import com.neworin.easynotes.greendao.gen.NoteDao;
 import com.neworin.easynotes.model.NoteBook;
+import com.neworin.easynotes.model.NoteBookManager;
 import com.neworin.easynotes.ui.BaseFragment;
+import com.neworin.easynotes.utils.DateUtil;
 import com.neworin.easynotes.utils.DialogUtils;
 import com.neworin.easynotes.view.DividerItemDecoration;
 
@@ -40,6 +44,8 @@ public class EditNoteBookFragment extends BaseFragment {
     private RecyclerViewCommonAdapter mAdapter;
     private DialogUtils mDialogUtils;
     private String[] mShowDialogItems = {"重命名", "查看详情", "删除"};
+    private NoteBookManager mNoteBookManager;
+    private EditNotebookInfoLayoutBinding mNoteBookInfoBinding;
 
     @Override
     protected int getLayoutId() {
@@ -56,6 +62,7 @@ public class EditNoteBookFragment extends BaseFragment {
     }
 
     private void initViewData() {
+        mNoteBookManager = new NoteBookManager(getActivity());
         mDialogUtils = new DialogUtils(getActivity());
         mNoteBookList = mDBManager.getWriteDaoSession().getNoteBookDao().queryBuilder().list();
         mNoteBookList = setNoteBookCount(mNoteBookList);
@@ -70,13 +77,13 @@ public class EditNoteBookFragment extends BaseFragment {
         mAdapter.setOnMoreInfoClickListener(new RecyclerViewCommonAdapter.OnMoreInfoClickListener() {
             @Override
             public void onMoreInfoClick(int position) {
-                showMoreInfoDialog();
+                showMoreInfoDialog(position);
             }
         });
         mAdapter.setmOnItemLongClickListener(new RecyclerViewCommonAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(int position) {
-                showMoreInfoDialog();
+                showMoreInfoDialog(position);
             }
         });
     }
@@ -115,13 +122,63 @@ public class EditNoteBookFragment extends BaseFragment {
         return list;
     }
 
-    private void showMoreInfoDialog(){
+    /**
+     * 显示更多对话框
+     */
+    private void showMoreInfoDialog(final int pos) {
         mDialogUtils.showItemDialog(mShowDialogItems, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                handleMoreInfo(which, pos);
             }
         });
+    }
+
+    /**
+     * 处理NoteBook
+     *
+     * @param which
+     */
+    private void handleMoreInfo(int which, int pos) {
+        switch (which) {
+            case 0:
+                reNameNoteBook(pos);
+                break;
+            case 1:
+                showNoteBookInfoDialog(pos);
+                break;
+            case 2:
+                mNoteBookManager.deleteByKey(mNoteBookList.get(pos).getId());
+                break;
+        }
+    }
+
+    /**
+     * NoteBook重命名
+     *
+     * @param pos
+     */
+    private void reNameNoteBook(final int pos) {
+        mDialogUtils.showEditTextDialog(R.string.edit_notebook_rename, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mNoteBookList.get(pos).setName(mDialogUtils.getEditText());
+                mNoteBookList.get(pos).setUpdateTime(DateUtil.getNowTime());
+                mNoteBookManager.update(mNoteBookList.get(pos));
+                refreshData();
+            }
+        });
+    }
+
+    /**
+     * 显示NoteBook详情
+     *
+     * @param pos
+     */
+    private void showNoteBookInfoDialog(int pos) {
+        mNoteBookInfoBinding = DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.edit_notebook_info_layout, null, false);
+        mNoteBookInfoBinding.setNotebook(mNoteBookList.get(pos));
+        mDialogUtils.showInfoDialog(mNoteBookInfoBinding.getRoot());
     }
     @Override
     public void onDestroy() {

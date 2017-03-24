@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="edit_notebook_create">创建笔记本</string>
+    <string name="edit_notebook_rename">重命名</string>
+    <string name="edit_notebook_name">笔记本名称</string>
+    <string name="edit_notebook_show_count">笔记数</string>
+    <string name="edit_notebook_show_update_time">上次修改时间</string>
+    <string name="edit_notebook_show_create_time">创建时间</string>
+    <string name="edit_notebook_show_info">详细信息</string>
 </resources>

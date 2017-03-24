@@ -116,6 +116,7 @@ public class SlideMenuFragment extends BaseFragment {
         if (null != mNoteBookList && null != mAdapter) {
             mNoteBookList = mDBManager.getWriteDaoSession().getNoteBookDao().queryBuilder().list();
             mNoteBookList = setNoteBookCount(mNoteBookList);
+            mNoteBookList.get(0).setChecked(true);
             mAdapter = new ListViewCommonAdapter<>(getActivity(), mNoteBookList, R.layout.item_slide_menu_layout, com.neworin.easynotes.BR.notebookBean);
             mBinding.setAdapter(mAdapter);
         }

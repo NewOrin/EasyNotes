@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="notebook"
+            type="com.neworin.easynotes.model.NoteBook"/>
+        <import type="android.view.View"/>
+        <import type="com.neworin.easynotes.utils.DateUtil"/>
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:background="@color/white"
+                  android:orientation="vertical"
+                  android:paddingLeft="@dimen/x20"
+                  android:paddingRight="@dimen/x20">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x15"
+            android:text="@string/edit_notebook_show_info"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_16_sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/x15"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/edit_notebook_show_textview_style"
+                android:text="@string/edit_notebook_name"/>
+
+            <TextView
+                style="@style/edit_notebook_info_textview_style"
+                android:text="@{notebook.name}"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/x15"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/edit_notebook_show_textview_style"
+                android:text="@string/edit_notebook_show_count"/>
+
+            <TextView
+                style="@style/edit_notebook_info_textview_style"
+                android:text="@{String.valueOf(notebook.count)}"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/x15"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:visibility="@{notebook.updateTime != null ? View.VISIBLE : View.GONE}">
+
+            <TextView
+                style="@style/edit_notebook_show_textview_style"
+                android:text="@string/edit_notebook_show_update_time"/>
+
+            <TextView
+                style="@style/edit_notebook_info_textview_style"
+                android:text="@{DateUtil.getDateTimeFormat(notebook.updateTime)}"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/x15"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/edit_notebook_show_textview_style"
+                android:text="@string/edit_notebook_show_create_time"/>
+
+            <TextView
+                style="@style/edit_notebook_info_textview_style"
+                android:text="@{DateUtil.getDateTimeFormat(notebook.createTime)}"/>
+        </LinearLayout>
+    </LinearLayout>
+</layout>
