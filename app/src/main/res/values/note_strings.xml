@@ -10,4 +10,5 @@
     <string name="note_book_choose">请选择</string>
     <string name="cofirm_delete_hint">确认删除?</string>
     <string name="note_my_notebook">我的笔记本</string>
+    <string name="notebook_add_note_hint">点击右下角添加笔记</string>
 </resources>
