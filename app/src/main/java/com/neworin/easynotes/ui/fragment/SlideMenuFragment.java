@@ -13,6 +13,7 @@ import com.neworin.easynotes.databinding.FragmentSlideMenuBinding;
 import com.neworin.easynotes.event.SlideMenuEvent;
 import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.greendao.gen.NoteBookDao;
+import com.neworin.easynotes.greendao.gen.NoteDao;
 import com.neworin.easynotes.handlers.SlideMenuEventHandler;
 import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.ui.BaseFragment;
@@ -58,6 +59,8 @@ public class SlideMenuFragment extends BaseFragment {
         mDaoSession = mDBManager.getWriteDaoSession();
         mNoteBookDao = mDaoSession.getNoteBookDao();
         mNoteBookList = mNoteBookDao.queryBuilder().list();
+        mNoteBookList = setNoteBookCount(mNoteBookList);
+        mDaoSession.clear();
         mCheckPosition = 0;
         mNoteBookList.get(0).setChecked(true);//The first one checked default
         mBinding.setHandler(new SlideMenuEventHandler(getActivity()));
@@ -81,6 +84,21 @@ public class SlideMenuFragment extends BaseFragment {
         });
     }
 
+    /**
+     * 设置NoteBookList count
+     *
+     * @param list
+     * @return
+     */
+    private List<NoteBook> setNoteBookCount(List<NoteBook> list) {
+        mDaoSession = mDBManager.getReadDaoSession();
+        for (NoteBook nb : list) {
+            nb.setCount(mDaoSession.getNoteDao().queryBuilder().where(NoteDao.Properties.NotebookId.eq(nb.getId())).list().size());
+        }
+        mDaoSession.clear();
+        return list;
+    }
+
     private void initEvent() {
         mBinding.slideMenuListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -97,6 +115,7 @@ public class SlideMenuFragment extends BaseFragment {
     private void refreshData() {
         if (null != mNoteBookList && null != mAdapter) {
             mNoteBookList = mDBManager.getWriteDaoSession().getNoteBookDao().queryBuilder().list();
+            mNoteBookList = setNoteBookCount(mNoteBookList);
             mAdapter = new ListViewCommonAdapter<>(getActivity(), mNoteBookList, R.layout.item_slide_menu_layout, com.neworin.easynotes.BR.notebookBean);
             mBinding.setAdapter(mAdapter);
         }

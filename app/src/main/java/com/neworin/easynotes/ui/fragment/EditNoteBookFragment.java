@@ -13,8 +13,10 @@ import com.neworin.easynotes.databinding.FragmentEditnotebookBinding;
 import com.neworin.easynotes.event.NoteBookFragmentEvent;
 import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.greendao.gen.NoteBookDao;
+import com.neworin.easynotes.greendao.gen.NoteDao;
 import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.ui.BaseFragment;
+import com.neworin.easynotes.view.DividerItemDecoration;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -50,9 +52,11 @@ public class EditNoteBookFragment extends BaseFragment {
 
     private void initViewData() {
         mNoteBookList = mDBManager.getWriteDaoSession().getNoteBookDao().queryBuilder().list();
+        mNoteBookList = setNoteBookCount(mNoteBookList);
         mAdapter = new RecyclerViewCommonAdapter(getActivity(), mNoteBookList, R.layout.item_edit_notebook_layout, BR.notebookBean);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         getRecyclerView().setLayoutManager(linearLayoutManager);
+        getRecyclerView().addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
         getRecyclerView().setAdapter(mAdapter);
     }
 
@@ -70,8 +74,24 @@ public class EditNoteBookFragment extends BaseFragment {
      */
     private void refreshData() {
         mNoteBookList = mDBManager.getWriteDaoSession().getNoteBookDao().queryBuilder().list();
+        mNoteBookList = setNoteBookCount(mNoteBookList);
         mAdapter.updateData(mNoteBookList);
         mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 设置NoteBookList count
+     *
+     * @param list
+     * @return
+     */
+    private List<NoteBook> setNoteBookCount(List<NoteBook> list) {
+        mDaoSession = mDBManager.getReadDaoSession();
+        for (NoteBook nb : list) {
+            nb.setCount(mDaoSession.getNoteDao().queryBuilder().where(NoteDao.Properties.NotebookId.eq(nb.getId())).list().size());
+        }
+        mDaoSession.clear();
+        return list;
     }
 
     @Override
