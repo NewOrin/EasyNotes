@@ -73,6 +73,9 @@ public class DateUtil {
      * @return
      */
     public static String getDateTimeFormat(Date date) {
+        if (null == date) {
+            return "";
+        }
         return dateTimeFormat.format(date);
     }
 
