@@ -11,17 +11,16 @@ import java.util.List;
 
 /**
  * 日期工具类
- * 
  */
 public class DateUtil {
 
     // 默认日期格式
-    public static final String DATE_DEFAULT_FORMAT = "yyyy-MM-dd";
+    private static final String DATE_DEFAULT_FORMAT = "yyyy-MM-dd";
 
     // 默认时间格式
-    public static final String DATETIME_DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final String DATETIME_DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    public static final String TIME_DEFAULT_FORMAT = "HH:mm:ss";
+    private static final String TIME_DEFAULT_FORMAT = "HH:mm:ss";
 
     // 日期格式化
     private static DateFormat dateFormat = null;
@@ -33,6 +32,8 @@ public class DateUtil {
 
     private static Calendar gregorianCalendar = null;
 
+    private final static long minute = 60 * 1000;// 1分钟
+
     static {
         dateFormat = new SimpleDateFormat(DATE_DEFAULT_FORMAT);
         dateTimeFormat = new SimpleDateFormat(DATETIME_DEFAULT_FORMAT);
@@ -42,7 +43,7 @@ public class DateUtil {
 
     /**
      * 日期格式化yyyy-MM-dd
-     * 
+     *
      * @param date
      * @return
      */
@@ -57,7 +58,7 @@ public class DateUtil {
 
     /**
      * 日期格式化yyyy-MM-dd
-     * 
+     *
      * @param date
      * @return
      */
@@ -67,7 +68,7 @@ public class DateUtil {
 
     /**
      * 日期格式化yyyy-MM-dd HH:mm:ss
-     * 
+     *
      * @param date
      * @return
      */
@@ -77,7 +78,7 @@ public class DateUtil {
 
     /**
      * 时间格式化
-     * 
+     *
      * @param date
      * @return HH:mm:ss
      */
@@ -87,7 +88,7 @@ public class DateUtil {
 
     /**
      * 日期格式化
-     * 
+     *
      * @param date
      * @return
      */
@@ -102,7 +103,7 @@ public class DateUtil {
 
     /**
      * 时间格式化
-     * 
+     *
      * @param date
      * @return
      */
@@ -132,9 +133,10 @@ public class DateUtil {
     public static Date getNowTime() {
         return DateUtil.getDateTimeFormat(dateTimeFormat.format(new Date()));
     }
+
     /**
      * 获取当前日期星期一日期
-     * 
+     *
      * @return date
      */
     public static Date getFirstDayOfWeek() {
@@ -146,7 +148,7 @@ public class DateUtil {
 
     /**
      * 获取当前日期星期日日期
-     * 
+     *
      * @return date
      */
     public static Date getLastDayOfWeek() {
@@ -190,7 +192,7 @@ public class DateUtil {
 
     /**
      * 获取当前月的第一天
-     * 
+     *
      * @return date
      */
     public static Date getFirstDayOfMonth() {
@@ -201,7 +203,7 @@ public class DateUtil {
 
     /**
      * 获取当前月的最后一天
-     * 
+     *
      * @return
      */
     public static Date getLastDayOfMonth() {
@@ -214,7 +216,7 @@ public class DateUtil {
 
     /**
      * 获取指定月的第一天
-     * 
+     *
      * @param date
      * @return
      */
@@ -226,7 +228,7 @@ public class DateUtil {
 
     /**
      * 获取指定月的最后一天
-     * 
+     *
      * @param date
      * @return
      */
@@ -240,7 +242,7 @@ public class DateUtil {
 
     /**
      * 获取日期前一天
-     * 
+     *
      * @param date
      * @return
      */
@@ -253,7 +255,7 @@ public class DateUtil {
 
     /**
      * 获取日期后一天
-     * 
+     *
      * @param date
      * @return
      */
@@ -266,7 +268,7 @@ public class DateUtil {
 
     /**
      * 获取当前年
-     * 
+     *
      * @return
      */
     public static int getNowYear() {
@@ -276,7 +278,7 @@ public class DateUtil {
 
     /**
      * 获取当前月份
-     * 
+     *
      * @return
      */
     public static int getNowMonth() {
@@ -286,7 +288,7 @@ public class DateUtil {
 
     /**
      * 获取当月天数
-     * 
+     *
      * @return
      */
     public static int getNowMonthDay() {
@@ -321,7 +323,7 @@ public class DateUtil {
 
     /**
      * 获取提前多少个月
-     * 
+     *
      * @param monty
      * @return
      */
@@ -329,5 +331,35 @@ public class DateUtil {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.MONTH, -monty);
         return c.getTime();
+    }
+
+    /**
+     * 将日期格式化成友好的字符串：几分钟前、几小时前、几天前、几月前、几年前、刚刚
+     *
+     * @param date
+     * @return
+     */
+    public static String formatFriendly(Date date) {
+        if (date == null) {
+            return null;
+        }
+        Calendar c = Calendar.getInstance();
+        int nowDay = c.get(Calendar.DAY_OF_MONTH);
+        c.setTime(date);
+        int noteDay = c.get(Calendar.DAY_OF_MONTH);
+        long diff = new Date().getTime() - date.getTime();
+        if (diff / minute < 3) {
+            return "刚刚";
+        }
+        if (diff / minute < 60) {
+            return diff / minute + " 分钟前";
+        }
+        if (nowDay == noteDay) {
+            return "今天 " + getTimeFormat(date);
+        }
+        if (nowDay == noteDay + 1) {
+            return "昨天 " + getTimeFormat(date);
+        }
+        return getDateFormat(date);
     }
 }
