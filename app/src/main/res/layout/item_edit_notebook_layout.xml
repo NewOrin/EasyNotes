@@ -18,7 +18,7 @@
                     android:paddingRight="@dimen/x20">
 
         <ImageView
-            android:id="@+id/item_slide_menu_img"
+            android:id="@+id/item_edit_notebook_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -29,15 +29,17 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/x20"
-            android:layout_toRightOf="@+id/item_slide_menu_img"
+            android:layout_toRightOf="@+id/item_edit_notebook_img"
             android:text="@{notebookBean.name}"/>
 
         <TextView
+            android:id="@+id/item_edit_notebook_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:drawablePadding="@dimen/x20"
+            android:drawableRight="@drawable/ic_more_vert"
             android:text="@{String.valueOf(notebookBean.count)}"/>
-
     </RelativeLayout>
 </layout>

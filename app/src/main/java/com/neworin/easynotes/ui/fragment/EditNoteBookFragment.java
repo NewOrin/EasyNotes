@@ -1,5 +1,6 @@
 package com.neworin.easynotes.ui.fragment;
 
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import com.neworin.easynotes.greendao.gen.NoteBookDao;
 import com.neworin.easynotes.greendao.gen.NoteDao;
 import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.ui.BaseFragment;
+import com.neworin.easynotes.utils.DialogUtils;
 import com.neworin.easynotes.view.DividerItemDecoration;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,6 +38,8 @@ public class EditNoteBookFragment extends BaseFragment {
     private NoteBookDao mNoteBookDao;
     private List<NoteBook> mNoteBookList;
     private RecyclerViewCommonAdapter mAdapter;
+    private DialogUtils mDialogUtils;
+    private String[] mShowDialogItems = {"重命名", "查看详情", "删除"};
 
     @Override
     protected int getLayoutId() {
@@ -48,9 +52,11 @@ public class EditNoteBookFragment extends BaseFragment {
         mBinding = DataBindingUtil.bind(getRootView());
         mDBManager = DBManager.getInstance(getActivity());
         initViewData();
+        initEvent();
     }
 
     private void initViewData() {
+        mDialogUtils = new DialogUtils(getActivity());
         mNoteBookList = mDBManager.getWriteDaoSession().getNoteBookDao().queryBuilder().list();
         mNoteBookList = setNoteBookCount(mNoteBookList);
         mAdapter = new RecyclerViewCommonAdapter(getActivity(), mNoteBookList, R.layout.item_edit_notebook_layout, BR.notebookBean);
@@ -58,6 +64,21 @@ public class EditNoteBookFragment extends BaseFragment {
         getRecyclerView().setLayoutManager(linearLayoutManager);
         getRecyclerView().addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
         getRecyclerView().setAdapter(mAdapter);
+    }
+
+    private void initEvent() {
+        mAdapter.setOnMoreInfoClickListener(new RecyclerViewCommonAdapter.OnMoreInfoClickListener() {
+            @Override
+            public void onMoreInfoClick(int position) {
+                showMoreInfoDialog();
+            }
+        });
+        mAdapter.setmOnItemLongClickListener(new RecyclerViewCommonAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(int position) {
+                showMoreInfoDialog();
+            }
+        });
     }
 
     private RecyclerView getRecyclerView() {
@@ -94,6 +115,14 @@ public class EditNoteBookFragment extends BaseFragment {
         return list;
     }
 
+    private void showMoreInfoDialog(){
+        mDialogUtils.showItemDialog(mShowDialogItems, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();

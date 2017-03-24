@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.neworin.easynotes.R;
+
 import java.util.List;
 
 /**
@@ -23,6 +25,7 @@ public class RecyclerViewCommonAdapter<T> extends RecyclerView.Adapter<MyViewHol
     private int mVariableId;
     private OnItemClickListener mOnItemClickListener;
     private OnItemLongClickListener mOnItemLongClickListener;
+    private OnMoreInfoClickListener mOnMoreInfoClickListener;
 
     public void setmOnItemClickListener(OnItemClickListener mOnItemClickListener) {
         this.mOnItemClickListener = mOnItemClickListener;
@@ -30,6 +33,10 @@ public class RecyclerViewCommonAdapter<T> extends RecyclerView.Adapter<MyViewHol
 
     public void setmOnItemLongClickListener(OnItemLongClickListener mOnItemLongClickListener) {
         this.mOnItemLongClickListener = mOnItemLongClickListener;
+    }
+
+    public void setOnMoreInfoClickListener(OnMoreInfoClickListener onMoreInfoClickListener) {
+        mOnMoreInfoClickListener = onMoreInfoClickListener;
     }
 
     public RecyclerViewCommonAdapter(Context context, List<T> datas, int layoutId, int variableId) {
@@ -66,6 +73,16 @@ public class RecyclerViewCommonAdapter<T> extends RecyclerView.Adapter<MyViewHol
                 return false;
             }
         });
+        if (null != holder.getBinding().getRoot().findViewById(R.id.item_edit_notebook_count)) {
+            holder.getBinding().getRoot().findViewById(R.id.item_edit_notebook_count).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != mOnMoreInfoClickListener) {
+                        mOnMoreInfoClickListener.onMoreInfoClick(holder.getLayoutPosition());
+                    }
+                }
+            });
+        }
         holder.getBinding().setVariable(mVariableId, mDatas.get(position));
     }
 
@@ -85,6 +102,10 @@ public class RecyclerViewCommonAdapter<T> extends RecyclerView.Adapter<MyViewHol
 
     public interface OnItemLongClickListener {
         void onItemLongClick(int position);
+    }
+
+    public interface OnMoreInfoClickListener {
+        void onMoreInfoClick(int position);
     }
 }
 

@@ -37,14 +37,7 @@ public class DialogUtils {
      */
     public void showItemDialog(CharSequence[] items, DialogInterface.OnClickListener listener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(R.string.note_book_choose);
         builder.setItems(items, listener);
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
         builder.create().show();
     }
 
