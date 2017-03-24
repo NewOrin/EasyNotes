@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.view.View;
 import android.widget.EditText;
 
 import com.neworin.easynotes.R;
@@ -59,6 +60,17 @@ public class DialogUtils {
         builder.create().show();
     }
 
+    /**
+     * 创建显示详情对话框
+     *
+     * @param view
+     */
+    public void showInfoDialog(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setView(view);
+        builder.setPositiveButton(R.string.confirm, null);
+        builder.create().show();
+    }
     /**
      * 获取EditText值
      *
