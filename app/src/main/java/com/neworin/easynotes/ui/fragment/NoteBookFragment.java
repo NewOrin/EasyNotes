@@ -24,6 +24,7 @@ import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.greendao.gen.NoteDao;
 import com.neworin.easynotes.model.Note;
 import com.neworin.easynotes.model.NoteBook;
+import com.neworin.easynotes.model.NoteManager;
 import com.neworin.easynotes.ui.BaseFragment;
 import com.neworin.easynotes.ui.activity.NoteActivity;
 import com.neworin.easynotes.utils.Constant;
@@ -55,6 +56,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
     private DialogUtils mDialogUtils;
     private String mDialogItems[];
     private boolean mIsThumb;
+    private NoteManager mNoteManager;
 
     public NoteBookFragment() {
     }
@@ -79,6 +81,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
     private void initView() {
+        mNoteManager = new NoteManager(getActivity());
         mIsThumb = false;
         mNoteBook = getArguments().getParcelable(Constant.ARG0);
         mDialogItems = new String[]{getString(R.string.note_book_delete)};
@@ -209,11 +212,19 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
      * @param position
      */
     private void showDeleteDialog(final int position) {
+        final Note note = mDatas.get(position);
         mDialogUtils = new DialogUtils(getActivity());
         mDialogUtils.showAlertDialog(getString(R.string.cofirm_delete_hint), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 deleteItem(position);
+                showSnackBarWithAction(getRootView(), getString(R.string.edit_notebook_success), getString(R.string.edit_notebook_recall), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mNoteManager.insert(note);
+                        refreshData();
+                    }
+                });
                 mAdapter.notifyItemRemoved(position);
                 refreshData();
             }
