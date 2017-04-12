@@ -14,4 +14,5 @@
     <dimen name="text_size_21_sp">21sp</dimen>
     <dimen name="text_size_22_sp">22sp</dimen>
     <dimen name="note_text_default_size">18sp</dimen>
+    <dimen name="edit_padding_top">0dp</dimen>
 </resources>

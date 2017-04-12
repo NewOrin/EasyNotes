@@ -58,6 +58,10 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         getToolbar().setOnMenuItemClickListener(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setNavigationIcon();
+        initEvent();
+    }
+    
+    private void initEvent(){
         getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
