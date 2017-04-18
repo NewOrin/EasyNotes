@@ -1,5 +1,7 @@
 package com.neworin.easynotes.utils;
 
+import android.os.Environment;
+
 /**
  * Created by NewOrin Zhang on 2017/2/20.
  * E-Mail : NewOrinZhang@Gmail.com
@@ -12,6 +14,8 @@ public class Constant {
 
     public static final int NOTE_BOOK_FRAGMENT_RESULT_CODE = 1000;
     public static final int EDIT_BOOK_RESULT_CODE = 1001;
+    public static final int OPEN_SYSTEM_ALBUM_RESULT_CODE = 1002;
+    public static final int OPEN_CAMERA_RESULT_CODE = 1003;
 
     public static final String ARG0 = "arg0";
     public static final String ARG1 = "arg1";
@@ -19,4 +23,6 @@ public class Constant {
 
     public static final String NOTE_ADD_FLAG = "note_add_flag";
     public static final String NOTE_EDIT_FLAG = "note_edit_flag";
+
+    public static final String CAMERA_PHOTO_DIR = Environment.getExternalStorageDirectory() + "/DCIM/Camera";
 }

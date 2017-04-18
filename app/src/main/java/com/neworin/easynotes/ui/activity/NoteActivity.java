@@ -1,6 +1,11 @@
 package com.neworin.easynotes.ui.activity;
 
+import android.Manifest;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,21 +15,35 @@ import com.neworin.easynotes.R;
 import com.neworin.easynotes.databinding.ActivityNoteLayoutBinding;
 import com.neworin.easynotes.event.NoteBookFragmentEvent;
 import com.neworin.easynotes.greendao.gen.DaoSession;
+import com.neworin.easynotes.model.EditData;
 import com.neworin.easynotes.model.Note;
 import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.ui.BaseAppCompatActivity;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
+import com.neworin.easynotes.utils.FileUtil;
 import com.neworin.easynotes.utils.GenerateSequenceUtil;
+import com.neworin.easynotes.utils.L;
+import com.neworin.easynotes.view.RichTextEditor;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.io.File;
+import java.util.List;
+
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * Created by NewOrin Zhang on 2017/3/13.
  * E-mail : NewOrinZhang@Gmail.com
  * 添加笔记，编辑笔记页面
  */
-
+@RuntimePermissions
 public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMenuItemClickListener {
 
     private ActivityNoteLayoutBinding mBinding;
@@ -37,6 +56,7 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     private NoteBook mNoteBook;
     private DBManager mDbManager;
     private DaoSession mDaoSession;
+    private File mCurrentPhotoFile;// 照相机拍照得到的图片
 
     @Override
     protected void initView() {
@@ -51,8 +71,10 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         mDbManager = DBManager.getInstance(this);
         if (mIsEdit) {
             initEditView();
+            getRichEdtor().setHaveContent(true);
         } else {
             initAddView();
+            getRichEdtor().setHaveContent(false);
         }
         getToolbar().inflateMenu(R.menu.note_menu);
         getToolbar().setOnMenuItemClickListener(this);
@@ -60,7 +82,7 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         setNavigationIcon();
         initEvent();
     }
-    
+
     private void initEvent(){
         getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +117,7 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         }
         mBinding.noteEditTitle.setText(mNote.getTitle());
         mBinding.noteEditTitle.setSelection(mNote.getTitle().length());
-        mBinding.noteEditContent.setText(mNote.getContent());
+//        mBinding.noteEditContent.setText(mNote.getContent());
     }
 
     /**
@@ -114,20 +136,32 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         return R.layout.activity_note_layout;
     }
 
-
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        //完成
-        if (item.getItemId() == R.id.note_menu_edit_done) {
-            if (mIsEdit) {
-                finish();
-            } else {
-                mIsDestroy = false;
-                saveNote();
-                if (!isSaveNote()) {
-                    showSnackBar(mBinding.getRoot(), getString(R.string.note_input_content_alert));
+        switch (item.getItemId()) {
+            //完成
+            case R.id.note_menu_edit_done:
+                List<EditData> dataList = getRichEdtor().buildEditData();
+                for (EditData ed : dataList) {
+                    L.d(ed.toString());
                 }
-            }
+//                if (mIsEdit) {
+//                    finish();
+//                } else {
+//                    mIsDestroy = false;
+//                    saveNote();
+//                    if (!isSaveNote()) {
+//                        showSnackBar(mBinding.getRoot(), getString(R.string.note_input_content_alert));
+//                    }
+//                }
+                break;
+            case R.id.note_menu_camera:
+                NoteActivityPermissionsDispatcher.openCameraWithCheck(this);
+//                openCamera();
+                break;
+            case R.id.note_menu_photo:
+                openSystemAlbum();
+                break;
         }
         return true;
     }
@@ -188,7 +222,8 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
      * @return
      */
     private String getContentText() {
-        return mBinding.noteEditContent.getText().toString();
+        return "";
+//        return mBinding.noteEditContent.getText().toString();
     }
 
     @Override
@@ -203,5 +238,81 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         }
         EventBus.getDefault().post(new NoteBookFragmentEvent.RefreshNoteEvent());
         super.onDestroy();
+    }
+
+    private RichTextEditor getRichEdtor() {
+        return mBinding.noteRichEditor;
+    }
+
+    /**
+     * 打开系统相册
+     */
+    private void openSystemAlbum() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, Constant.OPEN_SYSTEM_ALBUM_RESULT_CODE);
+    }
+
+    /**
+     * 打开相机
+     */
+    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void openCamera() {
+        if (FileUtil.mkDirs(Constant.CAMERA_PHOTO_DIR)) {
+            mCurrentPhotoFile = new File(Constant.CAMERA_PHOTO_DIR, FileUtil.getPhotoFileName());
+            Intent intent = getTakePickIntent(mCurrentPhotoFile);
+            startActivityForResult(intent, Constant.OPEN_CAMERA_RESULT_CODE);
+        } else {
+            showSnackBar(mBinding.getRoot(), getString(R.string.note_make_dirs_failed));
+        }
+    }
+
+    public Intent getTakePickIntent(File f) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE, null);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+        return intent;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        if (requestCode == Constant.OPEN_SYSTEM_ALBUM_RESULT_CODE) {
+            Uri uri = data.getData();
+            insertBitmap(FileUtil.getRealFilePath(uri, this));
+        } else if (requestCode == Constant.OPEN_CAMERA_RESULT_CODE) {
+            insertBitmap(mCurrentPhotoFile.getAbsolutePath());
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        NoteActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    /**
+     * 添加图片到RichEditor
+     *
+     * @param imagePath
+     */
+    private void insertBitmap(String imagePath) {
+        getRichEdtor().insertImage(imagePath);
+    }
+
+    @OnPermissionDenied({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showDeniedForCamera() {
+        showSnackBar(mBinding.getRoot(), getString(R.string.note_get_permission_failed));
+    }
+
+    @OnNeverAskAgain({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showNeverAskForCamera() {
+        showSnackBar(mBinding.getRoot(), getString(R.string.note_show_grant_permission_hint));
+    }
+
+    @OnShowRationale({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showRationaleForCamera(final PermissionRequest request) {
+        showSnackBar(mBinding.getRoot(), getString(R.string.note_get_permission_failed));
     }
 }

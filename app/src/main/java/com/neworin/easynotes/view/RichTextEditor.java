@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.neworin.easynotes.R;
+import com.neworin.easynotes.model.EditData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ public class RichTextEditor extends ScrollView {
 	private LayoutTransition mTransitioner; // 只在图片View添加或remove时，触发transition动画
 	private int editNormalPadding = 0; //
 	private int disappearingImageIndex = 0;
+	private boolean mIsHaveContent;
 
 	public RichTextEditor(Context context) {
 		this(context, null);
@@ -97,12 +99,18 @@ public class RichTextEditor extends ScrollView {
 				}
 			}
 		};
+	}
 
-		LinearLayout.LayoutParams firstEditParam = new LinearLayout.LayoutParams(
-				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+	/**
+	 * EditText提供外部接口插入内容
+	 *
+	 * @param content
+	 */
+	public void insertContent(String content) {
+		LinearLayout.LayoutParams firstEditParam = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		editNormalPadding = dip2px(EDIT_PADDING);
-		EditText firstEdit = createEditText("input here",
-				dip2px(EDIT_FIRST_PADDING_TOP));
+		EditText firstEdit = createEditText("", dip2px(EDIT_FIRST_PADDING_TOP));
+		firstEdit.setText(content);
 		allLayout.addView(firstEdit, firstEditParam);
 		lastFocusEdit = firstEdit;
 	}
@@ -387,9 +395,19 @@ public class RichTextEditor extends ScrollView {
 		return dataList;
 	}
 
-	class EditData {
-		String inputStr;
-		String imagePath;
-		Bitmap bitmap;
+	public boolean isHaveContent() {
+		return mIsHaveContent;
+	}
+
+	/**
+	 * 设置是否有内容
+	 *
+	 * @param haveContent
+	 */
+	public void setHaveContent(boolean haveContent) {
+		mIsHaveContent = haveContent;
+		if (!mIsHaveContent) {
+			insertContent("");
+		}
 	}
 }

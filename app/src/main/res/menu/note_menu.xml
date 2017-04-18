@@ -2,8 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/note_menu_photo"
+        android:icon="@drawable/ic_photo_library_white"
+        android:title="@string/note_edit_photo"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/note_menu_camera"
+        android:icon="@drawable/ic_camera_white"
+        android:title="@string/note_camera"
+        app:showAsAction="always"/>
+    <item
         android:id="@+id/note_menu_edit_done"
         android:icon="@drawable/ic_done"
         android:title="@string/note_edit_done"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always"/>
 </menu>

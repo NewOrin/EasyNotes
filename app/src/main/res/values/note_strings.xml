@@ -2,13 +2,21 @@
 <resources>
     <string name="note_activity_title">添加笔记</string>
     <string name="note_activity_edit_title">编辑笔记</string>
-    <string name="note_set_title_hint">标题</string>
+    <string name="note_set_title_hint">添加标题</string>
     <string name="note_set_content_hint">内容</string>
     <string name="note_edit_done">完成</string>
+    <string name="note_edit_photo">相册</string>
+    <string name="note_camera">拍照</string>
     <string name="note_input_content_alert">请输入内容</string>
     <string name="note_book_delete">删除</string>
     <string name="note_book_choose">请选择</string>
     <string name="cofirm_delete_hint">确认删除?</string>
     <string name="note_my_notebook">我的笔记本</string>
     <string name="notebook_add_note_hint">点击右下角添加笔记</string>
+    <string name="note_make_dirs_failed">创建文件夹失败</string>
+    <string name="note_get_photo_failed">获取照片失败</string>
+    <string name="note_get_camera_permission_failed">获取相机权限失败</string>
+    <string name="note_show_camera_permission_never_ask">请到设置授予打开相机权限</string>
+    <string name="note_get_permission_failed">获取权限失败</string>
+    <string name="note_show_grant_permission_hint">请到设置授予相应权限</string>
 </resources>
