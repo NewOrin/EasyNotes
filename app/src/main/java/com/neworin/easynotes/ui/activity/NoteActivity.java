@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.alibaba.fastjson.JSON;
 import com.neworin.easynotes.DBManager;
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.databinding.ActivityNoteLayoutBinding;
@@ -71,7 +72,11 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         mDbManager = DBManager.getInstance(this);
         if (mIsEdit) {
             initEditView();
-            getRichEdtor().setHaveContent(true);
+            if (null != mNote && !mNote.getContent().equals("")) {
+                getRichEdtor().setHaveContent(true);
+            } else {
+                getRichEdtor().setHaveContent(false);
+            }
         } else {
             initAddView();
             getRichEdtor().setHaveContent(false);
@@ -117,7 +122,6 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         }
         mBinding.noteEditTitle.setText(mNote.getTitle());
         mBinding.noteEditTitle.setSelection(mNote.getTitle().length());
-//        mBinding.noteEditContent.setText(mNote.getContent());
     }
 
     /**
@@ -128,7 +132,7 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     private boolean isSaveNote() {
         mTitle = getTitleText();
         mContent = getContentText();
-        return !(mTitle.isEmpty() && mContent.isEmpty());
+        return !(mTitle.equals("") && mContent == null);
     }
 
     @Override
@@ -145,22 +149,21 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
                 for (EditData ed : dataList) {
                     L.d(ed.toString());
                 }
-//                if (mIsEdit) {
-//                    finish();
-//                } else {
-//                    mIsDestroy = false;
-//                    saveNote();
-//                    if (!isSaveNote()) {
-//                        showSnackBar(mBinding.getRoot(), getString(R.string.note_input_content_alert));
-//                    }
-//                }
+                if (mIsEdit) {
+                    finish();
+                } else {
+                    mIsDestroy = false;
+                    saveNote();
+                    if (!isSaveNote()) {
+                        showSnackBar(mBinding.getRoot(), getString(R.string.note_input_content_alert));
+                    }
+                }
                 break;
             case R.id.note_menu_camera:
                 NoteActivityPermissionsDispatcher.openCameraWithCheck(this);
-//                openCamera();
                 break;
             case R.id.note_menu_photo:
-                openSystemAlbum();
+                NoteActivityPermissionsDispatcher.openSystemAlbumWithCheck(this);
                 break;
         }
         return true;
@@ -171,6 +174,9 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
      */
     private void saveNote() {
         if (isSaveNote()) {
+            if (mContent == null) {
+                mContent = "";
+            }
             mDaoSession = mDbManager.getWriteDaoSession();
             Note note = new Note();
             note.setId(GenerateSequenceUtil.generateSequenceNo());
@@ -192,7 +198,11 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
      * 更新笔记
      */
     private void updateNote() {
-        if (getTitleText().equals(mNote.getTitle()) && getContentText().equals(mNote.getContent())) {
+        String content = getContentText();
+        if (content == null) {
+            content = "";
+        }
+        if (getTitleText().equals(mNote.getTitle()) && content.equals(mNote.getContent())) {
             finish();
             return;
         }
@@ -200,7 +210,7 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         Note note = new Note();
         note.setId(mNote.getId());
         note.setTitle(getTitleText());
-        note.setContent(getContentText());
+        note.setContent(content);
         note.setCreateTime(mNote.getCreateTime());
         note.setUpdateTime(DateUtil.getNowTime());
         mDaoSession.getNoteDao().update(note);
@@ -222,8 +232,18 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
      * @return
      */
     private String getContentText() {
-        return "";
-//        return mBinding.noteEditContent.getText().toString();
+        List<EditData> dataList = getRichEdtor().buildEditData();
+        if (dataList.size() == 1) {
+            if (dataList.get(0).getInputStr().equals("") && dataList.get(0).getImagePath() == null && dataList.get(0).getBitmap() == null) {
+                return null;
+            }
+        }
+        for (EditData ed : dataList) {
+            if (ed.getInputStr().equals("") && ed.getImagePath() == null && ed.getBitmap() == null) {
+                dataList.remove(ed);
+            }
+        }
+        return JSON.toJSONString(dataList);
     }
 
     @Override
@@ -247,7 +267,8 @@ public class NoteActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     /**
      * 打开系统相册
      */
-    private void openSystemAlbum() {
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void openSystemAlbum() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, Constant.OPEN_SYSTEM_ALBUM_RESULT_CODE);
