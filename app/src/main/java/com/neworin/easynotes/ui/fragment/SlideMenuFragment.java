@@ -103,11 +103,8 @@ public class SlideMenuFragment extends BaseFragment {
         mBinding.slideMenuListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mNoteBookList.get(getCheckPos()).setChecked(false);
-                mNoteBookList.get(position).setChecked(true);
-                setCheckPos(position);
-                mAdapter.notifyDataSetChanged();
                 EventBus.getDefault().post(new SlideMenuEvent.ListItemEvent(mNoteBookList.get(position)));
+                mBinding.slideMenuListview.setItemChecked(position, true);
             }
         });
     }

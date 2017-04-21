@@ -49,6 +49,8 @@
             android:layout_alignParentBottom="true"
             android:divider="@null"
             app:adapter="@{adapter}"
+            android:choiceMode="singleChoice"
+            android:listSelector="@drawable/listview_selector"
             app:layout_heightPercent="78%"
             app:layout_widthPercent="100%" />
     </android.support.percent.PercentRelativeLayout>

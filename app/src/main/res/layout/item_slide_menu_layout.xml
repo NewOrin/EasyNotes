@@ -13,7 +13,6 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="@dimen/y55"
-        android:background="@{notebookBean.checked ? @color/slide_menu_item_selected : @color/white}"
         android:paddingLeft="@dimen/x20"
         android:paddingRight="@dimen/x20">
 
@@ -22,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:src="@{notebookBean.checked ?  @drawable/ic_notebook_selected: @drawable/ic_notebook_normal}" />
+            android:src="@drawable/item_imageview_selector"/>
 
         <TextView
             android:layout_width="wrap_content"
