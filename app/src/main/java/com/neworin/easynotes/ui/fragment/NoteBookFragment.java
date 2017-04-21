@@ -137,6 +137,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
             }
         });
         mDaoSession.clear();
+        EventBus.getDefault().post(new SlideMenuEvent.RefreshEvent());
     }
 
     @Override
