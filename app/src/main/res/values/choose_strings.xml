@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="email_hint">邮箱</string>
+    <string name="password_hint">密码</string>
+    <string name="email_validate_error">邮箱格式不正确</string>
+    <string name="password_empty_error">密码不能为空</string>
+</resources>

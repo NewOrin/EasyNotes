@@ -5,7 +5,7 @@
 
         <import type="com.neworin.easynotes.utils.DateUtil"/>
 
-        <import type="com.neworin.easynotes.utils.NoteBookItemUtil"/>
+        <import type="com.neworin.easynotes.binding.NoteBookItemBindingAdapter"/>
 
         <import type="android.view.View"/>
         <variable

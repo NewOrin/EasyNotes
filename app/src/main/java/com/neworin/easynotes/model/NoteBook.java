@@ -114,6 +114,7 @@ public class NoteBook extends BaseObservable implements Parcelable {
         this.name = name;
     }
 
+    @Bindable
     public Boolean getIsChecked() {
         return this.isChecked;
     }
@@ -155,6 +156,15 @@ public class NoteBook extends BaseObservable implements Parcelable {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "NoteBook{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", isChecked=" + isChecked +
+                '}';
     }
 
     @Override

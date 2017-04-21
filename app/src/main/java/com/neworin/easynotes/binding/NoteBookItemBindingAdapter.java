@@ -1,4 +1,4 @@
-package com.neworin.easynotes.utils;
+package com.neworin.easynotes.binding;
 
 import android.databinding.BindingAdapter;
 import android.view.View;
@@ -17,7 +17,7 @@ import java.util.List;
  * Description:
  */
 
-public class NoteBookItemUtil {
+public class NoteBookItemBindingAdapter {
 
     public static boolean isShow(String content) {
         List<EditData> list = JSON.parseArray(content, EditData.class);
