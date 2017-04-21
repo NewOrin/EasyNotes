@@ -2,9 +2,12 @@ package com.neworin.easynotes.model;
 
 import android.graphics.Bitmap;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 public class EditData {
     public String inputStr;
     public String imagePath;
+    @JSONField(serialize = false)
     public Bitmap bitmap;
 
     public String getInputStr() {

@@ -26,6 +26,7 @@ import com.neworin.easynotes.model.Note;
 import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.model.NoteManager;
 import com.neworin.easynotes.ui.BaseFragment;
+import com.neworin.easynotes.ui.activity.EditActivity;
 import com.neworin.easynotes.ui.activity.NoteActivity;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DialogUtils;
@@ -110,8 +111,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(Constant.ARG0, mDatas.get(position));
                 bundle.putParcelable(Constant.ARG1, mNoteBook);
-                bundle.putString(Constant.ARG2, Constant.NOTE_EDIT_FLAG);
-                Intent intent = new Intent(getActivity(), NoteActivity.class);
+                Intent intent = new Intent(getActivity(), EditActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, Constant.NOTE_BOOK_FRAGMENT_RESULT_CODE);
             }
@@ -252,7 +252,6 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
             Intent intent = new Intent(getActivity(), NoteActivity.class);
             Bundle bundle = new Bundle();
             bundle.putParcelable(Constant.ARG1, mNoteBook);
-            bundle.putString(Constant.ARG2, Constant.NOTE_ADD_FLAG);
             intent.putExtras(bundle);
             getActivity().startActivityForResult(intent, Constant.NOTE_BOOK_FRAGMENT_RESULT_CODE);
         }
