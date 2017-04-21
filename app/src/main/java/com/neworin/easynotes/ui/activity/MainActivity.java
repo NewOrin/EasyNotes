@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -129,6 +130,15 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constant.EDIT_BOOK_RESULT_CODE) {
             EventBus.getDefault().post(new SlideMenuEvent.RefreshEvent());
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mBinding.mainDrawerlayout.isDrawerOpen(GravityCompat.START)) {
+            mBinding.mainDrawerlayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 }
