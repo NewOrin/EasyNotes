@@ -36,6 +36,7 @@
                 app:civ_border_width="@dimen/dp0" />
 
             <TextView
+                android:id="@+id/slide_name_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x20"

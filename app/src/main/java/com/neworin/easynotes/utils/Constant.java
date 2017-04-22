@@ -32,4 +32,10 @@ public class Constant {
 
     public static final String SCREEN_WIDTH = "screen_width";
     public static final String SCREEN_HEIGHT = "screen_height";
+
+    public static final String USER_ID = "user_id";
+    public static final String USER_EMAIL = "email";
+    public static final String USER_PASSWORD = "password";
+    public static final String USER_AVATAR = "avatar";
+    public static final String USER_NICKNAME = "nickname";
 }

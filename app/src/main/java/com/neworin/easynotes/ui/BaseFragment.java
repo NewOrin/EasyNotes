@@ -1,5 +1,6 @@
 package com.neworin.easynotes.ui;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -7,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.neworin.easynotes.R;
 
 /**
  * Created by NewOrin Zhang
@@ -18,6 +21,7 @@ import android.view.ViewGroup;
 public abstract class BaseFragment extends Fragment {
 
     protected View mRootView;
+    private ProgressDialog mProgressDialog;
 
     @Nullable
     @Override
@@ -52,5 +56,23 @@ public abstract class BaseFragment extends Fragment {
 
     public void setRootView(View rootView) {
         mRootView = rootView;
+    }
+
+    /**
+     * 显示加载对话框
+     */
+    protected void showProgressDialog() {
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.show();
+    }
+
+    /**
+     * 关闭加载对话框
+     */
+    protected void closeProgressDialog() {
+        if (null != mProgressDialog) {
+            mProgressDialog.dismiss();
+        }
     }
 }

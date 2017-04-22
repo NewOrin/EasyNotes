@@ -25,10 +25,11 @@ public class UserDao extends AbstractDao<User, Long> {
      */
     public static class Properties {
         public final static Property Id = new Property(0, long.class, "id", true, "_id");
-        public final static Property WechatNumber = new Property(1, String.class, "wechatNumber", false, "WECHAT_NUMBER");
-        public final static Property NickName = new Property(2, String.class, "nickName", false, "NICK_NAME");
-        public final static Property AvatarUrl = new Property(3, String.class, "avatarUrl", false, "AVATAR_URL");
-        public final static Property JoinTime = new Property(4, java.util.Date.class, "joinTime", false, "JOIN_TIME");
+        public final static Property Email = new Property(1, String.class, "email", false, "EMAIL");
+        public final static Property Password = new Property(2, String.class, "password", false, "PASSWORD");
+        public final static Property Nickname = new Property(3, String.class, "nickname", false, "NICKNAME");
+        public final static Property Avatarurl = new Property(4, String.class, "avatarurl", false, "AVATARURL");
+        public final static Property Jointime = new Property(5, java.util.Date.class, "jointime", false, "JOINTIME");
     }
 
 
@@ -45,10 +46,11 @@ public class UserDao extends AbstractDao<User, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"USER\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY NOT NULL ," + // 0: id
-                "\"WECHAT_NUMBER\" TEXT," + // 1: wechatNumber
-                "\"NICK_NAME\" TEXT," + // 2: nickName
-                "\"AVATAR_URL\" TEXT," + // 3: avatarUrl
-                "\"JOIN_TIME\" INTEGER);"); // 4: joinTime
+                "\"EMAIL\" TEXT," + // 1: email
+                "\"PASSWORD\" TEXT," + // 2: password
+                "\"NICKNAME\" TEXT," + // 3: nickname
+                "\"AVATARURL\" TEXT," + // 4: avatarurl
+                "\"JOINTIME\" INTEGER);"); // 5: jointime
     }
 
     /** Drops the underlying database table. */
@@ -62,24 +64,29 @@ public class UserDao extends AbstractDao<User, Long> {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getId());
  
-        String wechatNumber = entity.getWechatNumber();
-        if (wechatNumber != null) {
-            stmt.bindString(2, wechatNumber);
+        String email = entity.getEmail();
+        if (email != null) {
+            stmt.bindString(2, email);
         }
  
-        String nickName = entity.getNickName();
-        if (nickName != null) {
-            stmt.bindString(3, nickName);
+        String password = entity.getPassword();
+        if (password != null) {
+            stmt.bindString(3, password);
         }
  
-        String avatarUrl = entity.getAvatarUrl();
-        if (avatarUrl != null) {
-            stmt.bindString(4, avatarUrl);
+        String nickname = entity.getNickname();
+        if (nickname != null) {
+            stmt.bindString(4, nickname);
         }
  
-        java.util.Date joinTime = entity.getJoinTime();
-        if (joinTime != null) {
-            stmt.bindLong(5, joinTime.getTime());
+        String avatarurl = entity.getAvatarurl();
+        if (avatarurl != null) {
+            stmt.bindString(5, avatarurl);
+        }
+ 
+        java.util.Date jointime = entity.getJointime();
+        if (jointime != null) {
+            stmt.bindLong(6, jointime.getTime());
         }
     }
 
@@ -88,24 +95,29 @@ public class UserDao extends AbstractDao<User, Long> {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getId());
  
-        String wechatNumber = entity.getWechatNumber();
-        if (wechatNumber != null) {
-            stmt.bindString(2, wechatNumber);
+        String email = entity.getEmail();
+        if (email != null) {
+            stmt.bindString(2, email);
         }
  
-        String nickName = entity.getNickName();
-        if (nickName != null) {
-            stmt.bindString(3, nickName);
+        String password = entity.getPassword();
+        if (password != null) {
+            stmt.bindString(3, password);
         }
  
-        String avatarUrl = entity.getAvatarUrl();
-        if (avatarUrl != null) {
-            stmt.bindString(4, avatarUrl);
+        String nickname = entity.getNickname();
+        if (nickname != null) {
+            stmt.bindString(4, nickname);
         }
  
-        java.util.Date joinTime = entity.getJoinTime();
-        if (joinTime != null) {
-            stmt.bindLong(5, joinTime.getTime());
+        String avatarurl = entity.getAvatarurl();
+        if (avatarurl != null) {
+            stmt.bindString(5, avatarurl);
+        }
+ 
+        java.util.Date jointime = entity.getJointime();
+        if (jointime != null) {
+            stmt.bindLong(6, jointime.getTime());
         }
     }
 
@@ -118,10 +130,11 @@ public class UserDao extends AbstractDao<User, Long> {
     public User readEntity(Cursor cursor, int offset) {
         User entity = new User( //
             cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // wechatNumber
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // nickName
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // avatarUrl
-            cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)) // joinTime
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // email
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // password
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // nickname
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // avatarurl
+            cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)) // jointime
         );
         return entity;
     }
@@ -129,10 +142,11 @@ public class UserDao extends AbstractDao<User, Long> {
     @Override
     public void readEntity(Cursor cursor, User entity, int offset) {
         entity.setId(cursor.getLong(offset + 0));
-        entity.setWechatNumber(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setNickName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setAvatarUrl(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setJoinTime(cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)));
+        entity.setEmail(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setPassword(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setNickname(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setAvatarurl(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setJointime(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
      }
     
     @Override

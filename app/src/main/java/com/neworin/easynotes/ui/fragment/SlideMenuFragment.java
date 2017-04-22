@@ -16,6 +16,7 @@ import com.neworin.easynotes.greendao.gen.NoteBookDao;
 import com.neworin.easynotes.greendao.gen.NoteDao;
 import com.neworin.easynotes.handlers.SlideMenuEventHandler;
 import com.neworin.easynotes.model.NoteBook;
+import com.neworin.easynotes.model.User;
 import com.neworin.easynotes.ui.BaseFragment;
 import com.neworin.easynotes.utils.Constant;
 
@@ -40,6 +41,7 @@ public class SlideMenuFragment extends BaseFragment {
     private List<NoteBook> mNoteBookList;
     private ListViewCommonAdapter<NoteBook> mAdapter;
     private int mCheckPosition;
+    private User mUser;
 
     @Override
     protected int getLayoutId() {
@@ -84,6 +86,9 @@ public class SlideMenuFragment extends BaseFragment {
         });
     }
 
+    private void setHeadInfo() {
+        mBinding.slideNameText.setText(mUser.getEmail());
+    }
     /**
      * 设置NoteBookList count
      *
@@ -132,6 +137,11 @@ public class SlideMenuFragment extends BaseFragment {
         refreshData();
     }
 
+    @Subscribe
+    public void onMessageEvent(SlideMenuEvent.RefreshUserEvent event) {
+        mUser = event.mUser;
+        setHeadInfo();
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();

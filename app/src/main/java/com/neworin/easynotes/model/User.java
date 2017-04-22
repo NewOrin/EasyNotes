@@ -22,19 +22,21 @@ public class User extends BaseObservable implements Parcelable {
 
     @Id
     private long id;
-    private String wechatNumber;
-    private String nickName;
-    private String avatarUrl;
-    private Date joinTime;
+    private String email;
+    private String password;
+    private String nickname;
+    private String avatarurl;
+    private Date jointime;
 
     @Keep
-    public User(long id, String wechatNumber, String nickName, String avatarUrl,
-            Date joinTime) {
+    public User(long id, String email, String password, String nickname, String avatarurl,
+                Date jointime) {
         this.id = id;
-        this.wechatNumber = wechatNumber;
-        this.nickName = nickName;
-        this.avatarUrl = avatarUrl;
-        this.joinTime = joinTime;
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.avatarurl = avatarurl;
+        this.jointime = jointime;
     }
 
     @Generated(hash = 586692638)
@@ -51,39 +53,48 @@ public class User extends BaseObservable implements Parcelable {
     }
 
     @Bindable
-    public String getWechatNumber() {
-        return wechatNumber;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setWechatNumber(String wechatNumber) {
-        this.wechatNumber = wechatNumber;
-    }
-
-    @Bindable
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     @Bindable
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public String getEmail() {
+        return email;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Bindable
-    public Date getJoinTime() {
-        return joinTime;
+    public String getPassword() {
+        return password;
     }
 
-    public void setJoinTime(Date joinTime) {
-        this.joinTime = joinTime;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Bindable
+    public String getAvatarurl() {
+        return avatarurl;
+    }
+
+    public void setAvatarurl(String avatarurl) {
+        this.avatarurl = avatarurl;
+    }
+
+    @Bindable
+    public Date getJointime() {
+        return jointime;
+    }
+
+    public void setJointime(Date jointime) {
+        this.jointime = jointime;
     }
 
     @Override
@@ -94,19 +105,21 @@ public class User extends BaseObservable implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
-        dest.writeString(this.wechatNumber);
-        dest.writeString(this.nickName);
-        dest.writeString(this.avatarUrl);
-        dest.writeLong(this.joinTime != null ? this.joinTime.getTime() : -1);
+        dest.writeString(this.email);
+        dest.writeString(this.password);
+        dest.writeString(this.nickname);
+        dest.writeString(this.avatarurl);
+        dest.writeLong(this.jointime != null ? this.jointime.getTime() : -1);
     }
 
     protected User(Parcel in) {
         this.id = in.readLong();
-        this.wechatNumber = in.readString();
-        this.nickName = in.readString();
-        this.avatarUrl = in.readString();
+        this.email = in.readString();
+        this.password = in.readString();
+        this.nickname = in.readString();
+        this.avatarurl = in.readString();
         long tmpJoinTime = in.readLong();
-        this.joinTime = tmpJoinTime == -1 ? null : new Date(tmpJoinTime);
+        this.jointime = tmpJoinTime == -1 ? null : new Date(tmpJoinTime);
     }
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
@@ -120,4 +133,16 @@ public class User extends BaseObservable implements Parcelable {
             return new User[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", avatarurl='" + avatarurl + '\'' +
+                ", jointime=" + jointime +
+                '}';
+    }
 }

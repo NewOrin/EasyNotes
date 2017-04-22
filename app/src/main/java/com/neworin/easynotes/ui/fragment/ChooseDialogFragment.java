@@ -1,8 +1,10 @@
 package com.neworin.easynotes.ui.fragment;
 
+import android.app.ProgressDialog;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -12,11 +14,18 @@ import android.widget.EditText;
 
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.databinding.FragmentDialogChooseBinding;
+import com.neworin.easynotes.http.Response;
+import com.neworin.easynotes.http.UserBizImpl;
+import com.neworin.easynotes.model.User;
 import com.neworin.easynotes.utils.Constant;
+import com.neworin.easynotes.utils.GsonUtil;
 import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * Created by NewOrin Zhang on 2017/4/21.
@@ -32,6 +41,17 @@ public class ChooseDialogFragment extends DialogFragment implements View.OnClick
     private Pattern pattern = Pattern.compile(EMAIL_PATTERN);
     private Matcher matcher;
     private Boolean mIsLogin;//默认是登录
+    private String TAG = ChooseDialogFragment.class.getSimpleName();
+    private ProgressDialog mProgressDialog;
+    private IUserResultListener mIUserResultListener;
+
+    public void setIUserResultListener(IUserResultListener IUserResultListener) {
+        mIUserResultListener = IUserResultListener;
+    }
+
+    public interface IUserResultListener {
+        void resultSuccess(User user);
+    }
 
     public static ChooseDialogFragment newInstance(Bundle bundle) {
         ChooseDialogFragment fragment = new ChooseDialogFragment();
@@ -94,9 +114,84 @@ public class ChooseDialogFragment extends DialogFragment implements View.OnClick
         return mBinding.choosePasswordEdit;
     }
 
-    public boolean validateEmail(String email) {
+    /**
+     * 验证邮箱格式
+     *
+     * @param email
+     * @return
+     */
+    private boolean validateEmail(String email) {
         matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    /**
+     * 登录操作
+     */
+    private void doLogin() {
+        UserBizImpl userBiz = new UserBizImpl();
+        userBiz.login(getUser(), new Callback<Response>() {
+            @Override
+            public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                closeProgressDialog();
+                Response resp = response.body();
+                if (resp.getMeta().isSuccess()) {
+                    //登录成功
+                    if (null != mIUserResultListener) {
+                        User user = GsonUtil.getDateFormatGson().fromJson(resp.getData().toString(), User.class);
+                        mIUserResultListener.resultSuccess(user);
+                    }
+                } else {
+                    Snackbar.make(mBinding.getRoot(), resp.getMeta().getMessage(), Snackbar.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response> call, Throwable t) {
+                Snackbar.make(mBinding.getRoot(), "登录失败" + t.getMessage(), Snackbar.LENGTH_SHORT).show();
+                closeProgressDialog();
+            }
+        });
+    }
+
+    /**
+     * 注册操作
+     */
+    private void doRegister() {
+        UserBizImpl userBiz = new UserBizImpl();
+        userBiz.register(getUser(), new Callback<Response>() {
+            @Override
+            public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                closeProgressDialog();
+                Response resp = response.body();
+                if (resp.getMeta().isSuccess()) {
+                    //注册成功
+                    if (null != mIUserResultListener) {
+                        mIUserResultListener.resultSuccess((User) resp.getData());
+                    }
+                } else {
+                    Snackbar.make(mBinding.getRoot(), resp.getMeta().getMessage(), Snackbar.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response> call, Throwable t) {
+                closeProgressDialog();
+                Snackbar.make(mBinding.getRoot(), "注册失败" + t.getMessage(), Snackbar.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * 获取EditText用户信息
+     *
+     * @return
+     */
+    private User getUser() {
+        User user = new User();
+        user.setEmail(getAccountEdit().getText().toString());
+        user.setPassword(getPasswordEdit().getText().toString());
+        return user;
     }
 
     @Override
@@ -110,7 +205,31 @@ public class ChooseDialogFragment extends DialogFragment implements View.OnClick
             } else {
                 getAccountWrapper().setErrorEnabled(false);
                 getPasswordWrapper().setErrorEnabled(false);
+                showProgressDialog();
+                if (mIsLogin) {
+                    doLogin();
+                } else {
+                    doRegister();
+                }
             }
+        }
+    }
+
+    /**
+     * 显示加载对话框
+     */
+    protected void showProgressDialog() {
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.show();
+    }
+
+    /**
+     * 关闭加载对话框
+     */
+    protected void closeProgressDialog() {
+        if (null != mProgressDialog) {
+            mProgressDialog.dismiss();
         }
     }
 }

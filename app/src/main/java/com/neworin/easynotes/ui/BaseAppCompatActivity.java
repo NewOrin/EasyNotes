@@ -1,5 +1,6 @@
 package com.neworin.easynotes.ui;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
     private static final String TAG = BaseAppCompatActivity.class.getSimpleName();
     private Toolbar mToolbar;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,5 +110,23 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
                                        String actionMsg,
                                        View.OnClickListener listener) {
         Snackbar.make(view, msg, Snackbar.LENGTH_SHORT).setAction(actionMsg, listener).show();
+    }
+
+    /**
+     * 显示加载对话框
+     */
+    protected void showProgressDialog() {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.show();
+    }
+
+    /**
+     * 关闭加载对话框
+     */
+    protected void closeProgressDialog() {
+        if (null != mProgressDialog) {
+            mProgressDialog.dismiss();
+        }
     }
 }

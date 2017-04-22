@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.neworin.easynotes.model.NoteBook;
+import com.neworin.easynotes.model.User;
 import com.neworin.easynotes.ui.activity.EditNoteBookActivity;
 import com.neworin.easynotes.ui.activity.SettingActivity;
 import com.neworin.easynotes.utils.Constant;
@@ -56,6 +57,14 @@ public class SlideMenuEvent {
 
     public static class RefreshEvent {
         public RefreshEvent() {
+        }
+    }
+
+    public static class RefreshUserEvent {
+        public User mUser;
+
+        public RefreshUserEvent(User user) {
+            this.mUser = user;
         }
     }
 }
