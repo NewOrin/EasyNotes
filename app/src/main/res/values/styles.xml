@@ -34,7 +34,7 @@
     </style>
 
     <style name="choose_btn_style">
-        <item name="android:layout_width">@dimen/y200</item>
+        <item name="android:layout_width">@dimen/y250</item>
         <item name="android:layout_height">@dimen/y28</item>
         <item name="android:layout_centerInParent">true</item>
         <item name="android:gravity">center</item>
