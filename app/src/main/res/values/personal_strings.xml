@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="personal_title">个人中心</string>
+    <string name="personal_account">简笔记账户</string>
+    <string name="personal_last_sync_time">上次同步时间</string>
+    <string name="personal_logout">退出登录</string>
+    <string name="personal_not_sync">未同步</string>
 </resources>

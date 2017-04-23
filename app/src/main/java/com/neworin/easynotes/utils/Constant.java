@@ -38,4 +38,5 @@ public class Constant {
     public static final String USER_PASSWORD = "password";
     public static final String USER_AVATAR = "avatar";
     public static final String USER_NICKNAME = "nickname";
+    public static final String USER_AVATAR_URL = "avatar";
 }
