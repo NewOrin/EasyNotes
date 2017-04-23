@@ -32,6 +32,7 @@
                 android:layout_width="@dimen/x80"
                 android:layout_height="@dimen/y80"
                 android:layout_marginLeft="@dimen/x20"
+                android:id="@+id/slide_avatar_image"
                 android:src="@mipmap/ic_defualt_avatar"
                 app:civ_border_width="@dimen/dp0" />
 

@@ -22,6 +22,7 @@ import com.neworin.easynotes.ui.fragment.NoteBookFragment;
 import com.neworin.easynotes.ui.fragment.SlideMenuFragment;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
+import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,6 +42,7 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
 
     @Override
     protected void initView() {
+        SharedPreferenceUtil.putString(this,Constant.USER_EMAIL,"neworin@163.com");
         mBinding = DataBindingUtil.setContentView(this, getLayoutId());
         EventBus.getDefault().register(this);
         mDBManager = DBManager.getInstance(this);

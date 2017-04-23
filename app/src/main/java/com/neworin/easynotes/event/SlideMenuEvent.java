@@ -67,4 +67,9 @@ public class SlideMenuEvent {
             this.mUser = user;
         }
     }
+
+    public static class RefreshAvatarEvent {
+        public RefreshAvatarEvent() {
+        }
+    }
 }

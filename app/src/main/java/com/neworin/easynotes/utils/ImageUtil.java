@@ -86,8 +86,8 @@ public class ImageUtil {
         if (!fileDir.exists()) {
             fileDir.mkdir();
         }
-        String fileName = "/" + SharedPreferenceUtil.getString(context, Constant.USER_EMAIL) + ".png";
-        File avatarFile = new File(fileDir.getAbsolutePath() + fileName);
+        String fileName = fileDir.getAbsolutePath() + "/" + SharedPreferenceUtil.getString(context, Constant.USER_EMAIL) + ".png";
+        File avatarFile = new File(fileName);
         try {
             FileOutputStream fos = new FileOutputStream(avatarFile);
             bitmap.compress(Bitmap.CompressFormat.PNG, 85, fos);

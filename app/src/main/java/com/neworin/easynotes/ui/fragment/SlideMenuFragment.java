@@ -1,6 +1,8 @@
 package com.neworin.easynotes.ui.fragment;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,6 +92,7 @@ public class SlideMenuFragment extends BaseFragment {
         if (mEmail != null && !mEmail.equals("")) {
             mBinding.slideNameText.setText(mEmail);
         }
+        refreshAvatar();
     }
 
     private void setHeadInfo() {
@@ -148,6 +151,23 @@ public class SlideMenuFragment extends BaseFragment {
         mUser = event.mUser;
         setHeadInfo();
     }
+
+    @Subscribe
+    public void onMessageEvent(SlideMenuEvent.RefreshAvatarEvent event) {
+        refreshAvatar();
+    }
+
+    /**
+     * 更新头像
+     */
+    private void refreshAvatar() {
+        String avatar_path = SharedPreferenceUtil.getString(getActivity(), Constant.USER_AVATAR_URL);
+        if (avatar_path != null && !avatar_path.equals("")) {
+            Bitmap bitmap = BitmapFactory.decodeFile(avatar_path);
+            mBinding.slideAvatarImage.setImageBitmap(bitmap);
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

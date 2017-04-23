@@ -14,9 +14,14 @@ import android.view.View;
 
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.databinding.ActivityPersonalLayoutBinding;
+import com.neworin.easynotes.event.SlideMenuEvent;
 import com.neworin.easynotes.ui.BaseAppCompatActivity;
+import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DialogUtils;
 import com.neworin.easynotes.utils.ImageUtil;
+import com.neworin.easynotes.utils.SharedPreferenceUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -50,6 +55,7 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setNavigationIcon();
         initEvent();
+        setAvatar();
     }
 
     private void initEvent() {
@@ -68,7 +74,7 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
     /**
      * 拍照选择
      */
-    @NeedsPermission(Manifest.permission.CAMERA)
+    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE})
     void chooseFromCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA_CODE);
@@ -113,6 +119,7 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
                     Bitmap bm = bundle.getParcelable("data");
                     ImageUtil.saveLogo(this, bm);
                     mBinding.personalAvatarImage.setImageBitmap(bm);
+                    EventBus.getDefault().post(new SlideMenuEvent.RefreshAvatarEvent());
                 }
                 break;
             default:
@@ -120,6 +127,13 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
         }
     }
 
+    private void setAvatar() {
+        String avatar_path = SharedPreferenceUtil.getString(this, Constant.USER_AVATAR_URL);
+        if (avatar_path != null && !avatar_path.equals("")) {
+            Bitmap bitmap = BitmapFactory.decodeFile(avatar_path);
+            mBinding.personalAvatarImage.setImageBitmap(bitmap);
+        }
+    }
     /**
      * 将content类型的Uri转化为文件类型的Uri
      *
