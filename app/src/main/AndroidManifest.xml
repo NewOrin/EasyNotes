@@ -25,6 +25,7 @@
         <activity android:name=".ui.activity.EditNoteBookActivity"/>
         <activity android:name=".ui.activity.EditActivity"/>
         <activity android:name=".ui.activity.ChooseActivity"/>
+        <activity android:name=".ui.activity.PersonalActivity"/>
     </application>
 
 </manifest>

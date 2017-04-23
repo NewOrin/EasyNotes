@@ -19,6 +19,7 @@ import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.model.User;
 import com.neworin.easynotes.ui.BaseFragment;
 import com.neworin.easynotes.utils.Constant;
+import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -42,6 +43,7 @@ public class SlideMenuFragment extends BaseFragment {
     private ListViewCommonAdapter<NoteBook> mAdapter;
     private int mCheckPosition;
     private User mUser;
+    private String mEmail;
 
     @Override
     protected int getLayoutId() {
@@ -84,6 +86,10 @@ public class SlideMenuFragment extends BaseFragment {
                 EventBus.getDefault().post(new SlideMenuEvent.SettingItemEvent(Constant.SLIDE_ITEM_SETTINGS, getActivity()));
             }
         });
+        mEmail = SharedPreferenceUtil.getString(getActivity(), Constant.USER_EMAIL);
+        if (mEmail != null && !mEmail.equals("")) {
+            mBinding.slideNameText.setText(mEmail);
+        }
     }
 
     private void setHeadInfo() {

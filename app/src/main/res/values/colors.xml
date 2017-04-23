@@ -15,4 +15,6 @@
     <color name="background_undercard_press">#E4F9F2</color>
 
     <color name="transparent">#00000000</color>
+    <color name="text_color_gray_light">#B5B7B6</color>
+    <color name="personal_layout_bg">#F1F2F2</color>
 </resources>

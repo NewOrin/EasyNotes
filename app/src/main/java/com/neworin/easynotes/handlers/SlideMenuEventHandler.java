@@ -6,6 +6,9 @@ import android.view.View;
 
 import com.neworin.easynotes.event.SlideMenuEvent;
 import com.neworin.easynotes.ui.activity.ChooseActivity;
+import com.neworin.easynotes.ui.activity.PersonalActivity;
+import com.neworin.easynotes.utils.Constant;
+import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -26,7 +29,12 @@ public class SlideMenuEventHandler {
     }
 
     public void headLayoutClick(View view) {
-        mContext.startActivity(new Intent(mContext, ChooseActivity.class));
+        String email = SharedPreferenceUtil.getString(mContext, Constant.USER_EMAIL)+"9";
+        if (email == null || email.equals("")) {
+            mContext.startActivity(new Intent(mContext, ChooseActivity.class));
+        } else {
+            mContext.startActivity(new Intent(mContext, PersonalActivity.class));
+        }
         EventBus.getDefault().post(new SlideMenuEvent.HeaderLayoutEvent(view));
     }
 }
