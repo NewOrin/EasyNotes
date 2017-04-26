@@ -37,16 +37,23 @@ public class NoteBookItemBindingAdapter {
      */
     @BindingAdapter("imageUrl")
     public static void setImageUrl(ImageView imageView, String content) {
+        boolean isHaveImage = false;
         List<EditData> list = JSON.parseArray(content, EditData.class);
         if (null == list || list.size() == 0) {
             imageView.setVisibility(View.GONE);
             return;
         }
         for (EditData e : list) {
-            if (e.getImagePath() != null) {
-                Glide.with(imageView.getContext()).load(e.getImagePath()).into(imageView);
-                return;
+            if (!isHaveImage) {
+                if (e.getImagePath() != null) {
+                    imageView.setVisibility(View.VISIBLE);
+                    Glide.with(imageView.getContext()).load(e.getImagePath()).into(imageView);
+                    isHaveImage = true;
+                }
             }
+        }
+        if (!isHaveImage) {
+            imageView.setVisibility(View.GONE);
         }
     }
 
