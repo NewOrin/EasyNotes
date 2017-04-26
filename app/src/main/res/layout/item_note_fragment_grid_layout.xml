@@ -46,7 +46,7 @@
                 android:layout_marginTop="@dimen/x5"
                 android:ellipsize="end"
                 android:singleLine="true"
-                app:textView="@{note.content}"
+                app:gridTextView="@{note.content}"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_16_sp"/>
 
@@ -57,7 +57,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginBottom="@dimen/y5"
                 android:layout_marginLeft="@dimen/x5"
-                android:text="@{DateUtil.formatFriendly(note.createTime)}"
+                app:timeTextView="@{note}"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_12_sp"/>
         </RelativeLayout>
