@@ -16,12 +16,12 @@
         android:title="@string/main_thumb"
         app:showAsAction="never" />
     <item
-        android:id="@+id/main_menu_sort"
-        android:title="@string/main_sort"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/main_menu_show_title_only"
         android:title="@string/main_show_title_only"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/main_menu_sort"
+        android:title="@string/main_sort"
         app:showAsAction="never" />
 
 </menu>
