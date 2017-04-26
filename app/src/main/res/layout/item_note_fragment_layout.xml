@@ -16,13 +16,12 @@
     <android.support.v7.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y60"
-        android:layout_marginBottom="@dimen/x10"
-        android:layout_marginLeft="@dimen/x5"
-        android:layout_marginRight="@dimen/x5"
+        android:layout_height="@dimen/y70"
+        android:foreground="?android:attr/selectableItemBackground"
         android:background="@color/white"
-        app:cardCornerRadius="@dimen/x5"
-        app:cardElevation="@dimen/x5">
+        android:stateListAnimator="@drawable/lift_on_touch"
+        app:cardElevation="@dimen/x5"
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="@{DateUtil.formatFriendly(note.updateTime)}"
+                    android:text="@{note.updateTime == null ? DateUtil.formatFriendly(note.createTime) : DateUtil.formatFriendly(note.updateTime)}"
                     android:textSize="@dimen/text_size_12_sp"/>
             </LinearLayout>
 

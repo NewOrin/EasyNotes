@@ -115,7 +115,11 @@ public class NoteBookItemBindingAdapter {
                 isHaveImage = true;
             }
         }
-        textView.setText(DateUtil.formatFriendly(note.getUpdateTime()));
+        if (note.getCreateTime() == null) {
+            textView.setText(DateUtil.formatFriendly(note.getUpdateTime()));
+        } else {
+            textView.setText(DateUtil.formatFriendly(note.getCreateTime()));
+        }
         if (isHaveImage) {
             textView.setTextColor(Color.WHITE);
         } else {
