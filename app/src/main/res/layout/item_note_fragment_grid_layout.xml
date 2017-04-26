@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.neworin.easynotes.utils.DateUtil"/>
+
+        <import type="com.neworin.easynotes.binding.NoteBookItemBindingAdapter"/>
+
+        <import type="android.view.View"/>
+
+        <variable
+            name="note"
+            type="com.neworin.easynotes.model.Note"/>
+    </data>
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y100"
+        android:layout_marginBottom="@dimen/x10"
+        android:layout_marginLeft="@dimen/x5"
+        android:layout_marginRight="@dimen/x5"
+        android:background="@color/white"
+        app:cardCornerRadius="@dimen/x5"
+        app:cardElevation="@dimen/x5">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@drawable/image_corner_shape"
+                android:scaleType="centerCrop"
+                app:imageUrl="@{note.content}"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="@dimen/x5"
+                android:layout_marginTop="@dimen/x5"
+                android:ellipsize="end"
+                android:singleLine="true"
+                app:textView="@{note.content}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_16_sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="@dimen/y5"
+                android:layout_marginLeft="@dimen/x5"
+                android:text="@{DateUtil.formatFriendly(note.createTime)}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_12_sp"/>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</layout>

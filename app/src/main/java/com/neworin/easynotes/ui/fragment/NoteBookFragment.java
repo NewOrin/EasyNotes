@@ -94,17 +94,21 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
         mDatas = mQueryBuilder.list();
         mDaoSession.clear();
         if (null != mDatas) {
-            mAdapter = new RecyclerViewCommonAdapter<>(getActivity(), mDatas, R.layout.item_note_fragment_layout, BR.note);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-            mBinding.noteBookFgRecyclerview.setLayoutManager(linearLayoutManager);
-            mBinding.noteBookFgRecyclerview.setItemAnimator(new DefaultItemAnimator());
-            mBinding.setAdapter(mAdapter);
+            setLinearLayoutRecyclerView();
         }
         mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
     }
 
     private void initEvent() {
         mSwipeRefreshLayout.setOnRefreshListener(this);
+        getFAButton().setOnClickListener(this);
+    }
+
+    /**
+     * 初始化列表事件
+     */
+    private void initItemEvent() {
+        mAdapter.setmOnItemLongClickListener(this);
         mAdapter.setmOnItemClickListener(new RecyclerViewCommonAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -116,10 +120,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
                 startActivityForResult(intent, Constant.NOTE_BOOK_FRAGMENT_RESULT_CODE);
             }
         });
-        mAdapter.setmOnItemLongClickListener(this);
-        getFAButton().setOnClickListener(this);
     }
-
     /**
      * 刷新数据
      */
@@ -138,6 +139,29 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
         });
         mDaoSession.clear();
         EventBus.getDefault().post(new SlideMenuEvent.RefreshEvent());
+    }
+
+    /**
+     * 设置线性布局RecyclerView
+     */
+    private void setLinearLayoutRecyclerView() {
+        mAdapter = new RecyclerViewCommonAdapter<>(getActivity(), mDatas, R.layout.item_note_fragment_layout, BR.note);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        mBinding.noteBookFgRecyclerview.setLayoutManager(linearLayoutManager);
+        mBinding.noteBookFgRecyclerview.setItemAnimator(new DefaultItemAnimator());
+        mBinding.setAdapter(mAdapter);
+        initItemEvent();
+    }
+
+    /**
+     * 设置RecyclerView网格布局
+     */
+    private void setGridLayoutRecyclerView() {
+        mAdapter = new RecyclerViewCommonAdapter<>(getActivity(), mDatas, R.layout.item_note_fragment_grid_layout, BR.note);
+        getRecyclerView().setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        getRecyclerView().setItemAnimator(new DefaultItemAnimator());
+        mBinding.setAdapter(mAdapter);
+        initItemEvent();
     }
 
     @Override
@@ -170,10 +194,10 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
     @Subscribe
     public void onMessageEvent(NoteBookFragmentEvent.ShowThumbEvent event) {
         if (mIsThumb) {
-            getRecyclerView().setLayoutManager(new LinearLayoutManager(getActivity()));
+            setLinearLayoutRecyclerView();
             mIsThumb = false;
         } else {
-            mBinding.noteBookFgRecyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            setGridLayoutRecyclerView();
             mIsThumb = true;
         }
     }
