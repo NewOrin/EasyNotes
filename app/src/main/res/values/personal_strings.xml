@@ -5,4 +5,6 @@
     <string name="personal_last_sync_time">上次同步时间</string>
     <string name="personal_logout">退出登录</string>
     <string name="personal_not_sync">未同步</string>
+    <string name="upload_avatar_failed">头像上传失败</string>
+    <string name="upload_avatar_success">头像上传成功</string>
 </resources>

@@ -15,6 +15,8 @@ import android.view.View;
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.databinding.ActivityPersonalLayoutBinding;
 import com.neworin.easynotes.event.SlideMenuEvent;
+import com.neworin.easynotes.http.FileUploadBizImpl;
+import com.neworin.easynotes.http.Response;
 import com.neworin.easynotes.ui.BaseAppCompatActivity;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DialogUtils;
@@ -29,6 +31,8 @@ import java.io.InputStream;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * Created by NewOrin Zhang on 2017/4/22.
@@ -118,7 +122,9 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
                     //获取裁剪后的图像
                     Bitmap bm = bundle.getParcelable("data");
                     ImageUtil.saveLogo(this, bm);
+                    showProgressDialog();
                     mBinding.personalAvatarImage.setImageBitmap(bm);
+                    uploadAvatar();
                     EventBus.getDefault().post(new SlideMenuEvent.RefreshAvatarEvent());
                 }
                 break;
@@ -127,6 +133,9 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
         }
     }
 
+    /**
+     * 设置头像
+     */
     private void setAvatar() {
         String avatar_path = SharedPreferenceUtil.getString(this, Constant.USER_AVATAR_URL);
         if (avatar_path != null && !avatar_path.equals("")) {
@@ -134,6 +143,30 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
             mBinding.personalAvatarImage.setImageBitmap(bitmap);
         }
     }
+
+    /**
+     * 上传头像到服务器
+     */
+    private void uploadAvatar() {
+        String path = SharedPreferenceUtil.getString(this, Constant.USER_AVATAR_URL);
+        if (path != null && !path.equals("")) {
+            FileUploadBizImpl uploadBiz = new FileUploadBizImpl();
+            uploadBiz.uploadFile(path, SharedPreferenceUtil.getString(this, Constant.USER_EMAIL), new Callback<Response>() {
+                @Override
+                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                    closeProgressDialog();
+                    showSnackBar(mBinding.getRoot(),getString(R.string.upload_avatar_success));
+                }
+
+                @Override
+                public void onFailure(Call<Response> call, Throwable t) {
+                    closeProgressDialog();
+                    showSnackBar(mBinding.getRoot(),getString(R.string.upload_avatar_failed));
+                }
+            });
+        }
+    }
+
     /**
      * 将content类型的Uri转化为文件类型的Uri
      *
