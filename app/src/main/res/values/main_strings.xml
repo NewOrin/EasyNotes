@@ -8,4 +8,5 @@
     <string name="main_thumb">缩略图</string>
     <string name="main_sort">排序</string>
     <string name="main_show_title_only">仅显示标题</string>
+    <string name="main_item">列表</string>
 </resources>

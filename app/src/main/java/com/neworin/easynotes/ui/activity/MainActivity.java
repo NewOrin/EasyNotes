@@ -39,6 +39,7 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     private NoteBookDao mNoteBookDao;
     private List<NoteBook> mNoteBookList;
     private NoteBook mNoteBook;
+    private boolean mIsThumb = false;
 
     @Override
     protected void initView() {
@@ -79,7 +80,6 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         return R.layout.activity_main;
     }
 
-
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.main_menu_refresh) {
@@ -87,6 +87,16 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         }
         if (item.getItemId() == R.id.main_menu_thumb) {
             EventBus.getDefault().post(new NoteBookFragmentEvent.ShowThumbEvent());
+            if (mIsThumb) {
+                item.setTitle(R.string.main_thumb);
+                mIsThumb = false;
+            } else {
+                item.setTitle(R.string.main_item);
+                mIsThumb = true;
+            }
+        }
+        if (item.getItemId() == R.id.main_menu_show_title_only) {
+            EventBus.getDefault().post(new NoteBookFragmentEvent.ShowTitleEvent());
         }
         return false;
     }

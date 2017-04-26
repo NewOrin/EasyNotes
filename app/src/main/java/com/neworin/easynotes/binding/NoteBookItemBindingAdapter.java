@@ -126,4 +126,24 @@ public class NoteBookItemBindingAdapter {
             textView.setTextColor(Color.BLACK);
         }
     }
+
+    @BindingAdapter("titleTextView")
+    public static void setTitleTextView(TextView textview, Note note) {
+        if (note.getTitle().equals("")) {
+            StringBuilder sb = new StringBuilder();
+            List<EditData> list = JSON.parseArray(note.getContent(), EditData.class);
+            if (null == list || list.size() == 0) {
+                textview.setVisibility(View.GONE);
+                return;
+            }
+            for (EditData e : list) {
+                if (e.getImagePath() == null) {
+                    sb.append(e.getInputStr());
+                }
+            }
+            textview.setText(sb.toString());
+        } else {
+            textview.setText(note.getTitle());
+        }
+    }
 }

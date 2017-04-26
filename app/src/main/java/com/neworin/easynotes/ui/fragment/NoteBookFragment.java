@@ -164,6 +164,18 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
         initItemEvent();
     }
 
+    /**
+     * 设置RecyclerView标题布局
+     */
+    private void setTitleLayoutRecyclerView() {
+        mAdapter = new RecyclerViewCommonAdapter<>(getActivity(), mDatas, R.layout.item_note_fragment_title_layout, BR.note);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        mBinding.noteBookFgRecyclerview.setLayoutManager(linearLayoutManager);
+        mBinding.noteBookFgRecyclerview.setItemAnimator(new DefaultItemAnimator());
+        mBinding.setAdapter(mAdapter);
+        initItemEvent();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -200,6 +212,11 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
             setGridLayoutRecyclerView();
             mIsThumb = true;
         }
+    }
+
+    @Subscribe
+    public void onMessageEvent(NoteBookFragmentEvent.ShowTitleEvent event) {
+        setTitleLayoutRecyclerView();
     }
 
     @Subscribe
