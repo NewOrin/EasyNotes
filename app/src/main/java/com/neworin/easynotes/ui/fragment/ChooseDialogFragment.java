@@ -19,6 +19,7 @@ import com.neworin.easynotes.http.UserBizImpl;
 import com.neworin.easynotes.model.User;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.GsonUtil;
+import com.neworin.easynotes.utils.HttpUtil;
 import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
 import java.util.regex.Matcher;
@@ -196,6 +197,10 @@ public class ChooseDialogFragment extends DialogFragment implements View.OnClick
 
     @Override
     public void onClick(View v) {
+        if (!HttpUtil.isNetworkConnected(getActivity())) {
+            Snackbar.make(mBinding.getRoot(), R.string.personal_no_network, Snackbar.LENGTH_SHORT).show();
+            return;
+        }
         if (v == mBinding.chooseBtnAction) {
             if (!validateEmail(getAccountEdit().getText().toString())) {
                 getAccountWrapper().setError(getString(R.string.email_validate_error));
