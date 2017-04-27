@@ -86,7 +86,7 @@ public class ImageUtil {
         if (!fileDir.exists()) {
             fileDir.mkdir();
         }
-        String fileName = fileDir.getAbsolutePath() + "/" + SharedPreferenceUtil.getString(context, Constant.USER_EMAIL) + ".png";
+        String fileName = fileDir.getAbsolutePath() + "/" + SharedPreferenceUtil.getString(context, Constant.USER_ID) + ".png";
         File avatarFile = new File(fileName);
         try {
             FileOutputStream fos = new FileOutputStream(avatarFile);

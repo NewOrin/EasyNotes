@@ -7,4 +7,5 @@
     <string name="personal_not_sync">未同步</string>
     <string name="upload_avatar_failed">头像上传失败</string>
     <string name="upload_avatar_success">头像上传成功</string>
+    <string name="personal_confirm_logout">确认退出登录?</string>
 </resources>

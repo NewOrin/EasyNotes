@@ -29,8 +29,8 @@ public class SlideMenuEventHandler {
     }
 
     public void headLayoutClick(View view) {
-        String email = SharedPreferenceUtil.getString(mContext, Constant.USER_EMAIL)+"9";
-        if (email == null || email.equals("")) {
+        String email = SharedPreferenceUtil.getString(mContext, Constant.USER_EMAIL);
+        if (null == email || email.equals("")) {
             mContext.startActivity(new Intent(mContext, ChooseActivity.class));
         } else {
             mContext.startActivity(new Intent(mContext, PersonalActivity.class));

@@ -81,11 +81,7 @@ public class ChooseActivity extends BaseAppCompatActivity implements View.OnClic
             dialogFragment.dismiss();
 //            DaoSession session = mDBManager.getWriteDaoSession();
 //            session.getUserDao().insert(user);
-            SharedPreferenceUtil.putString(this, Constant.USER_ID, String.valueOf(user.getId()));
-            SharedPreferenceUtil.putString(this, Constant.USER_EMAIL, user.getEmail());
-            SharedPreferenceUtil.putString(this, Constant.USER_PASSWORD, user.getPassword());
-            SharedPreferenceUtil.putString(this, Constant.USER_AVATAR, user.getAvatarurl());
-            SharedPreferenceUtil.putString(this, Constant.USER_NICKNAME, user.getNickname());
+            SharedPreferenceUtil.insertUserInfo(this, user);
             EventBus.getDefault().post(new SlideMenuEvent.RefreshUserEvent(user));
             finish();
         }

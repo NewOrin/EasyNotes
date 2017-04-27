@@ -36,7 +36,11 @@ public class Constant {
     public static final String USER_ID = "user_id";
     public static final String USER_EMAIL = "email";
     public static final String USER_PASSWORD = "password";
-    public static final String USER_AVATAR = "avatar";
     public static final String USER_NICKNAME = "nickname";
-    public static final String USER_AVATAR_URL = "avatar";
+    public static final String USER_AVATAR_URL = "user_avatar_url";
+
+
+    //public static final String BASE_API_URL = "http://192.168.31.208:8080";
+    public static final String BASE_API_URL = "http://192.168.1.233:8080";
+    public static final String GET_AVATAR_URL = BASE_API_URL + "/file/get_user_avatar/";
 }

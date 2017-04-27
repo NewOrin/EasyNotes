@@ -27,7 +27,7 @@
                 android:layout_width="@dimen/y35"
                 android:layout_height="@dimen/y35"
                 android:layout_alignParentRight="true"
-                android:src="@mipmap/ic_defualt_avatar"/>
+                android:src="@drawable/ic_default_avatar"/>
         </RelativeLayout>
 
         <LinearLayout
@@ -41,7 +41,6 @@
                 android:id="@+id/personal_email_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="neworin@163.com"
                 android:textColor="@color/text_color_gray_light"
                 android:textSize="@dimen/text_size_14_sp"/>
 

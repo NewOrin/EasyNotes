@@ -1,13 +1,12 @@
 package com.neworin.easynotes.ui.fragment;
 
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.bumptech.glide.Glide;
 import com.neworin.easynotes.DBManager;
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.adapter.ListViewCommonAdapter;
@@ -91,12 +90,19 @@ public class SlideMenuFragment extends BaseFragment {
         mEmail = SharedPreferenceUtil.getString(getActivity(), Constant.USER_EMAIL);
         if (mEmail != null && !mEmail.equals("")) {
             mBinding.slideNameText.setText(mEmail);
+            setAvatar();
+        } else {
+            Glide.with(getActivity()).load(R.drawable.ic_default_avatar).placeholder(R.drawable.ic_default_avatar).into(mBinding.slideAvatarImage);
         }
-        refreshAvatar();
     }
 
     private void setHeadInfo() {
-        mBinding.slideNameText.setText(mUser.getEmail());
+        if (null == mUser) {
+            mBinding.slideNameText.setText(getString(R.string.login_or_register));
+        } else {
+            mBinding.slideNameText.setText(mUser.getEmail());
+        }
+        setAvatar();
     }
     /**
      * 设置NoteBookList count
@@ -148,26 +154,30 @@ public class SlideMenuFragment extends BaseFragment {
 
     @Subscribe
     public void onMessageEvent(SlideMenuEvent.RefreshUserEvent event) {
-        mUser = event.mUser;
+        if (null == event.mUser) {
+            mUser = null;
+        } else {
+            mUser = event.mUser;
+        }
         setHeadInfo();
     }
 
     @Subscribe
     public void onMessageEvent(SlideMenuEvent.RefreshAvatarEvent event) {
-        refreshAvatar();
+        setAvatar();
     }
 
     /**
-     * 更新头像
+     * 设置头像
      */
-    private void refreshAvatar() {
-        String avatar_path = SharedPreferenceUtil.getString(getActivity(), Constant.USER_AVATAR_URL);
-        if (avatar_path != null && !avatar_path.equals("")) {
-            Bitmap bitmap = BitmapFactory.decodeFile(avatar_path);
-            mBinding.slideAvatarImage.setImageBitmap(bitmap);
+    private void setAvatar() {
+        String user_id = SharedPreferenceUtil.getString(getActivity(), Constant.USER_ID);
+        if (user_id != null && !user_id.equals("")) {
+            Glide.with(getActivity()).load(Constant.GET_AVATAR_URL + user_id).into(mBinding.slideAvatarImage);
+        } else {
+            Glide.with(getActivity()).load(R.drawable.ic_default_avatar).into(mBinding.slideAvatarImage);
         }
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();

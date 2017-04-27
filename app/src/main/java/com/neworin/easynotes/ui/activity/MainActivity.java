@@ -16,18 +16,27 @@ import com.neworin.easynotes.event.NoteBookFragmentEvent;
 import com.neworin.easynotes.event.SlideMenuEvent;
 import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.greendao.gen.NoteBookDao;
+import com.neworin.easynotes.http.Response;
+import com.neworin.easynotes.http.UserBizImpl;
 import com.neworin.easynotes.model.NoteBook;
+import com.neworin.easynotes.model.User;
 import com.neworin.easynotes.ui.BaseAppCompatActivity;
 import com.neworin.easynotes.ui.fragment.NoteBookFragment;
 import com.neworin.easynotes.ui.fragment.SlideMenuFragment;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
+import com.neworin.easynotes.utils.GsonUtil;
+import com.neworin.easynotes.utils.HttpUtil;
+import com.neworin.easynotes.utils.L;
 import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMenuItemClickListener {
 
@@ -43,7 +52,7 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
 
     @Override
     protected void initView() {
-        SharedPreferenceUtil.putString(this,Constant.USER_EMAIL,"neworin@163.com");
+        autoLogin();
         mBinding = DataBindingUtil.setContentView(this, getLayoutId());
         EventBus.getDefault().register(this);
         mDBManager = DBManager.getInstance(this);
@@ -151,6 +160,37 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
             mBinding.mainDrawerlayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    /**
+     * 用户自动登录
+     */
+    private void autoLogin() {
+        if (HttpUtil.isNetworkConnected(this)) {
+            final String email = SharedPreferenceUtil.getString(this, Constant.USER_EMAIL);
+            String password = SharedPreferenceUtil.getString(this, Constant.USER_PASSWORD);
+            if (null != email && null != password && !email.equals("") && !password.equals("")) {
+                User user = new User();
+                user.setEmail(email);
+                user.setPassword(password);
+                UserBizImpl userBiz = new UserBizImpl();
+                userBiz.login(user, new Callback<Response>() {
+                    @Override
+                    public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                        L.d(TAG, "user email = " + email + "auto login success");
+                        User user = GsonUtil.getDateFormatGson().fromJson(response.body().getData().toString(), User.class);
+                        SharedPreferenceUtil.putString(MainActivity.this, Constant.USER_AVATAR_URL, user.getAvatarurl());
+                    }
+
+                    @Override
+                    public void onFailure(Call<Response> call, Throwable t) {
+                        L.d(TAG, "user email = " + email + " auto login failed " + t.getMessage());
+                    }
+                });
+            }
+        } else {
+            L.d(TAG, "no network");
         }
     }
 }

@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.databinding.ActivityPersonalLayoutBinding;
 import com.neworin.easynotes.event.SlideMenuEvent;
@@ -59,7 +60,7 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setNavigationIcon();
         initEvent();
-        setAvatar();
+        setUserInfo();
     }
 
     private void initEvent() {
@@ -72,6 +73,15 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
         if (v == mBinding.personalChangeAvatarLayout) {
             showChooseDialog();
         } else if (v == mBinding.personalExitBtn) {
+            DialogUtils dialogUtils = new DialogUtils(this);
+            dialogUtils.showAlertDialog(getString(R.string.personal_confirm_logout), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    SharedPreferenceUtil.clearUserInfo(PersonalActivity.this);
+                    EventBus.getDefault().post(new SlideMenuEvent.RefreshUserEvent(null));
+                    finish();
+                }
+            });
         }
     }
 
@@ -136,12 +146,11 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
     /**
      * 设置头像
      */
-    private void setAvatar() {
-        String avatar_path = SharedPreferenceUtil.getString(this, Constant.USER_AVATAR_URL);
-        if (avatar_path != null && !avatar_path.equals("")) {
-            Bitmap bitmap = BitmapFactory.decodeFile(avatar_path);
-            mBinding.personalAvatarImage.setImageBitmap(bitmap);
-        }
+    private void setUserInfo() {
+        String user_id = SharedPreferenceUtil.getString(this, Constant.USER_ID);
+        String email = SharedPreferenceUtil.getString(this, Constant.USER_EMAIL);
+        Glide.with(this).load(Constant.GET_AVATAR_URL + user_id).into(mBinding.personalAvatarImage);
+        mBinding.personalEmailText.setText(email);
     }
 
     /**
