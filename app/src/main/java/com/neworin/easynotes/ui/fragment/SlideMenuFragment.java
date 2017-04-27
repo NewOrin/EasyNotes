@@ -20,6 +20,7 @@ import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.model.User;
 import com.neworin.easynotes.ui.BaseFragment;
 import com.neworin.easynotes.utils.Constant;
+import com.neworin.easynotes.utils.GlideUtils;
 import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -173,7 +174,7 @@ public class SlideMenuFragment extends BaseFragment {
     private void setAvatar() {
         String user_id = SharedPreferenceUtil.getString(getActivity(), Constant.USER_ID);
         if (user_id != null && !user_id.equals("")) {
-            Glide.with(getActivity()).load(Constant.GET_AVATAR_URL + user_id).error(R.drawable.ic_default_avatar).into(mBinding.slideAvatarImage);
+            GlideUtils.loadLogo(getActivity(), mBinding.slideAvatarImage, Constant.GET_AVATAR_URL + user_id);
         } else {
             Glide.with(getActivity()).load(R.drawable.ic_default_avatar).error(R.drawable.ic_default_avatar).into(mBinding.slideAvatarImage);
         }
