@@ -173,9 +173,9 @@ public class SlideMenuFragment extends BaseFragment {
     private void setAvatar() {
         String user_id = SharedPreferenceUtil.getString(getActivity(), Constant.USER_ID);
         if (user_id != null && !user_id.equals("")) {
-            Glide.with(getActivity()).load(Constant.GET_AVATAR_URL + user_id).into(mBinding.slideAvatarImage);
+            Glide.with(getActivity()).load(Constant.GET_AVATAR_URL + user_id).error(R.drawable.ic_default_avatar).into(mBinding.slideAvatarImage);
         } else {
-            Glide.with(getActivity()).load(R.drawable.ic_default_avatar).into(mBinding.slideAvatarImage);
+            Glide.with(getActivity()).load(R.drawable.ic_default_avatar).error(R.drawable.ic_default_avatar).into(mBinding.slideAvatarImage);
         }
     }
     @Override

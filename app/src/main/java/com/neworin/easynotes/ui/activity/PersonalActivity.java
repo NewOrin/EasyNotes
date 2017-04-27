@@ -149,7 +149,7 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
     private void setUserInfo() {
         String user_id = SharedPreferenceUtil.getString(this, Constant.USER_ID);
         String email = SharedPreferenceUtil.getString(this, Constant.USER_EMAIL);
-        Glide.with(this).load(Constant.GET_AVATAR_URL + user_id).into(mBinding.personalAvatarImage);
+        Glide.with(this).load(Constant.GET_AVATAR_URL + user_id).placeholder(R.drawable.ic_default_avatar).error(R.drawable.ic_default_avatar).into(mBinding.personalAvatarImage);
         mBinding.personalEmailText.setText(email);
     }
 
