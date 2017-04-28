@@ -31,6 +31,7 @@
         <activity android:name=".ui.activity.EditActivity"/>
         <activity android:name=".ui.activity.ChooseActivity"/>
         <activity android:name=".ui.activity.PersonalActivity"/>
+        <activity android:name=".ui.activity.RecycleActivity"/>
     </application>
 
 </manifest>

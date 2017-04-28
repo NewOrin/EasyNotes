@@ -74,8 +74,10 @@ public class SlideMenuFragment extends BaseFragment {
         mBinding.setAdapter(mAdapter);
         View footViewSettings = LayoutInflater.from(getActivity()).inflate(R.layout.slide_menu_footer_settings_layout, null);
         View footViewEdit = LayoutInflater.from(getActivity()).inflate(R.layout.slide_menu_footer_edit_layout, null);
-        mBinding.slideMenuListview.addFooterView(footViewSettings);
+        View footViewRecycle = LayoutInflater.from(getActivity()).inflate(R.layout.slide_menu_footer_recycle_layout,null);
         mBinding.slideMenuListview.addFooterView(footViewEdit);
+        mBinding.slideMenuListview.addFooterView(footViewRecycle);
+        mBinding.slideMenuListview.addFooterView(footViewSettings);
         footViewEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,6 +88,12 @@ public class SlideMenuFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 EventBus.getDefault().post(new SlideMenuEvent.SettingItemEvent(Constant.SLIDE_ITEM_SETTINGS, getActivity()));
+            }
+        });
+        footViewRecycle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new SlideMenuEvent.SettingItemEvent(Constant.SLIDE_ITEM_RECYCLE, getActivity()));
             }
         });
         mEmail = SharedPreferenceUtil.getString(getActivity(), Constant.USER_EMAIL);

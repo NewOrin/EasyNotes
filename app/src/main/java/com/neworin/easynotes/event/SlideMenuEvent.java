@@ -7,6 +7,7 @@ import android.view.View;
 import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.model.User;
 import com.neworin.easynotes.ui.activity.EditNoteBookActivity;
+import com.neworin.easynotes.ui.activity.RecycleActivity;
 import com.neworin.easynotes.ui.activity.SettingActivity;
 import com.neworin.easynotes.utils.Constant;
 
@@ -51,6 +52,8 @@ public class SlideMenuEvent {
                 activity.startActivity(new Intent(activity, SettingActivity.class));
             } else if (flag == Constant.SLIDE_ITEM_EDIT) {
                 activity.startActivityForResult(new Intent(activity, EditNoteBookActivity.class), Constant.EDIT_BOOK_RESULT_CODE);
+            } else if (flag == Constant.SLIDE_ITEM_RECYCLE) {
+                activity.startActivity(new Intent(activity, RecycleActivity.class));
             }
         }
     }

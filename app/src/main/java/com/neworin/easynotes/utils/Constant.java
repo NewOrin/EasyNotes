@@ -10,6 +10,7 @@ import android.os.Environment;
 public class Constant {
     public static final int SLIDE_ITEM_SETTINGS = -1;
     public static final int SLIDE_ITEM_EDIT = -2;
+    public static final int SLIDE_ITEM_RECYCLE = -3;
     public static final String DB_NAME = "easynote_db";
 
     public static final int NOTE_BOOK_FRAGMENT_RESULT_CODE = 1000;
