@@ -13,7 +13,8 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/y55"
-                    android:background="@drawable/listview_selector"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:stateListAnimator="@drawable/lift_on_touch"
                     android:paddingLeft="@dimen/x20"
                     android:paddingRight="@dimen/x20">
 

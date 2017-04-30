@@ -11,10 +11,12 @@
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/y55"
-        android:paddingLeft="@dimen/x20"
-        android:paddingRight="@dimen/x20">
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/y55"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:paddingLeft="@dimen/x20"
+                    android:paddingRight="@dimen/x20"
+                    android:stateListAnimator="@drawable/lift_on_touch">
 
         <ImageView
             android:id="@+id/item_slide_menu_img"
