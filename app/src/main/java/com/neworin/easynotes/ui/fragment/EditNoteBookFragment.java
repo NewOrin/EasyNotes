@@ -102,7 +102,7 @@ public class EditNoteBookFragment extends BaseFragment {
      * 刷新列表
      */
     private void refreshData() {
-        mNoteBookList = mDBManager.getWriteDaoSession().getNoteBookDao().queryBuilder().list();
+        mNoteBookList = mDBManager.getWriteDaoSession().getNoteBookDao().queryBuilder().where(NoteDao.Properties.IsDelete.eq(0)).list();
         mNoteBookList = setNoteBookCount(mNoteBookList);
         mAdapter.updateData(mNoteBookList);
         mAdapter.notifyDataSetChanged();
@@ -117,7 +117,7 @@ public class EditNoteBookFragment extends BaseFragment {
     private List<NoteBook> setNoteBookCount(List<NoteBook> list) {
         mDaoSession = mDBManager.getReadDaoSession();
         for (NoteBook nb : list) {
-            nb.setCount(mDaoSession.getNoteDao().queryBuilder().where(NoteDao.Properties.NotebookId.eq(nb.getId())).list().size());
+            nb.setCount(mDaoSession.getNoteDao().queryBuilder().where(NoteDao.Properties.NotebookId.eq(nb.getId()),NoteDao.Properties.IsDelete.eq(0)).list().size());
         }
         mDaoSession.clear();
         return list;

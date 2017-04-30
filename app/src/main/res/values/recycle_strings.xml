@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="recycle_title">回收站</string>
+    <string name="recycle_revert_success">笔记还原成功!</string>
+    <string name="recycle_revert_str">还原</string>
 </resources>

@@ -45,7 +45,6 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
 
     private FragmentNoteBookBinding mBinding;
     private java.lang.String TAG = NoteBookFragment.class.getSimpleName();
-    private View mView;
     private DBManager mDBManager;
     private List<Note> mDatas;
     private DaoSession mDaoSession;
@@ -88,11 +87,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
         mDialogItems = new String[]{getString(R.string.note_book_delete)};
         mSwipeRefreshLayout = mBinding.noteBookFgSwipeLayout;
         mDBManager = DBManager.getInstance(getActivity());
-        mDaoSession = mDBManager.getReadDaoSession();
-        mNoteDao = mDaoSession.getNoteDao();
-        mQueryBuilder = mNoteDao.queryBuilder().where(NoteDao.Properties.NotebookId.eq(mNoteBook.getId())).orderDesc(NoteDao.Properties.CreateTime);
-        mDatas = mQueryBuilder.list();
-        mDaoSession.clear();
+        mDatas = getDBDatas();
         if (null != mDatas) {
             setLinearLayoutRecyclerView();
         }
@@ -126,10 +121,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
      */
     private void refreshData() {
         mSwipeRefreshLayout.setRefreshing(true);
-        mDaoSession = mDBManager.getReadDaoSession();
-        mNoteDao = mDaoSession.getNoteDao();
-        mQueryBuilder = mNoteDao.queryBuilder().where(NoteDao.Properties.NotebookId.eq(mNoteBook.getId())).orderDesc(NoteDao.Properties.CreateTime);
-        mAdapter.updateData(mDatas = mQueryBuilder.list());
+        mAdapter.updateData(mDatas = getDBDatas());
         mAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
@@ -263,7 +255,8 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
                 showSnackBarWithAction(getRootView(), getString(R.string.edit_notebook_success), getString(R.string.edit_notebook_recall), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mNoteManager.insert(note);
+                        note.setIsDelete(0);
+                        mNoteManager.update(note);
                         refreshData();
                     }
                 });
@@ -281,11 +274,9 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
     private void deleteItem(int position) {
         mDaoSession = mDBManager.getWriteDaoSession();
         mNoteDao = mDaoSession.getNoteDao();
-        mNoteDao.deleteByKey(mDatas.get(position).getId());
-    }
-
-    private FloatingActionButton getFAButton() {
-        return mBinding.noteBookFgFloatBtn;
+        Note note = mDatas.get(position);
+        note.setIsDelete(1);
+        mNoteDao.update(note);
     }
 
     @Override
@@ -299,7 +290,29 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
         }
     }
 
+    /**
+     * 获取RecyclerView对象
+     *
+     * @return
+     */
     private RecyclerView getRecyclerView() {
         return mBinding.noteBookFgRecyclerview;
+    }
+
+    /**
+     * 获取FloatingActionButton对象
+     *
+     * @return
+     */
+    private FloatingActionButton getFAButton() {
+        return mBinding.noteBookFgFloatBtn;
+    }
+
+    private List<Note> getDBDatas() {
+        mDaoSession = mDBManager.getReadDaoSession();
+        mNoteDao = mDaoSession.getNoteDao();
+        mQueryBuilder = mNoteDao.queryBuilder().where(NoteDao.Properties.NotebookId.eq(mNoteBook.getId()), NoteDao.Properties.IsDelete.eq(0)).orderDesc(NoteDao.Properties.CreateTime);
+        mDaoSession.clear();
+        return mDatas = mQueryBuilder.list();
     }
 }

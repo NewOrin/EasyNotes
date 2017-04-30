@@ -34,6 +34,7 @@ public class Note extends BaseObservable implements Parcelable {
     private String content;
     private Date createTime;
     private Date updateTime;
+    private int isDelete;//0为未删除，1为已删除
     @ToOne(joinProperty = "notebookId")
     private NoteBook mNoteBook;
 
@@ -102,14 +103,24 @@ public class Note extends BaseObservable implements Parcelable {
         this.notebookId = notebookId;
     }
 
+    @Bindable
+    public int getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(int isDelete) {
+        this.isDelete = isDelete;
+    }
+
     @Keep
-    public Note(long id, String title, String content, Date createTime, Date updateTime, NoteBook noteBook) {
+    public Note(long id, String title, String content, Date createTime, Date updateTime, NoteBook noteBook, int isDelete) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.createTime = createTime;
         this.updateTime = updateTime;
         this.mNoteBook = noteBook;
+        this.isDelete = isDelete;
     }
 
     @Override
@@ -216,14 +227,15 @@ public class Note extends BaseObservable implements Parcelable {
         this.mNoteBook = in.readParcelable(NoteBook.class.getClassLoader());
     }
 
-    @Generated(hash = 293051043)
-    public Note(long id, long notebookId, String title, String content, Date createTime, Date updateTime) {
+    @Generated(hash = 278099198)
+    public Note(long id, long notebookId, String title, String content, Date createTime, Date updateTime, int isDelete) {
         this.id = id;
         this.notebookId = notebookId;
         this.title = title;
         this.content = content;
         this.createTime = createTime;
         this.updateTime = updateTime;
+        this.isDelete = isDelete;
     }
 
     public static final Parcelable.Creator<Note> CREATOR = new Parcelable.Creator<Note>() {

@@ -122,7 +122,7 @@ public class SlideMenuFragment extends BaseFragment {
     private List<NoteBook> setNoteBookCount(List<NoteBook> list) {
         mDaoSession = mDBManager.getReadDaoSession();
         for (NoteBook nb : list) {
-            nb.setCount(mDaoSession.getNoteDao().queryBuilder().where(NoteDao.Properties.NotebookId.eq(nb.getId())).list().size());
+            nb.setCount(mDaoSession.getNoteDao().queryBuilder().where(NoteDao.Properties.NotebookId.eq(nb.getId()),NoteDao.Properties.IsDelete.eq(0)).list().size());
         }
         mDaoSession.clear();
         return list;
