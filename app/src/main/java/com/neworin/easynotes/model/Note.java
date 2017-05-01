@@ -30,6 +30,7 @@ public class Note extends BaseObservable implements Parcelable {
     @Id
     private long id;
     private long notebookId;
+    private long userId;
     private String title;
     private String content;
     private Date createTime;
@@ -49,6 +50,15 @@ public class Note extends BaseObservable implements Parcelable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    @Bindable
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     @Bindable
@@ -113,7 +123,7 @@ public class Note extends BaseObservable implements Parcelable {
     }
 
     @Keep
-    public Note(long id, String title, String content, Date createTime, Date updateTime, NoteBook noteBook, int isDelete) {
+    public Note(long id, String title, long userId, String content, Date createTime, Date updateTime, NoteBook noteBook, int isDelete) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -121,6 +131,7 @@ public class Note extends BaseObservable implements Parcelable {
         this.updateTime = updateTime;
         this.mNoteBook = noteBook;
         this.isDelete = isDelete;
+        this.userId = userId;
     }
 
     @Override
@@ -137,6 +148,7 @@ public class Note extends BaseObservable implements Parcelable {
         dest.writeLong(this.createTime != null ? this.createTime.getTime() : -1);
         dest.writeLong(this.updateTime != null ? this.updateTime.getTime() : -1);
         dest.writeParcelable(this.mNoteBook, flags);
+        dest.writeLong(this.userId);
     }
 
     /** To-one relationship, resolved on first access. */
@@ -225,12 +237,14 @@ public class Note extends BaseObservable implements Parcelable {
         long tmpUpdateTime = in.readLong();
         this.updateTime = tmpUpdateTime == -1 ? null : new Date(tmpUpdateTime);
         this.mNoteBook = in.readParcelable(NoteBook.class.getClassLoader());
+        this.userId = in.readLong();
     }
 
-    @Generated(hash = 278099198)
-    public Note(long id, long notebookId, String title, String content, Date createTime, Date updateTime, int isDelete) {
+    @Generated(hash = 338718600)
+    public Note(long id, long notebookId, long userId, String title, String content, Date createTime, Date updateTime, int isDelete) {
         this.id = id;
         this.notebookId = notebookId;
+        this.userId = userId;
         this.title = title;
         this.content = content;
         this.createTime = createTime;
