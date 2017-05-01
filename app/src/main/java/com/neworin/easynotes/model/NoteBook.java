@@ -35,11 +35,13 @@ public class NoteBook extends BaseObservable implements Parcelable {
     private String name;
     private int count;
     private Boolean isChecked;
+    private int isDelete;//0为未删除，1为已删除
     private Date createTime;
     private Date updateTime;
     private Date syncTime;
     @ToOne(joinProperty = "userId")
     private User mUser;
+    private int status;
 
     @Keep
     public NoteBook() {
@@ -60,7 +62,7 @@ public class NoteBook extends BaseObservable implements Parcelable {
     }
 
     @Keep
-    public NoteBook(long id, String name, int count, Boolean isChecked, Date createTime, Date updateTime, Date syncTime, User user) {
+    public NoteBook(long id, String name, int count,int userId, Boolean isChecked, Date createTime, Date updateTime, Date syncTime, User user, Integer status, Integer isDelete) {
         this.id = id;
         this.name = name;
         this.count = count;
@@ -69,6 +71,18 @@ public class NoteBook extends BaseObservable implements Parcelable {
         this.updateTime = updateTime;
         this.syncTime = syncTime;
         this.mUser = user;
+        this.status = status;
+        this.isDelete = isDelete;
+        this.userId = userId;
+
+    }
+
+    public int getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(int isDelete) {
+        this.isDelete = isDelete;
     }
 
     public User getUser() {
@@ -158,6 +172,14 @@ public class NoteBook extends BaseObservable implements Parcelable {
         this.userId = userId;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "NoteBook{" +
@@ -179,10 +201,12 @@ public class NoteBook extends BaseObservable implements Parcelable {
         dest.writeString(this.name);
         dest.writeInt(this.count);
         dest.writeValue(this.isChecked);
+        dest.writeInt(this.isDelete);
         dest.writeLong(this.createTime != null ? this.createTime.getTime() : -1);
         dest.writeLong(this.updateTime != null ? this.updateTime.getTime() : -1);
         dest.writeLong(this.syncTime != null ? this.syncTime.getTime() : -1);
         dest.writeParcelable(this.mUser, flags);
+        dest.writeInt(this.status);
     }
 
     /** To-one relationship, resolved on first access. */
@@ -260,6 +284,10 @@ public class NoteBook extends BaseObservable implements Parcelable {
         myDao = daoSession != null ? daoSession.getNoteBookDao() : null;
     }
 
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     protected NoteBook(Parcel in) {
         this.id = in.readLong();
         this.userId = in.readLong();
@@ -273,6 +301,8 @@ public class NoteBook extends BaseObservable implements Parcelable {
         long tmpSyncTime = in.readLong();
         this.syncTime = tmpSyncTime == -1 ? null : new Date(tmpSyncTime);
         this.mUser = in.readParcelable(User.class.getClassLoader());
+        this.status = in.readInt();
+        this.isDelete = in.readInt();
     }
 
     @Keep
@@ -285,6 +315,20 @@ public class NoteBook extends BaseObservable implements Parcelable {
         this.createTime = createTime;
         this.updateTime = updateTime;
         this.syncTime = syncTime;
+    }
+
+    @Generated(hash = 623910123)
+    public NoteBook(long id, long userId, String name, int count, Boolean isChecked, int isDelete, Date createTime, Date updateTime, Date syncTime, int status) {
+        this.id = id;
+        this.userId = userId;
+        this.name = name;
+        this.count = count;
+        this.isChecked = isChecked;
+        this.isDelete = isDelete;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.syncTime = syncTime;
+        this.status = status;
     }
 
     public static final Parcelable.Creator<NoteBook> CREATOR = new Parcelable.Creator<NoteBook>() {
