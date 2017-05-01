@@ -36,6 +36,7 @@ public class Note extends BaseObservable implements Parcelable {
     private Date createTime;
     private Date updateTime;
     private int isDelete;//0为未删除，1为已删除
+    private int status;
     @ToOne(joinProperty = "notebookId")
     private NoteBook mNoteBook;
 
@@ -122,8 +123,16 @@ public class Note extends BaseObservable implements Parcelable {
         this.isDelete = isDelete;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     @Keep
-    public Note(long id, String title, long userId, String content, Date createTime, Date updateTime, NoteBook noteBook, int isDelete) {
+    public Note(long id, String title, long userId, String content, Date createTime, Date updateTime, NoteBook noteBook, int isDelete, int status) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -132,6 +141,7 @@ public class Note extends BaseObservable implements Parcelable {
         this.mNoteBook = noteBook;
         this.isDelete = isDelete;
         this.userId = userId;
+        this.status = status;
     }
 
     @Override
@@ -149,6 +159,7 @@ public class Note extends BaseObservable implements Parcelable {
         dest.writeLong(this.updateTime != null ? this.updateTime.getTime() : -1);
         dest.writeParcelable(this.mNoteBook, flags);
         dest.writeLong(this.userId);
+        dest.writeInt(this.status);
     }
 
     /** To-one relationship, resolved on first access. */
@@ -238,6 +249,7 @@ public class Note extends BaseObservable implements Parcelable {
         this.updateTime = tmpUpdateTime == -1 ? null : new Date(tmpUpdateTime);
         this.mNoteBook = in.readParcelable(NoteBook.class.getClassLoader());
         this.userId = in.readLong();
+        this.status = in.readInt();
     }
 
     @Generated(hash = 338718600)
