@@ -34,9 +34,11 @@ public class NoteBookDao extends AbstractDao<NoteBook, Long> {
         public final static Property Name = new Property(2, String.class, "name", false, "NAME");
         public final static Property Count = new Property(3, int.class, "count", false, "COUNT");
         public final static Property IsChecked = new Property(4, Boolean.class, "isChecked", false, "IS_CHECKED");
-        public final static Property CreateTime = new Property(5, java.util.Date.class, "createTime", false, "CREATE_TIME");
-        public final static Property UpdateTime = new Property(6, java.util.Date.class, "updateTime", false, "UPDATE_TIME");
-        public final static Property SyncTime = new Property(7, java.util.Date.class, "syncTime", false, "SYNC_TIME");
+        public final static Property IsDelete = new Property(5, int.class, "isDelete", false, "IS_DELETE");
+        public final static Property CreateTime = new Property(6, java.util.Date.class, "createTime", false, "CREATE_TIME");
+        public final static Property UpdateTime = new Property(7, java.util.Date.class, "updateTime", false, "UPDATE_TIME");
+        public final static Property SyncTime = new Property(8, java.util.Date.class, "syncTime", false, "SYNC_TIME");
+        public final static Property Status = new Property(9, int.class, "status", false, "STATUS");
     }
 
     private DaoSession daoSession;
@@ -60,9 +62,11 @@ public class NoteBookDao extends AbstractDao<NoteBook, Long> {
                 "\"NAME\" TEXT," + // 2: name
                 "\"COUNT\" INTEGER NOT NULL ," + // 3: count
                 "\"IS_CHECKED\" INTEGER," + // 4: isChecked
-                "\"CREATE_TIME\" INTEGER," + // 5: createTime
-                "\"UPDATE_TIME\" INTEGER," + // 6: updateTime
-                "\"SYNC_TIME\" INTEGER);"); // 7: syncTime
+                "\"IS_DELETE\" INTEGER NOT NULL ," + // 5: isDelete
+                "\"CREATE_TIME\" INTEGER," + // 6: createTime
+                "\"UPDATE_TIME\" INTEGER," + // 7: updateTime
+                "\"SYNC_TIME\" INTEGER," + // 8: syncTime
+                "\"STATUS\" INTEGER NOT NULL );"); // 9: status
     }
 
     /** Drops the underlying database table. */
@@ -87,21 +91,23 @@ public class NoteBookDao extends AbstractDao<NoteBook, Long> {
         if (isChecked != null) {
             stmt.bindLong(5, isChecked ? 1L: 0L);
         }
+        stmt.bindLong(6, entity.getIsDelete());
  
         java.util.Date createTime = entity.getCreateTime();
         if (createTime != null) {
-            stmt.bindLong(6, createTime.getTime());
+            stmt.bindLong(7, createTime.getTime());
         }
  
         java.util.Date updateTime = entity.getUpdateTime();
         if (updateTime != null) {
-            stmt.bindLong(7, updateTime.getTime());
+            stmt.bindLong(8, updateTime.getTime());
         }
  
         java.util.Date syncTime = entity.getSyncTime();
         if (syncTime != null) {
-            stmt.bindLong(8, syncTime.getTime());
+            stmt.bindLong(9, syncTime.getTime());
         }
+        stmt.bindLong(10, entity.getStatus());
     }
 
     @Override
@@ -120,21 +126,23 @@ public class NoteBookDao extends AbstractDao<NoteBook, Long> {
         if (isChecked != null) {
             stmt.bindLong(5, isChecked ? 1L: 0L);
         }
+        stmt.bindLong(6, entity.getIsDelete());
  
         java.util.Date createTime = entity.getCreateTime();
         if (createTime != null) {
-            stmt.bindLong(6, createTime.getTime());
+            stmt.bindLong(7, createTime.getTime());
         }
  
         java.util.Date updateTime = entity.getUpdateTime();
         if (updateTime != null) {
-            stmt.bindLong(7, updateTime.getTime());
+            stmt.bindLong(8, updateTime.getTime());
         }
  
         java.util.Date syncTime = entity.getSyncTime();
         if (syncTime != null) {
-            stmt.bindLong(8, syncTime.getTime());
+            stmt.bindLong(9, syncTime.getTime());
         }
+        stmt.bindLong(10, entity.getStatus());
     }
 
     @Override
@@ -156,9 +164,11 @@ public class NoteBookDao extends AbstractDao<NoteBook, Long> {
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
             cursor.getInt(offset + 3), // count
             cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0, // isChecked
-            cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)), // createTime
-            cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // updateTime
-            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)) // syncTime
+            cursor.getInt(offset + 5), // isDelete
+            cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // createTime
+            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // updateTime
+            cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)), // syncTime
+            cursor.getInt(offset + 9) // status
         );
         return entity;
     }
@@ -170,9 +180,11 @@ public class NoteBookDao extends AbstractDao<NoteBook, Long> {
         entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setCount(cursor.getInt(offset + 3));
         entity.setIsChecked(cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0);
-        entity.setCreateTime(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
-        entity.setUpdateTime(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
-        entity.setSyncTime(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
+        entity.setIsDelete(cursor.getInt(offset + 5));
+        entity.setCreateTime(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
+        entity.setUpdateTime(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
+        entity.setSyncTime(cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)));
+        entity.setStatus(cursor.getInt(offset + 9));
      }
     
     @Override

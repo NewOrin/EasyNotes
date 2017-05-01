@@ -9,6 +9,11 @@ import com.neworin.easynotes.DBManager;
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.databinding.ActivityChooseLayoutBinding;
 import com.neworin.easynotes.event.SlideMenuEvent;
+import com.neworin.easynotes.greendao.gen.DaoSession;
+import com.neworin.easynotes.greendao.gen.NoteBookDao;
+import com.neworin.easynotes.greendao.gen.NoteDao;
+import com.neworin.easynotes.model.Note;
+import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.model.User;
 import com.neworin.easynotes.ui.BaseAppCompatActivity;
 import com.neworin.easynotes.ui.fragment.ChooseDialogFragment;
@@ -16,6 +21,8 @@ import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 /**
  * Created by NewOrin Zhang on 2017/4/21.
@@ -82,8 +89,32 @@ public class ChooseActivity extends BaseAppCompatActivity implements View.OnClic
 //            DaoSession session = mDBManager.getWriteDaoSession();
 //            session.getUserDao().insert(user);
             SharedPreferenceUtil.insertUserInfo(this, user);
+            updateNoUserNotes(user);
             EventBus.getDefault().post(new SlideMenuEvent.RefreshUserEvent(user));
             finish();
+        }
+    }
+
+    /**
+     * 将未关联用户id的笔记和笔记本关联userId
+     */
+    private void updateNoUserNotes(User user) {
+        DaoSession session = mDBManager.getWriteDaoSession();
+        NoteDao noteDao = session.getNoteDao();
+        NoteBookDao noteBookDao = session.getNoteBookDao();
+        List<Note> noteList = noteDao.queryBuilder().where(NoteDao.Properties.UserId.eq(0)).list();
+        List<NoteBook> noteBookList = noteBookDao.queryBuilder().where(NoteBookDao.Properties.UserId.eq(0)).list();
+        if (null != noteList && noteList.size() > 0) {
+            for (Note note : noteList) {
+                note.setUserId(user.getId());
+                noteDao.update(note);
+            }
+        }
+        if (null != noteBookList && noteBookList.size() > 0) {
+            for (NoteBook noteBook : noteBookList) {
+                noteBook.setUserId(user.getId());
+                noteBookDao.update(noteBook);
+            }
         }
     }
 }

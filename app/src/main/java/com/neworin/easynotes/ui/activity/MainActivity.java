@@ -16,6 +16,7 @@ import com.neworin.easynotes.event.NoteBookFragmentEvent;
 import com.neworin.easynotes.event.SlideMenuEvent;
 import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.greendao.gen.NoteBookDao;
+import com.neworin.easynotes.http.NoteBizImpl;
 import com.neworin.easynotes.http.Response;
 import com.neworin.easynotes.http.UserBizImpl;
 import com.neworin.easynotes.model.NoteBook;
@@ -92,7 +93,10 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.main_menu_refresh) {
-            EventBus.getDefault().post(new NoteBookFragmentEvent.RefreshNoteEvent());
+//            EventBus.getDefault().post(new NoteBookFragmentEvent.RefreshNoteEvent());
+            NoteBizImpl noteBiz = new NoteBizImpl();
+//            noteBiz.syncNoteBook(this);
+            noteBiz.getAllDatas(this);
         }
         if (item.getItemId() == R.id.main_menu_thumb) {
             EventBus.getDefault().post(new NoteBookFragmentEvent.ShowThumbEvent());

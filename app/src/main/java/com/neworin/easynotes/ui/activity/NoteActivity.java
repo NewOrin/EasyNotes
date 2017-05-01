@@ -15,6 +15,7 @@ import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
 import com.neworin.easynotes.utils.GenerateSequenceUtil;
 import com.neworin.easynotes.utils.L;
+import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -99,6 +100,9 @@ public class NoteActivity extends BaseNoteEditActivity implements Toolbar.OnMenu
             note.setTitle(mTitle);
             note.setContent(mContent);
             note.setCreateTime(DateUtil.getNowTime());
+            if (null != SharedPreferenceUtil.getString(this, Constant.USER_ID)) {
+                note.setUserId(Long.parseLong(SharedPreferenceUtil.getString(this, Constant.USER_ID)));
+            }
             mDaoSession.getNoteDao().insert(note);
             mDaoSession.clear();
         }

@@ -31,11 +31,13 @@ public class NoteDao extends AbstractDao<Note, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, long.class, "id", true, "_id");
         public final static Property NotebookId = new Property(1, long.class, "notebookId", false, "NOTEBOOK_ID");
-        public final static Property Title = new Property(2, String.class, "title", false, "TITLE");
-        public final static Property Content = new Property(3, String.class, "content", false, "CONTENT");
-        public final static Property CreateTime = new Property(4, java.util.Date.class, "createTime", false, "CREATE_TIME");
-        public final static Property UpdateTime = new Property(5, java.util.Date.class, "updateTime", false, "UPDATE_TIME");
-        public final static Property IsDelete = new Property(6, int.class, "isDelete", false, "IS_DELETE");
+        public final static Property UserId = new Property(2, long.class, "userId", false, "USER_ID");
+        public final static Property Title = new Property(3, String.class, "title", false, "TITLE");
+        public final static Property Content = new Property(4, String.class, "content", false, "CONTENT");
+        public final static Property CreateTime = new Property(5, java.util.Date.class, "createTime", false, "CREATE_TIME");
+        public final static Property UpdateTime = new Property(6, java.util.Date.class, "updateTime", false, "UPDATE_TIME");
+        public final static Property IsDelete = new Property(7, int.class, "isDelete", false, "IS_DELETE");
+        public final static Property Status = new Property(8, int.class, "status", false, "STATUS");
     }
 
     private DaoSession daoSession;
@@ -56,11 +58,13 @@ public class NoteDao extends AbstractDao<Note, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"NOTE\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY NOT NULL ," + // 0: id
                 "\"NOTEBOOK_ID\" INTEGER NOT NULL ," + // 1: notebookId
-                "\"TITLE\" TEXT," + // 2: title
-                "\"CONTENT\" TEXT," + // 3: content
-                "\"CREATE_TIME\" INTEGER," + // 4: createTime
-                "\"UPDATE_TIME\" INTEGER," + // 5: updateTime
-                "\"IS_DELETE\" INTEGER NOT NULL );"); // 6: isDelete
+                "\"USER_ID\" INTEGER NOT NULL ," + // 2: userId
+                "\"TITLE\" TEXT," + // 3: title
+                "\"CONTENT\" TEXT," + // 4: content
+                "\"CREATE_TIME\" INTEGER," + // 5: createTime
+                "\"UPDATE_TIME\" INTEGER," + // 6: updateTime
+                "\"IS_DELETE\" INTEGER NOT NULL ," + // 7: isDelete
+                "\"STATUS\" INTEGER NOT NULL );"); // 8: status
     }
 
     /** Drops the underlying database table. */
@@ -74,27 +78,29 @@ public class NoteDao extends AbstractDao<Note, Long> {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getId());
         stmt.bindLong(2, entity.getNotebookId());
+        stmt.bindLong(3, entity.getUserId());
  
         String title = entity.getTitle();
         if (title != null) {
-            stmt.bindString(3, title);
+            stmt.bindString(4, title);
         }
  
         String content = entity.getContent();
         if (content != null) {
-            stmt.bindString(4, content);
+            stmt.bindString(5, content);
         }
  
         java.util.Date createTime = entity.getCreateTime();
         if (createTime != null) {
-            stmt.bindLong(5, createTime.getTime());
+            stmt.bindLong(6, createTime.getTime());
         }
  
         java.util.Date updateTime = entity.getUpdateTime();
         if (updateTime != null) {
-            stmt.bindLong(6, updateTime.getTime());
+            stmt.bindLong(7, updateTime.getTime());
         }
-        stmt.bindLong(7, entity.getIsDelete());
+        stmt.bindLong(8, entity.getIsDelete());
+        stmt.bindLong(9, entity.getStatus());
     }
 
     @Override
@@ -102,27 +108,29 @@ public class NoteDao extends AbstractDao<Note, Long> {
         stmt.clearBindings();
         stmt.bindLong(1, entity.getId());
         stmt.bindLong(2, entity.getNotebookId());
+        stmt.bindLong(3, entity.getUserId());
  
         String title = entity.getTitle();
         if (title != null) {
-            stmt.bindString(3, title);
+            stmt.bindString(4, title);
         }
  
         String content = entity.getContent();
         if (content != null) {
-            stmt.bindString(4, content);
+            stmt.bindString(5, content);
         }
  
         java.util.Date createTime = entity.getCreateTime();
         if (createTime != null) {
-            stmt.bindLong(5, createTime.getTime());
+            stmt.bindLong(6, createTime.getTime());
         }
  
         java.util.Date updateTime = entity.getUpdateTime();
         if (updateTime != null) {
-            stmt.bindLong(6, updateTime.getTime());
+            stmt.bindLong(7, updateTime.getTime());
         }
-        stmt.bindLong(7, entity.getIsDelete());
+        stmt.bindLong(8, entity.getIsDelete());
+        stmt.bindLong(9, entity.getStatus());
     }
 
     @Override
@@ -141,11 +149,13 @@ public class NoteDao extends AbstractDao<Note, Long> {
         Note entity = new Note( //
             cursor.getLong(offset + 0), // id
             cursor.getLong(offset + 1), // notebookId
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // title
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // content
-            cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)), // createTime
-            cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)), // updateTime
-            cursor.getInt(offset + 6) // isDelete
+            cursor.getLong(offset + 2), // userId
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // title
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // content
+            cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)), // createTime
+            cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // updateTime
+            cursor.getInt(offset + 7), // isDelete
+            cursor.getInt(offset + 8) // status
         );
         return entity;
     }
@@ -154,11 +164,13 @@ public class NoteDao extends AbstractDao<Note, Long> {
     public void readEntity(Cursor cursor, Note entity, int offset) {
         entity.setId(cursor.getLong(offset + 0));
         entity.setNotebookId(cursor.getLong(offset + 1));
-        entity.setTitle(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setContent(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setCreateTime(cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)));
-        entity.setUpdateTime(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
-        entity.setIsDelete(cursor.getInt(offset + 6));
+        entity.setUserId(cursor.getLong(offset + 2));
+        entity.setTitle(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setContent(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setCreateTime(cursor.isNull(offset + 5) ? null : new java.util.Date(cursor.getLong(offset + 5)));
+        entity.setUpdateTime(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
+        entity.setIsDelete(cursor.getInt(offset + 7));
+        entity.setStatus(cursor.getInt(offset + 8));
      }
     
     @Override

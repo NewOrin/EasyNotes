@@ -17,6 +17,7 @@ import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
 import com.neworin.easynotes.utils.DialogUtils;
 import com.neworin.easynotes.utils.GenerateSequenceUtil;
+import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -91,6 +92,9 @@ public class EditNoteBookActivity extends BaseAppCompatActivity implements Toolb
         noteBook.setId(GenerateSequenceUtil.generateSequenceNo());
         noteBook.setName(name);
         noteBook.setCreateTime(DateUtil.getNowTime());
+        if (null != SharedPreferenceUtil.getString(this, Constant.USER_ID)) {
+            noteBook.setUserId(Long.parseLong(SharedPreferenceUtil.getString(this, Constant.USER_ID)));
+        }
         mDaoSession.getNoteBookDao().insert(noteBook);
         mDaoSession.clear();
         EventBus.getDefault().post(new NoteBookFragmentEvent.RefreshNoteEvent());

@@ -252,8 +252,8 @@ public class Note extends BaseObservable implements Parcelable {
         this.status = in.readInt();
     }
 
-    @Generated(hash = 338718600)
-    public Note(long id, long notebookId, long userId, String title, String content, Date createTime, Date updateTime, int isDelete) {
+    @Generated(hash = 987352848)
+    public Note(long id, long notebookId, long userId, String title, String content, Date createTime, Date updateTime, int isDelete, int status) {
         this.id = id;
         this.notebookId = notebookId;
         this.userId = userId;
@@ -262,6 +262,7 @@ public class Note extends BaseObservable implements Parcelable {
         this.createTime = createTime;
         this.updateTime = updateTime;
         this.isDelete = isDelete;
+        this.status = status;
     }
 
     public static final Parcelable.Creator<Note> CREATOR = new Parcelable.Creator<Note>() {
