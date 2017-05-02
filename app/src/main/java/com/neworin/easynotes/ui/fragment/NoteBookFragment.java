@@ -247,6 +247,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
      */
     private void showDeleteDialog(final int position) {
         final Note note = mDatas.get(position);
+        final int status = note.getStatus();
         mDialogUtils = new DialogUtils(getActivity());
         mDialogUtils.showAlertDialog(getString(R.string.cofirm_delete_hint), new DialogInterface.OnClickListener() {
             @Override
@@ -256,6 +257,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
                     @Override
                     public void onClick(View v) {
                         note.setIsDelete(0);
+                        note.setStatus(status);
                         mNoteManager.update(note);
                         refreshData();
                     }
@@ -275,6 +277,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
         mDaoSession = mDBManager.getWriteDaoSession();
         mNoteDao = mDaoSession.getNoteDao();
         Note note = mDatas.get(position);
+        note.setStatus(Constant.STATUS_DELETE);
         note.setIsDelete(1);
         mNoteDao.update(note);
     }

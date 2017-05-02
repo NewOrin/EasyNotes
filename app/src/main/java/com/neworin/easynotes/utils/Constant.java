@@ -8,9 +8,9 @@ import android.os.Environment;
  */
 
 public class Constant {
-    public static final int SLIDE_ITEM_SETTINGS = -1;
-    public static final int SLIDE_ITEM_EDIT = -2;
-    public static final int SLIDE_ITEM_RECYCLE = -3;
+    public static final int SLIDE_ITEM_SETTINGS = -10;
+    public static final int SLIDE_ITEM_EDIT = -20;
+    public static final int SLIDE_ITEM_RECYCLE = -30;
     public static final String DB_NAME = "easynote_db";
 
     public static final int NOTE_BOOK_FRAGMENT_RESULT_CODE = 1000;
@@ -39,9 +39,17 @@ public class Constant {
     public static final String USER_PASSWORD = "password";
     public static final String USER_NICKNAME = "nickname";
     public static final String USER_AVATAR_URL = "user_avatar_url";
+    public static final String USER_SYNC_TIME = "user_sync_time";
 
 
     public static final String BASE_API_URL = "http://192.168.31.208:8080";
 //    public static final String BASE_API_URL = "http://192.168.1.233:8080";
     public static final String GET_AVATAR_URL = BASE_API_URL + "/file/get_user_avatar/";
+
+
+    public static final int STATUS_ADD = 2; //新增
+    public static final int STATUS_DELETE = -1; //删除
+    public static final int STATUS_UPDATE = 1; //更新
+    public static final int STATUS_COMPLETED = 9;//同步完成
+    public static final int STATUS_FAILED = -9;//同步失败
 }

@@ -19,6 +19,7 @@ import com.neworin.easynotes.http.FileUploadBizImpl;
 import com.neworin.easynotes.http.Response;
 import com.neworin.easynotes.ui.BaseAppCompatActivity;
 import com.neworin.easynotes.utils.Constant;
+import com.neworin.easynotes.utils.DateUtil;
 import com.neworin.easynotes.utils.DialogUtils;
 import com.neworin.easynotes.utils.GlideUtils;
 import com.neworin.easynotes.utils.ImageUtil;
@@ -29,6 +30,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -151,6 +153,10 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
         String email = SharedPreferenceUtil.getString(this, Constant.USER_EMAIL);
         GlideUtils.loadLogo(this, mBinding.personalAvatarImage, Constant.GET_AVATAR_URL + user_id);
         mBinding.personalEmailText.setText(email);
+        String time = SharedPreferenceUtil.getString(this, Constant.USER_SYNC_TIME);
+        if (null != time && !time.equals("")) {
+            mBinding.personalSyncTimeText.setText(DateUtil.formatFriendly(new Date(time)));
+        }
     }
 
     /**

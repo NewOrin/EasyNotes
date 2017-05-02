@@ -81,6 +81,8 @@ public class ChooseDialogFragment extends DialogFragment implements View.OnClick
             mBinding.chooseDialogTitle.setText(R.string.register);
             mBinding.chooseBtnAction.setText(R.string.register);
         }
+        getAccountEdit().setText("neworin@163.com");
+        getPasswordEdit().setText("123");
     }
 
     private void initEvent() {

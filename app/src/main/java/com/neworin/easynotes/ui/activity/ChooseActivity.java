@@ -12,6 +12,7 @@ import com.neworin.easynotes.event.SlideMenuEvent;
 import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.greendao.gen.NoteBookDao;
 import com.neworin.easynotes.greendao.gen.NoteDao;
+import com.neworin.easynotes.http.NoteBizImpl;
 import com.neworin.easynotes.model.Note;
 import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.model.User;
@@ -116,5 +117,7 @@ public class ChooseActivity extends BaseAppCompatActivity implements View.OnClic
                 noteBookDao.update(noteBook);
             }
         }
+        NoteBizImpl noteBiz = new NoteBizImpl();
+        noteBiz.postAllDatas(this);
     }
 }

@@ -91,6 +91,7 @@ public class EditNoteBookActivity extends BaseAppCompatActivity implements Toolb
         NoteBook noteBook = new NoteBook();
         noteBook.setId(GenerateSequenceUtil.generateSequenceNo());
         noteBook.setName(name);
+        noteBook.setStatus(Constant.STATUS_ADD);
         noteBook.setCreateTime(DateUtil.getNowTime());
         if (null != SharedPreferenceUtil.getString(this, Constant.USER_ID)) {
             noteBook.setUserId(Long.parseLong(SharedPreferenceUtil.getString(this, Constant.USER_ID)));

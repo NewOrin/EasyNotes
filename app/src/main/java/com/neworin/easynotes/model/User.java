@@ -5,6 +5,8 @@ import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
@@ -26,6 +28,7 @@ public class User extends BaseObservable implements Parcelable {
     private String password;
     private String nickname;
     private String avatarurl;
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Date jointime;
 
     @Keep

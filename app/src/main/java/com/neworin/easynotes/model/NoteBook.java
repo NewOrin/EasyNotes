@@ -5,6 +5,7 @@ import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.greendao.gen.NoteBookDao;
 import com.neworin.easynotes.greendao.gen.UserDao;
@@ -36,7 +37,9 @@ public class NoteBook extends BaseObservable implements Parcelable {
     private int count;
     private Boolean isChecked;
     private int isDelete;//0为未删除，1为已删除
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Date createTime;
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
     private Date syncTime;
     @ToOne(joinProperty = "userId")

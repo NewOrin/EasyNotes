@@ -113,6 +113,7 @@ public class EditActivity extends BaseNoteEditActivity {
         note.setNotebookId(mNoteBook.getId());
         note.setTitle(getTitleText());
         note.setContent(content);
+        note.setStatus(Constant.STATUS_UPDATE);
         note.setCreateTime(mNote.getCreateTime());
         note.setUpdateTime(DateUtil.getNowTime());
         mDaoSession.getNoteDao().update(note);

@@ -99,6 +99,7 @@ public class NoteActivity extends BaseNoteEditActivity implements Toolbar.OnMenu
             note.setNoteBook(mNoteBook);
             note.setTitle(mTitle);
             note.setContent(mContent);
+            note.setStatus(Constant.STATUS_ADD);
             note.setCreateTime(DateUtil.getNowTime());
             if (null != SharedPreferenceUtil.getString(this, Constant.USER_ID)) {
                 note.setUserId(Long.parseLong(SharedPreferenceUtil.getString(this, Constant.USER_ID)));

@@ -5,6 +5,7 @@ import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.greendao.gen.NoteBookDao;
 import com.neworin.easynotes.greendao.gen.NoteDao;
@@ -33,7 +34,9 @@ public class Note extends BaseObservable implements Parcelable {
     private long userId;
     private String title;
     private String content;
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Date createTime;
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
     private int isDelete;//0为未删除，1为已删除
     private int status;

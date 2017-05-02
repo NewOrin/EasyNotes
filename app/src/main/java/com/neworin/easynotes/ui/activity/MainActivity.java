@@ -93,10 +93,9 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.main_menu_refresh) {
-//            EventBus.getDefault().post(new NoteBookFragmentEvent.RefreshNoteEvent());
             NoteBizImpl noteBiz = new NoteBizImpl();
-//            noteBiz.syncNoteBook(this);
-            noteBiz.getAllDatas(this);
+            noteBiz.syncData(this);
+            EventBus.getDefault().post(new NoteBookFragmentEvent.RefreshNoteEvent());
         }
         if (item.getItemId() == R.id.main_menu_thumb) {
             EventBus.getDefault().post(new NoteBookFragmentEvent.ShowThumbEvent());
@@ -182,9 +181,12 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
                 userBiz.login(user, new Callback<Response>() {
                     @Override
                     public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
-                        L.d(TAG, "user email = " + email + "auto login success");
+                        L.d(TAG, "user email = " + email + " auto login success");
+                        Response res = response.body();
                         User user = GsonUtil.getDateFormatGson().fromJson(response.body().getData().toString(), User.class);
                         SharedPreferenceUtil.putString(MainActivity.this, Constant.USER_AVATAR_URL, user.getAvatarurl());
+                        NoteBizImpl noteBiz = new NoteBizImpl();
+                        noteBiz.postAllDatas(MainActivity.this);
                     }
 
                     @Override

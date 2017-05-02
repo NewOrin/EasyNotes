@@ -54,6 +54,7 @@
                 android:text="@string/personal_last_sync_time"/>
 
             <TextView
+                android:id="@+id/personal_sync_time_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/personal_not_sync"

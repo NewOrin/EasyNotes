@@ -21,6 +21,7 @@ import com.neworin.easynotes.greendao.gen.NoteDao;
 import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.model.NoteBookManager;
 import com.neworin.easynotes.ui.BaseFragment;
+import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
 import com.neworin.easynotes.utils.DialogUtils;
 import com.neworin.easynotes.view.DividerItemDecoration;
@@ -165,6 +166,7 @@ public class EditNoteBookFragment extends BaseFragment {
             public void onClick(DialogInterface dialog, int which) {
                 mNoteBookList.get(pos).setName(mDialogUtils.getEditText());
                 mNoteBookList.get(pos).setUpdateTime(DateUtil.getNowTime());
+                mNoteBookList.get(pos).setStatus(Constant.STATUS_UPDATE);
                 mNoteBookManager.update(mNoteBookList.get(pos));
                 refreshData();
             }
@@ -189,6 +191,7 @@ public class EditNoteBookFragment extends BaseFragment {
      */
     private void handleDeleteNoteBook(final int pos) {
         final NoteBook nb = mNoteBookList.get(pos);
+        final int status = nb.getStatus();
         if (nb.getId() == 1) {
             showSnackBar(getRootView(), getString(R.string.edit_notebook_cannot_delete_default_hint));
             return;
@@ -196,10 +199,14 @@ public class EditNoteBookFragment extends BaseFragment {
         mDialogUtils.showAlertDialog(getString(R.string.edit_notebook_delete_alert), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mNoteBookManager.deleteByKey(nb.getId());
+                nb.setIsDelete(1);
+                nb.setStatus(Constant.STATUS_DELETE);
+                mNoteBookManager.update(nb);
                 showSnackBarWithAction(getRootView(), getString(R.string.edit_notebook_success), getString(R.string.edit_notebook_recall), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        nb.setStatus(status);
+                        nb.setIsDelete(0);
                         mNoteBookManager.insert(nb);
                         refreshData();
                     }
