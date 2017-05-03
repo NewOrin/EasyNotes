@@ -48,8 +48,8 @@ public class NoteBizImpl {
         mDaoSession = mDBManager.getWriteDaoSession();
         NoteBookDao noteBookDao = mDaoSession.getNoteBookDao();
         NoteDao noteDao = mDaoSession.getNoteDao();
-        List<NoteBook> noteBookList = noteBookDao.queryBuilder().where(NoteBookDao.Properties.UserId.eq(user_id)).list();
-        List<Note> noteList = noteDao.queryBuilder().where(NoteDao.Properties.UserId.eq(user_id)).list();
+        List<NoteBook> noteBookList = noteBookDao.queryBuilder().where(NoteBookDao.Properties.UserId.eq(user_id),NoteBookDao.Properties.Status.notEq(Constant.STATUS_COMPLETED)).list();
+        List<Note> noteList = noteDao.queryBuilder().where(NoteDao.Properties.UserId.eq(user_id),NoteDao.Properties.Status.notEq(Constant.STATUS_COMPLETED)).list();
         NoteAndBookList noteAndBookList = new NoteAndBookList(noteBookList, noteList, user_id);
         Call<Response> call = service.syncNoteData(noteAndBookList);
         call.enqueue(new Callback<Response>() {
@@ -78,17 +78,21 @@ public class NoteBizImpl {
         mDBManager = DBManager.getInstance(context);
         mDaoSession = mDBManager.getReadDaoSession();
         NoteBookDao noteBookDao = mDaoSession.getNoteBookDao();
-        List<NoteBook> noteBookList = noteBookDao.queryBuilder().list();
+        List<NoteBook> noteBookList = noteBookDao.queryBuilder().where(NoteBookDao.Properties.UserId.eq(user_id)).list();
         NoteDao noteDao = mDaoSession.getNoteDao();
-        List<Note> noteList = noteDao.queryBuilder().list();
+        List<Note> noteList = noteDao.queryBuilder().where(NoteDao.Properties.UserId.eq(user_id)).list();
         NoteAndBookList noteAndBookList = new NoteAndBookList(noteBookList, noteList, user_id);
         NoteService service = ServiceGenerator.createService(NoteService.class);
         Call<NoteAndBookList> call = service.postNoteData(noteAndBookList);
         call.enqueue(new Callback<NoteAndBookList>() {
             @Override
             public void onResponse(Call<NoteAndBookList> call, retrofit2.Response<NoteAndBookList> response) {
+                if (null == response.body()) {
+                    L.d(TAG, "服务器错误 response body == null");
+                    return;
+                }
                 L.d(TAG, "返回 = " + response.body().toString());
-                updateLocalDB(response.body(), user_id);
+                updateLocalDB(response.body());
                 SharedPreferenceUtil.putString(context, Constant.USER_SYNC_TIME, String.valueOf(DateUtil.getNowTime()));
                 EventBus.getDefault().post(new NoteBookFragmentEvent.RefreshNoteEvent());
                 EventBus.getDefault().post(new SlideMenuEvent.RefreshEvent());
@@ -121,16 +125,16 @@ public class NoteBizImpl {
      *
      * @param noteAndBookList
      */
-    private void updateLocalDB(NoteAndBookList noteAndBookList, long user_id) {
+    private void updateLocalDB(NoteAndBookList noteAndBookList) {
         mDaoSession = mDBManager.getWriteDaoSession();
         NoteDao noteDao = mDaoSession.getNoteDao();
         NoteBookDao noteBookDao = mDaoSession.getNoteBookDao();
-        List<Note> notes = noteDao.queryBuilder().where(NoteDao.Properties.UserId.eq(user_id)).list();
+        List<Note> notes = noteDao.queryBuilder().where(NoteDao.Properties.UserId.eq(noteAndBookList.getUser_id())).list();
         for (Note note : notes) {
             note.setStatus(Constant.STATUS_COMPLETED);
             noteDao.update(note);
         }
-        List<NoteBook> noteBooks = noteBookDao.queryBuilder().where(NoteBookDao.Properties.UserId.eq(user_id)).list();
+        List<NoteBook> noteBooks = noteBookDao.queryBuilder().where(NoteBookDao.Properties.UserId.eq(noteAndBookList.getUser_id())).list();
         for (NoteBook noteBook : noteBooks) {
             noteBook.setStatus(Constant.STATUS_COMPLETED);
         }

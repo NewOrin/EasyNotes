@@ -16,6 +16,7 @@ import com.neworin.easynotes.greendao.gen.DaoSession;
 import com.neworin.easynotes.greendao.gen.NoteDao;
 import com.neworin.easynotes.model.Note;
 import com.neworin.easynotes.ui.BaseAppCompatActivity;
+import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DialogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -102,6 +103,7 @@ public class RecycleActivity extends BaseAppCompatActivity {
         NoteDao dao = mDaoSession.getNoteDao();
         Note note = getDBDatas().get(position);
         note.setIsDelete(0);
+        note.setStatus(Constant.STATUS_UPDATE);
         dao.update(note);
         mDaoSession.clear();
         mDatas.remove(position);
