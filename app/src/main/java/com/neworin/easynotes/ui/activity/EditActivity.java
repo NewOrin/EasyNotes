@@ -13,6 +13,7 @@ import com.neworin.easynotes.model.Note;
 import com.neworin.easynotes.ui.BaseNoteEditActivity;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
+import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -108,11 +109,16 @@ public class EditActivity extends BaseNoteEditActivity {
             content = "";
         }
         mDaoSession = mDbManager.getWriteDaoSession();
+        long userId = 0;
+        if (SharedPreferenceUtil.getString(this, Constant.USER_ID) != null) {
+            userId = Long.parseLong(SharedPreferenceUtil.getString(this, Constant.USER_ID));
+        }
         Note note = new Note();
         note.setId(mNote.getId());
         note.setNotebookId(mNoteBook.getId());
         note.setTitle(getTitleText());
         note.setContent(content);
+        note.setUserId(userId);
         note.setStatus(Constant.STATUS_UPDATE);
         note.setCreateTime(mNote.getCreateTime());
         note.setUpdateTime(DateUtil.getNowTime());
