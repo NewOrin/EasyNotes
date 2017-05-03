@@ -93,9 +93,14 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.main_menu_refresh) {
-            NoteBizImpl noteBiz = new NoteBizImpl();
-            noteBiz.syncData(this);
-            EventBus.getDefault().post(new NoteBookFragmentEvent.RefreshNoteEvent());
+            String userId = SharedPreferenceUtil.getString(this, Constant.USER_ID);
+            if (null != userId && !userId.equals("")) {
+                NoteBizImpl noteBiz = new NoteBizImpl();
+                noteBiz.syncData(this);
+                EventBus.getDefault().post(new NoteBookFragmentEvent.RefreshNoteEvent());
+            } else {
+                showSnackBar(mBinding.getRoot(), getString(R.string.main_no_login_hint));
+            }
         }
         if (item.getItemId() == R.id.main_menu_thumb) {
             EventBus.getDefault().post(new NoteBookFragmentEvent.ShowThumbEvent());
@@ -182,7 +187,6 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
                     @Override
                     public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                         L.d(TAG, "user email = " + email + " auto login success");
-                        Response res = response.body();
                         User user = GsonUtil.getDateFormatGson().fromJson(response.body().getData().toString(), User.class);
                         SharedPreferenceUtil.putString(MainActivity.this, Constant.USER_AVATAR_URL, user.getAvatarurl());
                         NoteBizImpl noteBiz = new NoteBizImpl();
@@ -196,7 +200,7 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
                 });
             }
         } else {
-            L.d(TAG, "no network");
+            L.d(TAG, "auto login no network");
         }
     }
 }
