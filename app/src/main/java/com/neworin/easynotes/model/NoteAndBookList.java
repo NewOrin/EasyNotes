@@ -39,4 +39,13 @@ public class NoteAndBookList {
         public void setNotes(List<Note> notes) {
             this.notes = notes;
         }
+
+    @Override
+    public String toString() {
+        return "NoteAndBookList{" +
+                "notebooks=" + notebooks +
+                ", notes=" + notes +
+                ", user_id=" + user_id +
+                '}';
     }
+}

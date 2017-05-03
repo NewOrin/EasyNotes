@@ -42,8 +42,8 @@ public class Constant {
     public static final String USER_SYNC_TIME = "user_sync_time";
 
 
-    public static final String BASE_API_URL = "http://192.168.31.208:8080";
-//    public static final String BASE_API_URL = "http://192.168.1.233:8080";
+//    public static final String BASE_API_URL = "http://192.168.31.208:8080";
+    public static final String BASE_API_URL = "http://192.168.1.233:8080";
     public static final String GET_AVATAR_URL = BASE_API_URL + "/file/get_user_avatar/";
 
 

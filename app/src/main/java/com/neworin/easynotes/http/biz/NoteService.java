@@ -19,6 +19,5 @@ public interface NoteService {
     Call<Response> syncNoteData(@Body NoteAndBookList params);
 
     @POST("/main/post_data")
-    Call<Response> postNoteData(@Body NoteAndBookList params);
-
+    Call<NoteAndBookList> postNoteData(@Body NoteAndBookList params);
 }

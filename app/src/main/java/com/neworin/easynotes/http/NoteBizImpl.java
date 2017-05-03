@@ -2,7 +2,6 @@ package com.neworin.easynotes.http;
 
 import android.content.Context;
 
-import com.alibaba.fastjson.JSONArray;
 import com.neworin.easynotes.DBManager;
 import com.neworin.easynotes.event.NoteBookFragmentEvent;
 import com.neworin.easynotes.event.SlideMenuEvent;
@@ -19,9 +18,7 @@ import com.neworin.easynotes.utils.L;
 import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -86,34 +83,19 @@ public class NoteBizImpl {
         List<Note> noteList = noteDao.queryBuilder().list();
         NoteAndBookList noteAndBookList = new NoteAndBookList(noteBookList, noteList, user_id);
         NoteService service = ServiceGenerator.createService(NoteService.class);
-        Call<Response> call = service.postNoteData(noteAndBookList);
-        call.enqueue(new Callback<Response>() {
+        Call<NoteAndBookList> call = service.postNoteData(noteAndBookList);
+        call.enqueue(new Callback<NoteAndBookList>() {
             @Override
-            public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
-                String nabStr = response.body().getData().toString();
-                org.json.JSONObject jsonObject = null;
-                List<NoteBook> noteBooks = new ArrayList<NoteBook>();
-                List<Note> notes = new ArrayList<Note>();
-                long userId = 0;
-                try {
-                    jsonObject = new org.json.JSONObject(nabStr);
-                    userId = jsonObject.getLong("user_id");
-                    org.json.JSONArray array1 = jsonObject.getJSONArray("notebooks");
-                    noteBooks = JSONArray.parseArray(array1.toString(), NoteBook.class);
-                    org.json.JSONArray array2 = jsonObject.getJSONArray("notes");
-                    notes = JSONArray.parseArray(array2.toString(), Note.class);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                NoteAndBookList nab = new NoteAndBookList(noteBooks, notes, userId);
-                updateLocalDB(nab, user_id);
+            public void onResponse(Call<NoteAndBookList> call, retrofit2.Response<NoteAndBookList> response) {
+                L.d(TAG, "返回 = " + response.body().toString());
+                updateLocalDB(response.body(), user_id);
                 SharedPreferenceUtil.putString(context, Constant.USER_SYNC_TIME, String.valueOf(DateUtil.getNowTime()));
                 EventBus.getDefault().post(new NoteBookFragmentEvent.RefreshNoteEvent());
                 EventBus.getDefault().post(new SlideMenuEvent.RefreshEvent());
             }
 
             @Override
-            public void onFailure(Call<Response> call, Throwable t) {
+            public void onFailure(Call<NoteAndBookList> call, Throwable t) {
                 L.d(TAG, "数据发送到服务器失败 error = " + t.getMessage());
             }
         });
