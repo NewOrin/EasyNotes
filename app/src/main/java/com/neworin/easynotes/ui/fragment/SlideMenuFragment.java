@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide;
 import com.neworin.easynotes.DBManager;
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.adapter.ListViewCommonAdapter;
+import com.neworin.easynotes.cache.MyBitmapUtils;
 import com.neworin.easynotes.databinding.FragmentSlideMenuBinding;
 import com.neworin.easynotes.event.SlideMenuEvent;
 import com.neworin.easynotes.greendao.gen.DaoSession;
@@ -20,7 +21,6 @@ import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.model.User;
 import com.neworin.easynotes.ui.BaseFragment;
 import com.neworin.easynotes.utils.Constant;
-import com.neworin.easynotes.utils.GlideUtils;
 import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -180,13 +180,14 @@ public class SlideMenuFragment extends BaseFragment {
      * 设置头像
      */
     private void setAvatar() {
-        String user_id = SharedPreferenceUtil.getString(getActivity(), Constant.USER_ID);
-        if (user_id != null && !user_id.equals("")) {
-            GlideUtils.loadLogo(getActivity(), mBinding.slideAvatarImage, Constant.GET_AVATAR_URL + user_id);
+        if (SharedPreferenceUtil.getUserId(getActivity()) == 0) {
+            mBinding.slideAvatarImage.setImageResource(R.drawable.ic_default_avatar);
         } else {
-            Glide.with(getActivity()).load(R.drawable.ic_default_avatar).error(R.drawable.ic_default_avatar).into(mBinding.slideAvatarImage);
+            MyBitmapUtils myBitmapUtils = new MyBitmapUtils();
+            myBitmapUtils.disPlay(mBinding.slideAvatarImage, Constant.GET_AVATAR_URL + SharedPreferenceUtil.getUserId(getActivity()));
         }
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

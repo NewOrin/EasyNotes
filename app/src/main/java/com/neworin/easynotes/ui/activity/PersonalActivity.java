@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.neworin.easynotes.R;
+import com.neworin.easynotes.cache.MyBitmapUtils;
 import com.neworin.easynotes.databinding.ActivityPersonalLayoutBinding;
 import com.neworin.easynotes.event.SlideMenuEvent;
 import com.neworin.easynotes.http.FileUploadBizImpl;
@@ -21,7 +22,6 @@ import com.neworin.easynotes.ui.BaseAppCompatActivity;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
 import com.neworin.easynotes.utils.DialogUtils;
-import com.neworin.easynotes.utils.GlideUtils;
 import com.neworin.easynotes.utils.ImageUtil;
 import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
@@ -151,7 +151,8 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
     private void setUserInfo() {
         String user_id = SharedPreferenceUtil.getString(this, Constant.USER_ID);
         String email = SharedPreferenceUtil.getString(this, Constant.USER_EMAIL);
-        GlideUtils.loadLogo(this, mBinding.personalAvatarImage, Constant.GET_AVATAR_URL + user_id);
+        MyBitmapUtils myBitmapUtils = new MyBitmapUtils();
+        myBitmapUtils.disPlay(mBinding.personalAvatarImage, Constant.GET_AVATAR_URL + user_id);
         mBinding.personalEmailText.setText(email);
         String time = SharedPreferenceUtil.getString(this, Constant.USER_SYNC_TIME);
         if (null != time && !time.equals("")) {

@@ -61,4 +61,11 @@ public class SharedPreferenceUtil {
         putString(context, Constant.USER_PASSWORD, "");
         putString(context, Constant.USER_NICKNAME, "");
     }
+
+    public static long getUserId(Context context) {
+        if (null != getString(context, Constant.USER_ID)) {
+            return Long.parseLong(getString(context, Constant.USER_ID));
+        }
+        return 0;
+    }
 }
