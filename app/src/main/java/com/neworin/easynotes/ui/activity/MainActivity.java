@@ -115,6 +115,9 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         if (item.getItemId() == R.id.main_menu_show_title_only) {
             EventBus.getDefault().post(new NoteBookFragmentEvent.ShowTitleEvent());
         }
+        if (item.getItemId() == R.id.main_menu_search) {
+            startActivity(new Intent(this, SearchActivity.class));
+        }
         return false;
     }
 

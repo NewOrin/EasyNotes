@@ -1,0 +1,31 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="adapter"
+            type="com.neworin.easynotes.adapter.RecyclerViewCommonAdapter"/>
+
+        <variable
+            name="handler"
+            type="com.neworin.easynotes.handlers.NoteBookFragmentHandler"/>
+    </data>
+
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_layout"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/x5"
+            android:layout_weight="1"
+            app:adapter="@{adapter}"/>
+    </LinearLayout>
+</layout>

@@ -32,6 +32,11 @@
         <activity android:name=".ui.activity.ChooseActivity"/>
         <activity android:name=".ui.activity.PersonalActivity"/>
         <activity android:name=".ui.activity.RecycleActivity"/>
+        <activity android:name=".ui.activity.SearchActivity">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
+        </activity>
     </application>
 
 </manifest>
