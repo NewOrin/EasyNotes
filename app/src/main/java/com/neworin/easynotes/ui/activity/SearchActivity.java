@@ -1,6 +1,8 @@
 package com.neworin.easynotes.ui.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,8 +15,10 @@ import com.neworin.easynotes.R;
 import com.neworin.easynotes.adapter.RecyclerViewCommonAdapter;
 import com.neworin.easynotes.databinding.ActivitySearchLayoutBinding;
 import com.neworin.easynotes.greendao.gen.DaoSession;
+import com.neworin.easynotes.greendao.gen.NoteBookDao;
 import com.neworin.easynotes.greendao.gen.NoteDao;
 import com.neworin.easynotes.model.Note;
+import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.ui.BaseAppCompatActivity;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.SharedPreferenceUtil;
@@ -40,7 +44,8 @@ public class SearchActivity extends BaseAppCompatActivity implements SearchView.
     private Map<Integer, String> mNotesMapStr;
     private ActivitySearchLayoutBinding mBinding;
     private RecyclerViewCommonAdapter<Note> mAdapter;
-
+    private Map<Long, NoteBook> mNoteBookMap;
+    private long mUserId;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_search_layout;
@@ -54,7 +59,6 @@ public class SearchActivity extends BaseAppCompatActivity implements SearchView.
         getToolbar().inflateMenu(R.menu.search_menu);
         MenuItem menuItem = getToolbar().getMenu().findItem(R.id.search_menu_search);
         menuItem.expandActionView();
-
         mSearchView = (SearchView) menuItem.getActionView();
         mSearchView.onActionViewExpanded();
         MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
@@ -81,6 +85,11 @@ public class SearchActivity extends BaseAppCompatActivity implements SearchView.
      * 初始化数据
      */
     private void initData() {
+        mUserId = 0;
+        if (SharedPreferenceUtil.getString(this, Constant.USER_ID) != null) {
+            mUserId = Long.parseLong(SharedPreferenceUtil.getString(this, Constant.USER_ID));
+        }
+        mNoteBookMap = getNoteBookMap();
         mNoteList = new ArrayList<>();
         setLinearLayoutRecyclerView(mNoteList);
         mNotesMapStr = getNoteStrs();
@@ -102,7 +111,12 @@ public class SearchActivity extends BaseAppCompatActivity implements SearchView.
         mAdapter.setmOnItemClickListener(new RecyclerViewCommonAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(Constant.ARG0, mNoteList.get(position));
+                bundle.putParcelable(Constant.ARG1, mNoteBookMap.get(mNoteList.get(position).getNotebookId()));
+                Intent intent = new Intent(SearchActivity.this, EditActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }
@@ -151,17 +165,24 @@ public class SearchActivity extends BaseAppCompatActivity implements SearchView.
      * @return
      */
     private Map<Integer, String> getNoteStrs() {
-        long userId = 0;
-        if (SharedPreferenceUtil.getString(this, Constant.USER_ID) != null) {
-            userId = Long.parseLong(SharedPreferenceUtil.getString(this, Constant.USER_ID));
-        }
         mDBManager = DBManager.getInstance(this);
         mDaoSession = mDBManager.getReadDaoSession();
         Map<Integer, String> stringMap = new HashMap<>();
-        mNoteList = mDaoSession.getNoteDao().queryBuilder().where(NoteDao.Properties.UserId.eq(userId), NoteDao.Properties.IsDelete.eq(0)).list();
+        mNoteList = mDaoSession.getNoteDao().queryBuilder().where(NoteDao.Properties.UserId.eq(mUserId), NoteDao.Properties.IsDelete.eq(0)).list();
         for (int i = 0; i < mNoteList.size(); i++) {
             stringMap.put(i, mNoteList.get(i).getTitle() + mNoteList.get(i).getContent());
         }
         return stringMap;
+    }
+
+    private Map<Long, NoteBook> getNoteBookMap() {
+        mNoteBookMap = new HashMap<>();
+        mDBManager = DBManager.getInstance(this);
+        mDaoSession = mDBManager.getReadDaoSession();
+        List<NoteBook> noteBookList = mDaoSession.getNoteBookDao().queryBuilder().where(NoteBookDao.Properties.UserId.eq(mUserId), NoteBookDao.Properties.IsDelete.eq(0)).list();
+        for (NoteBook noteBook : noteBookList) {
+            mNoteBookMap.put(noteBook.getId(), noteBook);
+        }
+        return mNoteBookMap;
     }
 }
