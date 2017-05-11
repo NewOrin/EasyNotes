@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
+import com.neworin.easynotes.utils.ImageUtil;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -16,6 +18,7 @@ public class NetCacheUtils {
 
     private LocalCacheUtils mLocalCacheUtils;
     private MemoryCacheUtils mMemoryCacheUtils;
+    private String TAG = NetCacheUtils.class.getSimpleName();
 
     public NetCacheUtils(LocalCacheUtils localCacheUtils, MemoryCacheUtils memoryCacheUtils) {
         mLocalCacheUtils = localCacheUtils;
@@ -76,7 +79,8 @@ public class NetCacheUtils {
         @Override
         protected void onPostExecute(Bitmap result) {
             if (result != null) {
-                ivPic.setImageBitmap(result);
+                Bitmap compressBmp = ImageUtil.compressImage(result);
+                ivPic.setImageBitmap(compressBmp);
                 System.out.println("从网络缓存图片啦.....");
 
                 //从网络获取图片后,保存至本地缓存
@@ -103,13 +107,8 @@ public class NetCacheUtils {
             conn.setRequestMethod("GET");
 
             int responseCode = conn.getResponseCode();
-            if (responseCode == 200) {
-                //图片压缩
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 2;//宽高压缩为原来的1/2
-                options.inPreferredConfig = Bitmap.Config.ARGB_4444;
-                Bitmap bitmap = BitmapFactory.decodeStream(conn.getInputStream(), null, options);
-                return bitmap;
+            if (responseCode == 200 || responseCode == 201) {
+                return BitmapFactory.decodeStream(conn.getInputStream());
             }
         } catch (IOException e) {
             e.printStackTrace();

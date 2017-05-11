@@ -6,4 +6,5 @@
     <string name="back">返回</string>
     <string name="please_wait">请稍后</string>
     <string name="main_no_login_hint">您尚未登录</string>
+    <string name="grant_permission_alert">请授予所需权限</string>
 </resources>

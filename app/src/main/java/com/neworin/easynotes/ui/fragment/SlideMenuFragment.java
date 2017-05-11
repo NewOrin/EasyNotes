@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.bumptech.glide.Glide;
 import com.neworin.easynotes.DBManager;
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.adapter.ListViewCommonAdapter;
@@ -97,11 +96,11 @@ public class SlideMenuFragment extends BaseFragment {
             }
         });
         mEmail = SharedPreferenceUtil.getString(getActivity(), Constant.USER_EMAIL);
-        if (mEmail != null && !mEmail.equals("")) {
+        if (mEmail != null) {
             mBinding.slideNameText.setText(mEmail);
             setAvatar();
         } else {
-            Glide.with(getActivity()).load(R.drawable.ic_default_avatar).placeholder(R.drawable.ic_default_avatar).into(mBinding.slideAvatarImage);
+            mBinding.slideAvatarImage.setImageResource(R.drawable.ic_default_avatar);
         }
     }
 

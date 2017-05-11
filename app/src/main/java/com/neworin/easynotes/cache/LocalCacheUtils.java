@@ -49,7 +49,7 @@ public class LocalCacheUtils {
         try {
             String fileName = MD5Encoder.encode(url);//把图片的url当做文件名,并进行MD5加密
             File file = new File(CACHE_PATH, fileName);
-            L.d(TAG,"已保存到本地 = "+file.getName());
+            L.d(TAG, "已保存到本地 = " + file.getAbsolutePath());
             //通过得到文件的父文件,判断父文件是否存在
             File parentFile = file.getParentFile();
             if (!parentFile.exists()) {

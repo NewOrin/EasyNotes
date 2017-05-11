@@ -1,8 +1,10 @@
 package com.neworin.easynotes.ui.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -36,9 +38,13 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.RuntimePermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 
+@RuntimePermissions
 public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMenuItemClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -66,10 +72,22 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         getToolbar().inflateMenu(R.menu.main_menu);
         getToolbar().setOnMenuItemClickListener(this);
         mFragmentManager = getSupportFragmentManager();
-        mFragmentManager.beginTransaction().add(R.id.main_left_container, new SlideMenuFragment()).commit();
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constant.ARG0, mNoteBook);
-        mFragmentManager.beginTransaction().add(R.id.main_content_container, NoteBookFragment.newsInstance(bundle)).commit();
+        mFragmentManager.beginTransaction().add(R.id.main_content_container, NoteBookFragment.newsInstance(bundle)).commitAllowingStateLoss();
+        checkPermission();
+    }
+
+    /**
+     * 检查所需权限
+     */
+    void checkPermission() {
+        MainActivityPermissionsDispatcher.initSlideFragmentWithCheck(this);
+    }
+
+    @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
+    void initSlideFragment() {
+        mFragmentManager.beginTransaction().add(R.id.main_left_container, new SlideMenuFragment()).commitAllowingStateLoss();
     }
 
     /**
@@ -205,5 +223,16 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         } else {
             L.d(TAG, "auto login no network");
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showPermissionDenied() {
+        MainActivity.this.finish();
     }
 }

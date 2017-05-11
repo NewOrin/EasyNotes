@@ -3,6 +3,7 @@ package com.neworin.easynotes.cache;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
+import com.neworin.easynotes.utils.ImageUtil;
 import com.neworin.easynotes.utils.L;
 
 /**
@@ -26,7 +27,8 @@ public class MyBitmapUtils {
         //内存缓存
         bitmap = mMemoryCacheUtils.getBitmapFromMemory(url);
         if (bitmap != null) {
-            ivPic.setImageBitmap(bitmap);
+            Bitmap compressBmp = ImageUtil.compressImage(bitmap);
+            ivPic.setImageBitmap(compressBmp);
             L.d(TAG, "从内存获取图片啦。。。");
             return;
         }
@@ -34,7 +36,8 @@ public class MyBitmapUtils {
         //本地缓存
         bitmap = mLocalCacheUtils.getBitmapFromLocal(url);
         if (bitmap != null) {
-            ivPic.setImageBitmap(bitmap);
+            Bitmap compressBmp = ImageUtil.compressImage(bitmap);
+            ivPic.setImageBitmap(compressBmp);
             L.d(TAG, "从本地获取图片啦。。。");
             //从本地获取图片后,保存至内存中
             mMemoryCacheUtils.setBitmapToMemory(url, bitmap);
