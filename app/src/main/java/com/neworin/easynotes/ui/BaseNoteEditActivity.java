@@ -144,7 +144,8 @@ public abstract class BaseNoteEditActivity extends BaseAppCompatActivity impleme
     public String saveImage(Bitmap bitmap) {
         File fileDir = new File(Constant.FILE_SAVE_PATH);
         if (!fileDir.exists()) {
-            fileDir.mkdir();
+            boolean isSuccess = fileDir.mkdirs();
+            L.d(TAG, "创建文件夹  " + isSuccess);
         }
         String filePath = Constant.FILE_SAVE_PATH + "/" + GenerateSequenceUtil.generateSequenceNo() + ".jpg";
         File imageFile = new File(filePath);
