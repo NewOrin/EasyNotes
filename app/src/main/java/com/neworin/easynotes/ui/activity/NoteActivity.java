@@ -75,10 +75,10 @@ public class NoteActivity extends BaseNoteEditActivity implements Toolbar.OnMenu
                 }
                 break;
             case R.id.note_menu_camera:
-                checkCamera();
+                openCamera();
                 break;
             case R.id.note_menu_photo:
-                checkAlbum();
+                openSystemAlbum();
                 break;
         }
         return true;

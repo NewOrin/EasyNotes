@@ -1,6 +1,5 @@
 package com.neworin.easynotes.ui.activity;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -9,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.neworin.easynotes.R;
@@ -32,8 +30,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.RuntimePermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -42,7 +38,6 @@ import retrofit2.Callback;
  * Project : com.neworin.easynotes.ui.activity
  * Description:
  */
-@RuntimePermissions
 public class PersonalActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
     private ActivityPersonalLayoutBinding mBinding;
@@ -90,7 +85,6 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
     /**
      * 拍照选择
      */
-    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE})
     void chooseFromCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA_CODE);
@@ -99,7 +93,6 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
     /**
      * 从相册选择图片
      */
-    @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     void chooseFromGallery() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -240,17 +233,11 @@ public class PersonalActivity extends BaseAppCompatActivity implements View.OnCl
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
-                    PersonalActivityPermissionsDispatcher.chooseFromCameraWithCheck(PersonalActivity.this);
+                    chooseFromCamera();
                 } else {
-                    PersonalActivityPermissionsDispatcher.chooseFromGalleryWithCheck(PersonalActivity.this);
+                    chooseFromGallery();
                 }
             }
         });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PersonalActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 }

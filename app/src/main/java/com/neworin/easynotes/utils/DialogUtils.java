@@ -24,12 +24,29 @@ public class DialogUtils {
         this.mContext = context;
     }
 
+    /**
+     * 确认对话框
+     *
+     * @param alertMsg
+     * @param listener
+     */
     public void showAlertDialog(String alertMsg, final DialogInterface.OnClickListener listener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(alertMsg).setPositiveButton(R.string.confirm, listener).setNegativeButton(R.string.cancel, null);
         builder.create().show();
     }
 
+    /**
+     * 提示对话框
+     *
+     * @param hintMsg
+     */
+    public void showHintDialog(String hintMsg, DialogInterface.OnClickListener listener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setCancelable(false);
+        builder.setTitle(hintMsg).setPositiveButton(R.string.confirm, listener);
+        builder.create().show();
+    }
     /**
      * 列表显示对话框
      *

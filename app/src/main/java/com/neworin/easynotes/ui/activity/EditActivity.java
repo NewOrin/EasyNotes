@@ -91,10 +91,10 @@ public class EditActivity extends BaseNoteEditActivity {
                 handleExist();
                 break;
             case R.id.note_menu_camera:
-                checkCamera();
+                openCamera();
                 break;
             case R.id.note_menu_photo:
-                checkAlbum();
+                openSystemAlbum();
                 break;
         }
         return true;

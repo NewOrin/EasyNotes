@@ -1,12 +1,10 @@
 package com.neworin.easynotes.ui;
 
-import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 
 import com.alibaba.fastjson.JSON;
@@ -29,20 +27,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnNeverAskAgain;
-import permissions.dispatcher.OnPermissionDenied;
-import permissions.dispatcher.OnShowRationale;
-import permissions.dispatcher.PermissionRequest;
-import permissions.dispatcher.RuntimePermissions;
-
 /**
  * Created by NewOrin Zhang on 2017/4/20.
  * Project : com.neworin.easynotes.ui
  * Description:
  */
 
-@RuntimePermissions
 public abstract class BaseNoteEditActivity extends BaseAppCompatActivity implements Toolbar.OnMenuItemClickListener {
     protected Note mNote;
     protected NoteBook mNoteBook;
@@ -62,24 +52,9 @@ public abstract class BaseNoteEditActivity extends BaseAppCompatActivity impleme
     abstract protected void onBackPress();
 
     /**
-     * 检查是否授予拍照权限
-     */
-    protected void checkCamera() {
-        BaseNoteEditActivityPermissionsDispatcher.openCameraWithCheck(this);
-    }
-
-    /**
-     * 检查是否获取读取内存权限
-     */
-    protected void checkAlbum() {
-        BaseNoteEditActivityPermissionsDispatcher.openSystemAlbumWithCheck(this);
-    }
-
-    /**
      * 打开系统相册
      */
-    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    void openSystemAlbum() {
+    protected void openSystemAlbum() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, Constant.OPEN_SYSTEM_ALBUM_RESULT_CODE);
@@ -88,8 +63,7 @@ public abstract class BaseNoteEditActivity extends BaseAppCompatActivity impleme
     /**
      * 打开相机
      */
-    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
-    void openCamera() {
+    protected void openCamera() {
         if (FileUtil.mkDirs(Constant.CAMERA_PHOTO_DIR)) {
             mCurrentPhotoFile = new File(Constant.CAMERA_PHOTO_DIR, FileUtil.getPhotoFileName());
             Intent intent = getTakePickIntent(mCurrentPhotoFile);
@@ -119,12 +93,6 @@ public abstract class BaseNoteEditActivity extends BaseAppCompatActivity impleme
             imagePath = saveImage(BitmapFactory.decodeFile(mCurrentPhotoFile.getAbsolutePath()));
             insertBitmap(imagePath);
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        BaseNoteEditActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     /**
@@ -165,21 +133,6 @@ public abstract class BaseNoteEditActivity extends BaseAppCompatActivity impleme
     @Override
     public void onBackPressed() {
         onBackPress();
-    }
-
-    @OnPermissionDenied({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
-    void showDeniedForCamera() {
-        showSnackBar(mBinding.getRoot(), getString(R.string.note_get_permission_failed));
-    }
-
-    @OnNeverAskAgain({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
-    void showNeverAskForCamera() {
-        showSnackBar(mBinding.getRoot(), getString(R.string.note_show_grant_permission_hint));
-    }
-
-    @OnShowRationale({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
-    void showRationaleForCamera(final PermissionRequest request) {
-        showSnackBar(mBinding.getRoot(), getString(R.string.note_get_permission_failed));
     }
 
     /**

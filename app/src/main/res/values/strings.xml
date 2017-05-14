@@ -7,4 +7,5 @@
     <string name="please_wait">请稍后</string>
     <string name="main_no_login_hint">您尚未登录</string>
     <string name="grant_permission_alert">请授予所需权限</string>
+    <string name="grant_permission_hint">为确保应用正常运行，我们需要以下权限</string>
 </resources>

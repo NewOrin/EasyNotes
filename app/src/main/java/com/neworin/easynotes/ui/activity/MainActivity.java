@@ -1,11 +1,16 @@
 package com.neworin.easynotes.ui.activity;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -28,6 +33,7 @@ import com.neworin.easynotes.ui.fragment.NoteBookFragment;
 import com.neworin.easynotes.ui.fragment.SlideMenuFragment;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
+import com.neworin.easynotes.utils.DialogUtils;
 import com.neworin.easynotes.utils.GsonUtil;
 import com.neworin.easynotes.utils.HttpUtil;
 import com.neworin.easynotes.utils.L;
@@ -36,15 +42,12 @@ import com.neworin.easynotes.utils.SharedPreferenceUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnPermissionDenied;
-import permissions.dispatcher.RuntimePermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-@RuntimePermissions
 public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMenuItemClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -56,6 +59,8 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     private List<NoteBook> mNoteBookList;
     private NoteBook mNoteBook;
     private boolean mIsThumb = false;
+    private String[] mPermissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+    private final int REQUEST_PERMISSION_CODE = 9999;
 
     @Override
     protected void initView() {
@@ -75,19 +80,7 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constant.ARG0, mNoteBook);
         mFragmentManager.beginTransaction().add(R.id.main_content_container, NoteBookFragment.newsInstance(bundle)).commitAllowingStateLoss();
-        checkPermission();
-    }
-
-    /**
-     * 检查所需权限
-     */
-    void checkPermission() {
-        MainActivityPermissionsDispatcher.initSlideFragmentWithCheck(this);
-    }
-
-    @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
-    void initSlideFragment() {
-        mFragmentManager.beginTransaction().add(R.id.main_left_container, new SlideMenuFragment()).commitAllowingStateLoss();
+        showGrantPermissionDialog();
     }
 
     /**
@@ -225,14 +218,44 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    /**
+     * 显示授予权限提示对话框
+     */
+    private void showGrantPermissionDialog() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            final List<String> needsToGrantPermissions = new ArrayList<>();
+            for (int i = 0; i < mPermissions.length; i++) {
+                if (ContextCompat.checkSelfPermission(this, mPermissions[i]) != PackageManager.PERMISSION_GRANTED) {
+                    needsToGrantPermissions.add(mPermissions[i]);
+                }
+            }
+            if (needsToGrantPermissions.size() > 0) {
+                DialogUtils dialogUtils = new DialogUtils(this);
+                dialogUtils.showHintDialog(getString(R.string.grant_permission_hint), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions(MainActivity.this, needsToGrantPermissions.toArray(new String[needsToGrantPermissions.size()]), REQUEST_PERMISSION_CODE);
+                    }
+                });
+            }else{
+                mFragmentManager.beginTransaction().add(R.id.main_left_container, new SlideMenuFragment()).commitAllowingStateLoss();
+            }
+        }
     }
 
-    @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
-    void showPermissionDenied() {
-        MainActivity.this.finish();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_PERMISSION_CODE:
+                for (int i = 0; i < permissions.length; i++) {
+                    if (ContextCompat.checkSelfPermission(this, mPermissions[0]) != PackageManager.PERMISSION_GRANTED) {
+                        showGrantPermissionDialog();
+                        return;
+                    }
+                }
+                mFragmentManager.beginTransaction().add(R.id.main_left_container, new SlideMenuFragment()).commitAllowingStateLoss();
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }
