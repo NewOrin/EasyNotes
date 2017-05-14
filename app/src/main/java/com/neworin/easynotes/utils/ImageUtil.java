@@ -82,7 +82,7 @@ public class ImageUtil {
      * @param bitmap
      */
     public static void saveLogo(Context context, Bitmap bitmap) {
-        File fileDir = new File(Environment.getExternalStorageDirectory() + "/easynotes_files");
+        File fileDir = new File(Environment.getExternalStorageDirectory() + "/easynotes/logo");
         if (!fileDir.exists()) {
             fileDir.mkdir();
         }

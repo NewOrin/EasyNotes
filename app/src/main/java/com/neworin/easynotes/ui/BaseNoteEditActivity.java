@@ -2,6 +2,8 @@ package com.neworin.easynotes.ui;
 
 import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -17,9 +19,14 @@ import com.neworin.easynotes.model.Note;
 import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.FileUtil;
+import com.neworin.easynotes.utils.GenerateSequenceUtil;
+import com.neworin.easynotes.utils.L;
 import com.neworin.easynotes.view.RichTextEditor;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import permissions.dispatcher.NeedsPermission;
@@ -43,6 +50,7 @@ public abstract class BaseNoteEditActivity extends BaseAppCompatActivity impleme
     protected DBManager mDbManager;
     protected DaoSession mDaoSession;
     protected File mCurrentPhotoFile;// 照相机拍照得到的图片
+    private String TAG = BaseNoteEditActivity.class.getSimpleName();
 
     @Override
     protected int getLayoutId() {
@@ -102,11 +110,14 @@ public abstract class BaseNoteEditActivity extends BaseAppCompatActivity impleme
         if (resultCode != RESULT_OK) {
             return;
         }
+        String imagePath;
         if (requestCode == Constant.OPEN_SYSTEM_ALBUM_RESULT_CODE) {
             Uri uri = data.getData();
-            insertBitmap(FileUtil.getRealFilePath(uri, this));
+            imagePath = saveImage(BitmapFactory.decodeFile(FileUtil.getRealFilePath(uri, this)));
+            insertBitmap(imagePath);
         } else if (requestCode == Constant.OPEN_CAMERA_RESULT_CODE) {
-            insertBitmap(mCurrentPhotoFile.getAbsolutePath());
+            imagePath = saveImage(BitmapFactory.decodeFile(mCurrentPhotoFile.getAbsolutePath()));
+            insertBitmap(imagePath);
         }
     }
 
@@ -169,5 +180,32 @@ public abstract class BaseNoteEditActivity extends BaseAppCompatActivity impleme
     @OnShowRationale({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
     void showRationaleForCamera(final PermissionRequest request) {
         showSnackBar(mBinding.getRoot(), getString(R.string.note_get_permission_failed));
+    }
+
+    /**
+     * 将图片另存为
+     *
+     * @param bitmap
+     * @return
+     */
+    public String saveImage(Bitmap bitmap) {
+        File fileDir = new File(Constant.FILE_SAVE_PATH);
+        if (!fileDir.exists()) {
+            fileDir.mkdir();
+        }
+        String filePath = Constant.FILE_SAVE_PATH + "/" + GenerateSequenceUtil.generateSequenceNo() + ".jpg";
+        File imageFile = new File(filePath);
+        try {
+            FileOutputStream fos = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, fos);
+            fos.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        L.d(TAG, "图片保存路径 = " + filePath);
+        return filePath;
     }
 }

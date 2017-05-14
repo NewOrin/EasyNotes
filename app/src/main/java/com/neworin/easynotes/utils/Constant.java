@@ -28,7 +28,8 @@ public class Constant {
     public static final String NOTE_EDIT_FLAG = "note_edit_flag";
 
     public static final String CAMERA_PHOTO_DIR = Environment.getExternalStorageDirectory() + "/DCIM/Camera";
-    public static final String CACHE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/easynotes";
+    public static final String CACHE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/easynotes/caches";
+    public static final String FILE_SAVE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/easynotes/files";
 
     public static final String SHARED_PREF_NAME = "easynote_shred_pref";
 
