@@ -1,5 +1,6 @@
 package com.neworin.easynotes.ui.fragment;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -27,6 +28,7 @@ import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.model.NoteManager;
 import com.neworin.easynotes.ui.BaseFragment;
 import com.neworin.easynotes.ui.activity.EditActivity;
+import com.neworin.easynotes.ui.activity.MainActivity;
 import com.neworin.easynotes.ui.activity.NoteActivity;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DialogUtils;
@@ -57,6 +59,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
     private String mDialogItems[];
     private boolean mIsThumb;
     private NoteManager mNoteManager;
+    private MainActivity mMainActivity;
 
     public NoteBookFragment() {
     }
@@ -65,6 +68,12 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
         NoteBookFragment noteBookFragment = new NoteBookFragment();
         noteBookFragment.setArguments(bundle);
         return noteBookFragment;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mMainActivity = (MainActivity) activity;
     }
 
     @Override
@@ -131,6 +140,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
         });
         mDaoSession.clear();
         EventBus.getDefault().post(new SlideMenuEvent.RefreshEvent());
+        mMainActivity.startUploadImageService();
     }
 
     /**

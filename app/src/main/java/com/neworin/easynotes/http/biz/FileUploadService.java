@@ -2,6 +2,8 @@ package com.neworin.easynotes.http.biz;
 
 import com.neworin.easynotes.http.Response;
 
+import java.util.List;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -20,4 +22,8 @@ public interface FileUploadService {
     @Multipart
     @POST("/file/file_upload")
     Call<Response> uploadFiles(@Part("description") RequestBody description, @Part MultipartBody.Part file);
+
+    @Multipart
+    @POST("/file/note_image_upload")
+    Call<Response> uploadNoteImage(@Part("description") RequestBody description, @Part List<MultipartBody.Part> file);
 }

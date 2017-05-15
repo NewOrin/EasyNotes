@@ -28,6 +28,7 @@ import com.neworin.easynotes.http.Response;
 import com.neworin.easynotes.http.UserBizImpl;
 import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.model.User;
+import com.neworin.easynotes.service.NoteImageUploadService;
 import com.neworin.easynotes.ui.BaseAppCompatActivity;
 import com.neworin.easynotes.ui.fragment.NoteBookFragment;
 import com.neworin.easynotes.ui.fragment.SlideMenuFragment;
@@ -257,5 +258,12 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    /**
+     * 启动上传图片服务
+     */
+    public void startUploadImageService() {
+        startService(new Intent(MainActivity.this, NoteImageUploadService.class));
     }
 }
