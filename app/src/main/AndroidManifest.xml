@@ -37,7 +37,7 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"/>
         </activity>
-        <service android:name=".service.NoteImageUploadService"/>
+        <service android:name=".service.SyncDataService"/>
     </application>
 
 </manifest>

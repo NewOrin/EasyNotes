@@ -8,10 +8,10 @@ import com.alibaba.fastjson.JSON;
 import com.neworin.easynotes.DBManager;
 import com.neworin.easynotes.greendao.gen.NoteDao;
 import com.neworin.easynotes.http.FileUploadBizImpl;
+import com.neworin.easynotes.http.NoteBizImpl;
 import com.neworin.easynotes.http.Response;
 import com.neworin.easynotes.model.EditData;
 import com.neworin.easynotes.model.Note;
-import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.L;
 import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
@@ -27,15 +27,15 @@ import retrofit2.Callback;
  * Description:
  */
 
-public class NoteImageUploadService extends IntentService {
+public class SyncDataService extends IntentService {
 
-    private static final String TAG = NoteImageUploadService.class.getSimpleName();
+    private static final String TAG = SyncDataService.class.getSimpleName();
     private long mUserId;
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      */
-    public NoteImageUploadService() {
+    public SyncDataService() {
         super(TAG);
     }
 
@@ -54,6 +54,8 @@ public class NoteImageUploadService extends IntentService {
                 @Override
                 public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                     L.d(TAG, "多图片上传成功");
+                    NoteBizImpl noteBiz = new NoteBizImpl();
+                    noteBiz.syncData(SyncDataService.this);
                 }
 
                 @Override
@@ -67,7 +69,7 @@ public class NoteImageUploadService extends IntentService {
     private List<String> getNeedsToUploadImage() {
         DBManager dbManager = DBManager.getInstance(this);
         NoteDao noteDao = dbManager.getWriteDaoSession().getNoteDao();
-        List<Note> noteList = noteDao.queryBuilder().where(NoteDao.Properties.UserId.eq(mUserId), NoteDao.Properties.Status.notEq(Constant.STATUS_COMPLETED)).list();
+        List<Note> noteList = noteDao.queryBuilder().where(NoteDao.Properties.UserId.eq(mUserId)).list();
         List<EditData> editDataList;
         List<String> imagePathStrs = new ArrayList<>();
         for (int i = 0; i < noteList.size(); i++) {

@@ -28,7 +28,7 @@ import com.neworin.easynotes.http.Response;
 import com.neworin.easynotes.http.UserBizImpl;
 import com.neworin.easynotes.model.NoteBook;
 import com.neworin.easynotes.model.User;
-import com.neworin.easynotes.service.NoteImageUploadService;
+import com.neworin.easynotes.service.SyncDataService;
 import com.neworin.easynotes.ui.BaseAppCompatActivity;
 import com.neworin.easynotes.ui.fragment.NoteBookFragment;
 import com.neworin.easynotes.ui.fragment.SlideMenuFragment;
@@ -107,8 +107,7 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
         if (item.getItemId() == R.id.main_menu_refresh) {
             String userId = SharedPreferenceUtil.getString(this, Constant.USER_ID);
             if (null != userId && !userId.equals("")) {
-                NoteBizImpl noteBiz = new NoteBizImpl();
-                noteBiz.syncData(this);
+                startSyncDataService();
                 EventBus.getDefault().post(new NoteBookFragmentEvent.RefreshNoteEvent());
             } else {
                 showSnackBar(mBinding.getRoot(), getString(R.string.main_no_login_hint));
@@ -263,7 +262,7 @@ public class MainActivity extends BaseAppCompatActivity implements Toolbar.OnMen
     /**
      * 启动上传图片服务
      */
-    public void startUploadImageService() {
-        startService(new Intent(MainActivity.this, NoteImageUploadService.class));
+    public void startSyncDataService() {
+        startService(new Intent(MainActivity.this, SyncDataService.class));
     }
 }

@@ -140,7 +140,6 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
         });
         mDaoSession.clear();
         EventBus.getDefault().post(new SlideMenuEvent.RefreshEvent());
-        mMainActivity.startUploadImageService();
     }
 
     /**
@@ -203,6 +202,7 @@ public class NoteBookFragment extends BaseFragment implements SwipeRefreshLayout
     @Subscribe
     public void onMessageEvent(NoteBookFragmentEvent.RefreshNoteEvent event) {
         refreshData();
+        mMainActivity.startSyncDataService();
     }
 
     @Subscribe

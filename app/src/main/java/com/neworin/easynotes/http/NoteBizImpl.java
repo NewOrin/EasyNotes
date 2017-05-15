@@ -41,7 +41,7 @@ public class NoteBizImpl {
      *
      * @param context
      */
-    public void syncData(Context context) {
+    public void syncData(final Context context) {
         final long user_id = Long.parseLong(SharedPreferenceUtil.getString(context, Constant.USER_ID));
         NoteService service = ServiceGenerator.createService(NoteService.class);
         mDBManager = DBManager.getInstance(context);
