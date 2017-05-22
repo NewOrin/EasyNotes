@@ -37,7 +37,14 @@ public class ImageUtil {
             options -= 10;//每次都减少10
         }
         ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中
-        return BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片
+        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);
+        try {
+            baos.close();
+            isBm.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bitmap;//把ByteArrayInputStream数据生成图片
     }
 
     /**

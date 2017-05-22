@@ -9,12 +9,18 @@ import android.provider.MediaStore;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+
+import okhttp3.ResponseBody;
 
 /**
  * 文件操作工具类
  */
 public class FileUtil {
+    private static java.lang.String TAG = FileUtil.class.getSimpleName();
+
     /**
      * 在指定的位置创建指定的文件
      *
@@ -196,5 +202,58 @@ public class FileUtil {
             }
         }
         return data;
+    }
+
+    public static boolean writeResponseBodyToDisk(ResponseBody body, String fileName) {
+        File f = new File(Constant.FILE_SAVE_PATH);
+        if (!f.exists()) {
+            mkDirs(Constant.FILE_SAVE_PATH);
+        }
+        try {
+            File futureStudioIconFile = new File(Constant.FILE_SAVE_PATH + "/" + fileName);
+
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+
+            try {
+                byte[] fileReader = new byte[4096];
+
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+
+                inputStream = body.byteStream();
+                outputStream = new FileOutputStream(futureStudioIconFile);
+
+                while (true) {
+                    int read = inputStream.read(fileReader);
+
+                    if (read == -1) {
+                        break;
+                    }
+
+                    outputStream.write(fileReader, 0, read);
+
+                    fileSizeDownloaded += read;
+
+                    L.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+
+                outputStream.flush();
+
+                return true;
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

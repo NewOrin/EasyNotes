@@ -5,8 +5,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.neworin.easynotes.utils.ImageUtil;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -79,8 +77,8 @@ public class NetCacheUtils {
         @Override
         protected void onPostExecute(Bitmap result) {
             if (result != null) {
-                Bitmap compressBmp = ImageUtil.compressImage(result);
-                ivPic.setImageBitmap(compressBmp);
+//                Bitmap compressBmp = ImageUtil.compressImage(result);
+                ivPic.setImageBitmap(result);
                 System.out.println("从网络缓存图片啦.....");
 
                 //从网络获取图片后,保存至本地缓存

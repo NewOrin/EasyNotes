@@ -12,6 +12,7 @@ import com.neworin.easynotes.http.NoteBizImpl;
 import com.neworin.easynotes.http.Response;
 import com.neworin.easynotes.model.EditData;
 import com.neworin.easynotes.model.Note;
+import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.L;
 import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
@@ -69,7 +70,7 @@ public class SyncDataService extends IntentService {
     private List<String> getNeedsToUploadImage() {
         DBManager dbManager = DBManager.getInstance(this);
         NoteDao noteDao = dbManager.getWriteDaoSession().getNoteDao();
-        List<Note> noteList = noteDao.queryBuilder().where(NoteDao.Properties.UserId.eq(mUserId)).list();
+        List<Note> noteList = noteDao.queryBuilder().where(NoteDao.Properties.UserId.eq(mUserId), NoteDao.Properties.Status.notEq(Constant.STATUS_COMPLETED)).list();
         List<EditData> editDataList;
         List<String> imagePathStrs = new ArrayList<>();
         for (int i = 0; i < noteList.size(); i++) {

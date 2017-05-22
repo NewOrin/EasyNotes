@@ -8,10 +8,13 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
+import com.neworin.easynotes.cache.MyBitmapUtils;
 import com.neworin.easynotes.model.EditData;
 import com.neworin.easynotes.model.Note;
+import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -21,6 +24,8 @@ import java.util.List;
  */
 
 public class NoteBookItemBindingAdapter {
+
+    private static String TAG = NoteBookItemBindingAdapter.class.getSimpleName();
 
     public static boolean isShow(String content) {
         List<EditData> list = JSON.parseArray(content, EditData.class);
@@ -46,11 +51,18 @@ public class NoteBookItemBindingAdapter {
             imageView.setVisibility(View.GONE);
             return;
         }
+        MyBitmapUtils myBitmapUtils = new MyBitmapUtils();
         for (EditData e : list) {
             if (!isHaveImage) {
                 if (e.getImagePath() != null) {
                     imageView.setVisibility(View.VISIBLE);
-                    Glide.with(imageView.getContext()).load(e.getImagePath()).into(imageView);
+                    File file = new File(e.getImagePath());
+                    if (file.exists()) {
+                        Glide.with(imageView.getContext()).load(e.getImagePath()).into(imageView);
+                    } else {
+                        String[] args = e.getImagePath().split("/");
+                        myBitmapUtils.disPlay(imageView, Constant.GET_NOTE_IMAGE_URL + args[args.length - 1] + "/20");
+                    }
                     isHaveImage = true;
                 }
             }

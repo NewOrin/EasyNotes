@@ -8,16 +8,25 @@ import com.alibaba.fastjson.JSON;
 import com.neworin.easynotes.DBManager;
 import com.neworin.easynotes.R;
 import com.neworin.easynotes.event.NoteBookFragmentEvent;
+import com.neworin.easynotes.http.FileDownloadBizImpl;
 import com.neworin.easynotes.model.EditData;
 import com.neworin.easynotes.model.Note;
 import com.neworin.easynotes.ui.BaseNoteEditActivity;
 import com.neworin.easynotes.utils.Constant;
 import com.neworin.easynotes.utils.DateUtil;
+import com.neworin.easynotes.utils.FileUtil;
+import com.neworin.easynotes.utils.L;
 import com.neworin.easynotes.utils.SharedPreferenceUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by NewOrin Zhang on 2017/4/20.
@@ -26,6 +35,8 @@ import java.util.List;
  */
 
 public class EditActivity extends BaseNoteEditActivity {
+
+    private java.lang.String TAG = EditActivity.class.getSimpleName();
 
     @Override
     protected void initView() {
@@ -69,9 +80,39 @@ public class EditActivity extends BaseNoteEditActivity {
                     getRichEdtor().insertContent(e.getInputStr());
                 }
             } else {
-                getRichEdtor().insertImage(e.getImagePath());
+                File file = new File(e.getImagePath());
+                if (file.exists()) {
+                    getRichEdtor().insertImage(e.getImagePath());
+                } else {
+                    String[] args = e.getImagePath().split("/");
+                    handleNetImage(args[args.length - 1]);
+                }
             }
         }
+    }
+
+    /**
+     * 处理从网络获取图片
+     *
+     * @param fileName
+     */
+    private void handleNetImage(final String fileName) {
+        FileDownloadBizImpl fileDownloadBiz = new FileDownloadBizImpl();
+        fileDownloadBiz.downloadFile(Constant.GET_NOTE_IMAGE_URL + fileName + "/40", new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    FileUtil.writeResponseBodyToDisk(response.body(), fileName);
+                    L.d(TAG, "图片" + fileName + "保存成功");
+                    getRichEdtor().insertImage(Constant.FILE_SAVE_PATH + "/" + fileName);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                L.d(TAG, "图片" + fileName + "加载失败");
+            }
+        });
     }
 
     private void initEvent() {
