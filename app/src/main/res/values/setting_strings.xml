@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setting_feedback">意见反馈</string>
+    <string name="setting_open_source_license">开源许可</string>
+    <string name="setting_feedback_input_content">请输入内容</string>
+    <string name="setting_feedback_thank">感谢您的反馈</string>
+    <string name="setting_feedback_submit_failed">提交失败 = </string>
+</resources>
